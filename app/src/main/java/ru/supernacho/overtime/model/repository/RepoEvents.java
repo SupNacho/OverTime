@@ -1,4 +1,6 @@
 package ru.supernacho.overtime.model.repository;
 
 public enum RepoEvents {
+    LOGIN_SUCCESS, LOGIN_FAILED_NO_CONNECTION, LOGIN_FAILED_WRONG_PASS, LOGIN_NEEDED,
+    REGISTRATION_SUCCESS, REGISTRATION_FAILED
 }

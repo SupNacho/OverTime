@@ -24,13 +24,36 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/app_name">
-
         </android.support.v7.widget.Toolbar>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Timer" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logs" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_item_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manager" />
+        </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+        android:id="@+id/vp_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.supernacho.overtime.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ManagerFragment extends Fragment {
 
+    private Unbinder unbinder;
 
     public ManagerFragment() {
         // Required empty public constructor
@@ -23,8 +23,14 @@ public class ManagerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manager, container, false);
+        View view = inflater.inflate(R.layout.fragment_manager, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
 }

@@ -1,4 +1,4 @@
-package geekgram.supernacho.ru.utils;
+package ru.supernacho.overtime.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -6,7 +6,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
 
-import geekgram.supernacho.ru.App;
+import ru.supernacho.overtime.App;
+
 
 public class NetworkStatus
 {
