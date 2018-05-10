@@ -12,17 +12,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -32,14 +36,17 @@ import butterknife.OnClick;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.LoginPresenter;
+import timber.log.Timber;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-public class LoginActivity extends MvpAppCompatActivity implements LoginView {
+public class LoginActivity extends MvpAppCompatActivity implements LoginView, View.OnKeyListener {
 
     private static final int REQUEST_READ_CONTACTS = 0;
 
     // UI references.
+    @BindView(R.id.linear_layout)
+    LinearLayout linearLayout;
     @BindView(R.id.email)
     AutoCompleteTextView emailView;
     @BindView(R.id.password)
@@ -79,6 +86,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     private void init() {
+        passwordView.setOnKeyListener(this);
+        editTextConfirmPassword.setOnKeyListener(this);
         populateAutoComplete();
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -90,7 +99,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @OnClick({R.id.email_sign_in_button, R.id.btn_cancel,
-            R.id.btn_confirm_registration, R.id.btn_register})
+            R.id.btn_confirm_registration, R.id.btn_register, R.id.linear_layout})
     public void onClickSignIn(View view) {
         switch (view.getId()) {
             case R.id.email_sign_in_button:
@@ -100,14 +109,40 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
                 showHideRegistrationUI();
                 break;
             case R.id.btn_confirm_registration:
-                presenter.registerUser(editTextUserName.getText().toString(),
-                        emailView.getText().toString(), passwordView.getText().toString());
+                atemptRegistration();
                 break;
             case R.id.btn_cancel:
                 showHideRegistrationUI();
                 break;
+            case R.id.linear_layout:
+                Timber.d("LL clicked");
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                break;
 
         }
+    }
+
+    private void atemptRegistration() {
+        presenter.registerUser(editTextUserName.getText().toString(),
+                emailView.getText().toString(), passwordView.getText().toString());
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (v.getId()) {
+                case R.id.password:
+                    attemptLogin();
+                    break;
+                case R.id.et_confirm_password:
+                    atemptRegistration();
+                    break;
+                default:
+                    break;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -155,8 +190,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         if (!mayRequestContacts()) {
             return;
         }
-//
-//        getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {
@@ -167,7 +200,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(emailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(linearLayout, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, v -> requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS));
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
