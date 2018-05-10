@@ -5,4 +5,5 @@ public interface ParseFileds {
     String startDate = "start_date";
     String stopDate = "stop_date";
     String comment = "comment";
+    String createdAt = "createdAt";
 }
