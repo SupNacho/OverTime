@@ -1,13 +1,10 @@
 package ru.supernacho.overtime.model.repository;
 
-import com.parse.LogOutCallback;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.User;
-import timber.log.Timber;
 
 public class LoginRepository {
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
