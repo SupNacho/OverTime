@@ -54,7 +54,7 @@ public class TimerRepository {
         runningTime.getFirstInBackground((object, e) -> {
             if (e == null && object != null) {
                 String oldComment = (String) object.get(ParseFileds.comment);
-                if (!comment.equals(oldComment)){
+                if (!comment.equals(oldComment) && !comment.equals("")){
                     String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
                     sb.setLength(0);
                     sb
@@ -78,9 +78,9 @@ public class TimerRepository {
 
     }
 
-    public Observable<String> restoreTimerState(){
+    public Observable<Long> restoreTimerState(){
         return Observable.create( emit -> {
-            final String[] startDate = new String[1];
+            final Long[] startDate = new Long[1];
             ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
             runningTime
                     .whereNotEqualTo(ParseFileds.startDate, null)
@@ -90,8 +90,7 @@ public class TimerRepository {
 
             runningTime.getFirstInBackground((object, e) -> {
                 if (e == null && object != null) {
-                    startDate[0] = new SimpleDateFormat("HH:mm:ss", Locale.US)
-                            .format(object.get(ParseFileds.startDate));
+                    startDate[0] = ((Date) object.get(ParseFileds.startDate)).getTime();
                     emit.onNext(startDate[0]);
                 }
             });

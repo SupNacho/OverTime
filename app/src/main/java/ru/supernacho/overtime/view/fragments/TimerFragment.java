@@ -33,12 +33,10 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
 
     private final static String MY_SHARED_PREFS = "overtime_prefs";
     private final static String PREF_IS_STARTED = "overtime_is_started";
-    private final static String PREF_SECS = "overtime_seconds";
     private SharedPreferences prefs;
 
     private Unbinder unbinder;
     private boolean isStarted;
-    private int secs;
 
     @InjectPresenter
     TimerPresenter presenter;
@@ -64,8 +62,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
     public TimerPresenter providePresenter(){
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(MY_SHARED_PREFS, Context.MODE_PRIVATE);
         isStarted = prefs.getBoolean(PREF_IS_STARTED, false);
-        secs = prefs.getInt(PREF_SECS, 0);
-        return new TimerPresenter(AndroidSchedulers.mainThread(), isStarted, secs);
+        return new TimerPresenter(AndroidSchedulers.mainThread(), isStarted);
     }
 
     @Override
@@ -98,9 +95,8 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
     }
 
     @Override
-    public void setCounter(String countMsg, int sec) {
+    public void setCounter(String countMsg) {
         tvCounter.setText(countMsg);
-        this.secs = sec;
     }
 
     @Override
@@ -113,7 +109,6 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
         super.onStop();
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PREF_IS_STARTED, isStarted);
-        editor.putInt(PREF_SECS, secs);
         editor.apply();
     }
 

@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.repository.TimerRepository;
@@ -31,9 +32,9 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
     @Inject
     TimerRepository repository;
 
-    public TimerPresenter(Scheduler uiScheduler, boolean isStarted, int secs) {
+    public TimerPresenter(Scheduler uiScheduler, boolean isStarted) {
         this.uiScheduler = uiScheduler;
-        this.seconds = secs;
+        this.seconds = 0;
         this.isStarted = isStarted;
     }
 
@@ -88,11 +89,18 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
     }
 
     private void restoreOverTime(){
+
         Timber.d("restore overTime");
         restoreDisposable = repository.restoreTimerState()
                 .subscribeOn(Schedulers.io())
         .observeOn(uiScheduler)
-        .subscribe(getViewState()::setStartDate);
+        .subscribe(aLong -> {
+            long currTime = new Date().getTime();
+            seconds = (int) ((currTime - aLong) / 1000);
+            String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US)
+                    .format(aLong);
+            getViewState().setStartDate(startDate);
+        });
 
         counterObserver = new DisposableObserver<Long>() {
             @Override
