@@ -3,6 +3,7 @@ package ru.supernacho.overtime.view.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
 
     @BindView(R.id.rv_month_logs_chooser)
     RecyclerView recyclerView;
+    @BindView(R.id.srl_refresh_months)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectPresenter
     DateChooserPresenter presenter;
@@ -53,7 +56,7 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         View view = inflater.inflate(R.layout.fragment_date_chooser, container, false);
         unbinder = ButterKnife.bind(this, view);
         initUI();
-        presenter.getDateData();
+        updateData();
         return view;
     }
 
@@ -63,6 +66,12 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         recyclerView.setLayoutManager(layoutManager);
         adapter = new DateLogRvAdapter(presenter);
         recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(this::updateData);
+    }
+
+    private void updateData(){
+        presenter.getDateData();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

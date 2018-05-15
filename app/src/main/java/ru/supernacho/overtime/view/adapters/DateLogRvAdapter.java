@@ -19,7 +19,6 @@ import timber.log.Timber;
 public class DateLogRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private DateChooserPresenter presenter;
     private List<DateChooserEntry> datesList;
-    private Disposable disposableDateList;
 
     public DateLogRvAdapter(DateChooserPresenter presenter) {
         this.presenter = presenter;

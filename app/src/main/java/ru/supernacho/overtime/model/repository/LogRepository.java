@@ -22,6 +22,7 @@ public class LogRepository {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
                         if (objects != null && e == null){
+                            set.clear();
                             list = objects;
                             for (ParseObject parseObject : list) {
                                 set.add(new DateChooserEntry(parseObject.getInt(ParseFields.monthNum), parseObject.getInt(ParseFields.yearNum)));
