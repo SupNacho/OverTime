@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.13'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
