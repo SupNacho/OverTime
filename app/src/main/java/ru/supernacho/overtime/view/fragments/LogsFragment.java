@@ -3,17 +3,26 @@ package ru.supernacho.overtime.view.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.repository.LogRepository;
+import ru.supernacho.overtime.model.repository.LoginRepository;
 
 public class LogsFragment extends Fragment {
 
     private Unbinder unbinder;
+    private FragmentManager fragmentManager;
+
+    @BindView(R.id.fl_logs_fragments_container)
+    FrameLayout fragmentContainer;
 
     public LogsFragment() {
         // Required empty public constructor
@@ -25,7 +34,19 @@ public class LogsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_logs, container, false);
         unbinder = ButterKnife.bind(this, view);
+        fragmentManager = getChildFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.fl_logs_fragments_container, new DateChooserFragment())
+                .commit();
         return view;
+    }
+
+    public void backToDateChooser(){
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_logs_fragments_container, new DateChooserFragment())
+                .commit();
     }
 
     @Override

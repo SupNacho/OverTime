@@ -23,13 +23,18 @@ public class TimerRepository {
 
     public void startOverTime(String comment) {
         ParseObject overtime = new ParseObject("OverTime");
-        String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
+        Date currentDate = new Date();
+        String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(currentDate);
+        String yearStamp = new SimpleDateFormat( "yyyy",Locale.US).format(currentDate);
+        String monthStamp = new SimpleDateFormat( "MM",Locale.US).format(currentDate);
         sb.setLength(0);
         sb.append(timeStamp).append(" ").append(comment);
-        overtime.put(ParseFileds.createdBy, ParseUser.getCurrentUser().getObjectId());
-        overtime.put(ParseFileds.startDate, new Date());
-        overtime.put(ParseFileds.stopDate, zeroTime);
-        overtime.put(ParseFileds.comment, sb.toString());
+        overtime.put(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId());
+        overtime.put(ParseFields.monthNum, Integer.parseInt(monthStamp));
+        overtime.put(ParseFields.yearNum, Integer.parseInt(yearStamp));
+        overtime.put(ParseFields.startDate, new Date());
+        overtime.put(ParseFields.stopDate, zeroTime);
+        overtime.put(ParseFields.comment, sb.toString());
 
         overtime.saveEventually(e -> {
             if (e == null) {
@@ -46,14 +51,14 @@ public class TimerRepository {
         ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
 
         runningTime
-                .whereNotEqualTo(ParseFileds.startDate, null)
-                .whereEqualTo(ParseFileds.createdBy, ParseUser.getCurrentUser().getObjectId())
-                .whereEqualTo(ParseFileds.stopDate, zeroTime)
-                .orderByDescending(ParseFileds.createdAt);
+                .whereNotEqualTo(ParseFields.startDate, null)
+                .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                .whereEqualTo(ParseFields.stopDate, zeroTime)
+                .orderByDescending(ParseFields.createdAt);
 
         runningTime.getFirstInBackground((object, e) -> {
             if (e == null && object != null) {
-                String oldComment = (String) object.get(ParseFileds.comment);
+                String oldComment = (String) object.get(ParseFields.comment);
                 if (!comment.equals(oldComment) && !comment.equals("")){
                     String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
                     sb.setLength(0);
@@ -63,9 +68,9 @@ public class TimerRepository {
                             .append(timeStamp)
                             .append(" ")
                             .append(comment);
-                    object.put(ParseFileds.comment, sb.toString());
+                    object.put(ParseFields.comment, sb.toString());
                 }
-                object.put(ParseFileds.stopDate, new Date());
+                object.put(ParseFields.stopDate, new Date());
                 object.saveEventually(e1 -> {
                     if (e1 == null) {
                         Timber.d("Hey hey saved");
@@ -83,14 +88,14 @@ public class TimerRepository {
             final Long[] startDate = new Long[1];
             ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
             runningTime
-                    .whereNotEqualTo(ParseFileds.startDate, null)
-                    .whereEqualTo(ParseFileds.createdBy, ParseUser.getCurrentUser().getObjectId())
-                    .whereEqualTo(ParseFileds.stopDate, zeroTime)
-                    .orderByDescending(ParseFileds.createdAt);
+                    .whereNotEqualTo(ParseFields.startDate, null)
+                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                    .whereEqualTo(ParseFields.stopDate, zeroTime)
+                    .orderByDescending(ParseFields.createdAt);
 
             runningTime.getFirstInBackground((object, e) -> {
                 if (e == null && object != null) {
-                    startDate[0] = ((Date) object.get(ParseFileds.startDate)).getTime();
+                    startDate[0] = ((Date) object.get(ParseFields.startDate)).getTime();
                     emit.onNext(startDate[0]);
                 }
             });

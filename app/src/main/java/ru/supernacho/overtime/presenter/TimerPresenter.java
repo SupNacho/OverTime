@@ -68,7 +68,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 int secs = seconds % 60;
                 String time = String.format(Locale.US,"%d:%02d:%02d",
                         hours, minutes, secs);
-                getViewState().setCounter(time, seconds);
+                getViewState().setCounter(time);
             }
 
             @Override
@@ -111,7 +111,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 int secs = seconds % 60;
                 String time = String.format(Locale.US,"%d:%02d:%02d",
                         hours, minutes, secs);
-                getViewState().setCounter(time, seconds);
+                getViewState().setCounter(time);
             }
 
             @Override
