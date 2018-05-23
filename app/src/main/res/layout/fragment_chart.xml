@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/ll_chart_fragment"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/cl_chart_fragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.ChartFragment"
-    android:orientation="vertical"
-    android:weightSum="10"
-    android:padding="20dp"
-    android:focusable="true"
-    android:focusedByDefault="true"
-    android:focusableInTouchMode="true"
-    tools:targetApi="o">
+    tools:context=".view.fragments.ChartFragment">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bc_chart_fragment"
+    <LinearLayout
+        android:id="@+id/ll_chart_fragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"/>
-    <TextView
-        android:id="@+id/tv_comment_chart_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="2"
-        android:text="Chart fragment" />
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:focusedByDefault="true"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:weightSum="10"
+        tools:targetApi="o">
 
-</LinearLayout>
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bc_chart_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6" />
+
+        <TextView
+            android:id="@+id/tv_comment_chart_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="2"
+            android:text="Chart fragment" />
+
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_chart_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="70dp"
+        android:src="@android:drawable/ic_dialog_email" />
+</android.support.design.widget.CoordinatorLayout>
