@@ -10,7 +10,9 @@ public class OverTimeEntity {
     private final long duration;
     private final String comment;
     private final String durationString;
-    private final String dateLabel;
+    private final String startDateLabel;
+    private final String startDateTimeLabel;
+    private final String stopDateTimeLabel;
 
     public OverTimeEntity(Date startDate, Date stopDate, long duration, String comment) {
         this.startDate = startDate;
@@ -18,7 +20,9 @@ public class OverTimeEntity {
         this.duration = duration;
         this.comment = comment;
         this.durationString = new SimpleDateFormat("HH:mm:ss", Locale.US).format(duration);
-        this.dateLabel = new SimpleDateFormat("dd MMM", Locale.US).format(startDate);
+        this.startDateLabel = new SimpleDateFormat("dd MMM", Locale.US).format(startDate);
+        this.startDateTimeLabel = new SimpleDateFormat("dd MMM HH:mm", Locale.US).format(startDate);
+        this.stopDateTimeLabel = new SimpleDateFormat("dd MMM HH:mm", Locale.US).format(stopDate);
     }
 
     public Date getStartDate() {
@@ -42,7 +46,15 @@ public class OverTimeEntity {
         return durationString;
     }
 
-    public String getDateLabel() {
-        return dateLabel;
+    public String getStartDateLabel() {
+        return startDateLabel;
+    }
+
+    public String getStartDateTimeLabel() {
+        return startDateTimeLabel;
+    }
+
+    public String getStopDateTimeLabel() {
+        return stopDateTimeLabel;
     }
 }
