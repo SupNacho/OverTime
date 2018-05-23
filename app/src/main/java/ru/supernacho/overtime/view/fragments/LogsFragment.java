@@ -37,7 +37,7 @@ public class LogsFragment extends Fragment {
         fragmentManager = getChildFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .add(R.id.fl_logs_fragments_container, new DateChooserFragment())
+                .add(R.id.fl_logs_fragments_container, new DateChooserFragment(), FragmentTag.DATE_CHOOSER)
                 .commit();
         return view;
     }
@@ -45,7 +45,15 @@ public class LogsFragment extends Fragment {
     public void backToDateChooser(){
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fl_logs_fragments_container, new DateChooserFragment())
+                .replace(R.id.fl_logs_fragments_container, new DateChooserFragment(), FragmentTag.DATE_CHOOSER)
+                .commit();
+    }
+
+    public void openChartFragment(int month, int year){
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_logs_fragments_container, ChartFragment.newInstance(month, year),
+                        FragmentTag.WORKER_CHART)
                 .commit();
     }
 
