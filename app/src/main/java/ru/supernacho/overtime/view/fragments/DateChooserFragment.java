@@ -79,6 +79,11 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void viewChart(int month, int year) {
+        ((LogsFragment) Objects.requireNonNull(getParentFragment())).openChartFragment(month, year);
+    }
+
     public void backToParent(){
         ((LogsFragment) Objects.requireNonNull(getParentFragment())).backToDateChooser();
     }
