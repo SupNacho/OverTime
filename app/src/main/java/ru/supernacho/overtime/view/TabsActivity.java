@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,11 +25,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.repository.LogRepository;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
+import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
+import timber.log.Timber;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -114,6 +118,21 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void logoutFailed() {
         Snackbar.make(toolbar, "Logout failed? 8-0", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
+            for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
+                if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
+                    ((LogsFragment)logsFragment).backToDateChooser();
+                } else {
+                    super.onBackPressed();
+                }
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
