@@ -71,8 +71,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
         View view = inflater.inflate(R.layout.fragment_timer, container, false);
         unbinder = ButterKnife.bind(this, view);
         App.getInstance().getAppComponent().inject(presenter);
-
-
+        view.clearFocus();
         return view;
     }
 
