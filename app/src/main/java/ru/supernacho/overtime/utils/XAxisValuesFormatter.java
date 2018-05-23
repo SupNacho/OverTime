@@ -5,10 +5,10 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.List;
 
-public class ChartValuesFormatter implements IAxisValueFormatter {
+public class XAxisValuesFormatter implements IAxisValueFormatter {
     private List<String> list;
 
-    public ChartValuesFormatter(List<String> list) {
+    public XAxisValuesFormatter(List<String> list) {
         this.list = list;
     }
 
