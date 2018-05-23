@@ -53,7 +53,10 @@ public class DateLogRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             month = itemView.findViewById(R.id.tv_date_chooser_month);
             year = itemView.findViewById(R.id.tv_date_chooser_year);
-            itemView.setOnClickListener(e-> Timber.d("Position: %d", getLayoutPosition()));
+            itemView.setOnClickListener(e-> {
+                presenter.viewChart(month.getText().toString(), year.getText().toString());
+                Timber.d("Position: %d", getLayoutPosition());
+            });
         }
     }
 }
