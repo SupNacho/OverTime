@@ -2,7 +2,6 @@ package ru.supernacho.overtime.presenter;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.List;
 
@@ -14,17 +13,20 @@ import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.ChartRepository;
 import ru.supernacho.overtime.view.fragments.ChartView;
+import timber.log.Timber;
 
 @InjectViewState
 public class ChartPresenter extends MvpPresenter<ChartView> {
     private Scheduler uiScheduler;
-    private DisposableObserver<List<OverTimeEntity>> disposableObserver;
+    private List<OverTimeEntity> entities;
+    private StringBuilder stringBuilder;
 
     @Inject
     ChartRepository repository;
 
     public ChartPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
+        stringBuilder = new StringBuilder();
     }
 
     @Override
@@ -39,6 +41,7 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
                 .subscribe(new DisposableObserver<List<OverTimeEntity>>() {
                     @Override
                     public void onNext(List<OverTimeEntity> overTimeEntities) {
+                        entities = overTimeEntities;
                         getViewState().updateChartView(overTimeEntities);
                     }
 
@@ -54,9 +57,19 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
                 });
     }
 
+    public void sendReport(){
+        stringBuilder.setLength(0);
+        for (OverTimeEntity entity : entities) {
+            stringBuilder.append(entity.getStartDateTimeLabel()).append(" -> ").append(entity.getStopDateTimeLabel())
+                    .append(" : ").append(entity.getDurationString()).append(" - ").append(entity.getComment())
+                    .append("\n");
+        }
+        Timber.d("Report: %s", stringBuilder.toString());
+        getViewState().shareReport(stringBuilder.toString());
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (disposableObserver != null) disposableObserver.dispose();
     }
 }
