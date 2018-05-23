@@ -2,7 +2,6 @@ package ru.supernacho.overtime.view.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,11 +80,11 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
 
     @Override
     public void viewChart(int month, int year) {
-        ((LogsFragment) Objects.requireNonNull(getParentFragment())).openChartFragment(month, year);
+        ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
     }
 
     public void backToParent(){
-        ((LogsFragment) Objects.requireNonNull(getParentFragment())).backToDateChooser();
+        ((LogsFragment) Objects.requireNonNull(getParentFragment())).callDateChooser();
     }
 
     @Override
