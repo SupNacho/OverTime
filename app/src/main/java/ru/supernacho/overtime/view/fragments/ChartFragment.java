@@ -1,8 +1,10 @@
 package ru.supernacho.overtime.view.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,6 @@ import com.arellomobile.mvp.MvpAppCompatDialogFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -37,7 +38,6 @@ import ru.supernacho.overtime.presenter.ChartPresenter;
 import ru.supernacho.overtime.utils.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.YAxisValueFormatter;
-import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +62,8 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
 
     @BindView(R.id.tv_comment_chart_fragment)
     TextView tvComment;
+    @BindView(R.id.fab_chart_fragment)
+    FloatingActionButton fab;
 
     private List<BarEntry> yVals = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
@@ -95,6 +97,7 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         unbinder = ButterKnife.bind(this, view);
         presenter.getOverTimes(month, year);
+        fab.setOnClickListener(v -> presenter.sendReport());
         return view;
     }
 
@@ -111,7 +114,7 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         labels.clear();
         yVals.clear();
         for (OverTimeEntity overTimeEntity : overTimeEntityList) {
-            labels.add(overTimeEntity.getDateLabel());
+            labels.add(overTimeEntity.getStartDateLabel());
             yVals.add(new BarEntry(overTimeEntityList.indexOf(overTimeEntity), overTimeEntity.getDuration()));
         }
         BarDataSet dataSet = new BarDataSet(yVals, "Hours per day");
@@ -138,6 +141,15 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         barChart.setOnChartValueSelectedListener(this);
         barChart.animateXY(1000,3000);
         barChart.invalidate();
+    }
+
+    @Override
+    public void shareReport(String report){
+        Intent shareIntent = new Intent((Intent.ACTION_SEND));
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Subj OVerTimes");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, report);
+        startActivity(Intent.createChooser(shareIntent, "Share shmare"));
     }
 
     @Override
