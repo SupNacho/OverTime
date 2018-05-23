@@ -109,7 +109,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                 showHideRegistrationUI();
                 break;
             case R.id.btn_confirm_registration:
-                atemptRegistration();
+                attemptRegistration();
                 break;
             case R.id.btn_cancel:
                 showHideRegistrationUI();
@@ -123,7 +123,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         }
     }
 
-    private void atemptRegistration() {
+    private void attemptRegistration() {
         presenter.registerUser(editTextUserName.getText().toString(),
                 emailView.getText().toString(), passwordView.getText().toString());
     }
@@ -136,7 +136,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                     attemptLogin();
                     break;
                 case R.id.et_confirm_password:
-                    atemptRegistration();
+                    attemptRegistration();
                     break;
                 default:
                     break;
