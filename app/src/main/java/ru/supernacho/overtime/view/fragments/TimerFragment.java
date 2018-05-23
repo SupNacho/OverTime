@@ -27,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TimerPresenter;
+import timber.log.Timber;
 
 public class TimerFragment extends MvpAppCompatFragment implements TimerView {
 
@@ -60,9 +61,13 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
 
     @ProvidePresenter
     public TimerPresenter providePresenter(){
+        getSharedPrefs();
+        return new TimerPresenter(AndroidSchedulers.mainThread(), isStarted);
+    }
+
+    private void getSharedPrefs() {
         prefs = Objects.requireNonNull(getActivity()).getSharedPreferences(MY_SHARED_PREFS, Context.MODE_PRIVATE);
         isStarted = prefs.getBoolean(PREF_IS_STARTED, false);
-        return new TimerPresenter(AndroidSchedulers.mainThread(), isStarted);
     }
 
     @Override
@@ -72,6 +77,9 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
         unbinder = ButterKnife.bind(this, view);
         App.getInstance().getAppComponent().inject(presenter);
         view.clearFocus();
+        if (prefs == null){
+            getSharedPrefs();
+        }
         return view;
     }
 
@@ -105,10 +113,10 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
 
     @Override
     public void onStop() {
-        super.onStop();
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PREF_IS_STARTED, isStarted);
         editor.apply();
+        super.onStop();
     }
 
     @Override
