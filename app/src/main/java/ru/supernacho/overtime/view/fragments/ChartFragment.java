@@ -26,6 +26,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ import ru.supernacho.overtime.presenter.ChartPresenter;
 import ru.supernacho.overtime.utils.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.YAxisValueFormatter;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -97,7 +99,13 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         unbinder = ButterKnife.bind(this, view);
         presenter.getOverTimes(month, year);
-        fab.setOnClickListener(v -> presenter.sendReport());
+        fab.setOnClickListener(v -> presenter.sendReport(
+                getResources().getString(R.string.text_rep_new_rec),
+                getResources().getString(R.string.text_rep_start_date),
+                getResources().getString(R.string.text_rep_end_date),
+                getResources().getString(R.string.text_rep_duration),
+                getResources().getString(R.string.text_rep_comment)));
+        Timber.d("Time zone: %s", TimeZone.getDefault().getDisplayName());
         return view;
     }
 
@@ -130,7 +138,7 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         YAxis yAxisLeft = barChart.getAxisLeft();
         yAxisLeft.setValueFormatter(new YAxisValueFormatter());
         XAxis xAxisBarChart = barChart.getXAxis();
-        xAxisBarChart.setLabelCount(labels.size());
+        xAxisBarChart.setLabelCount(labels.size() > 3 ? 4 : labels.size());
         xAxisBarChart.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisBarChart.setValueFormatter(new XAxisValuesFormatter(labels));
         barChart.setData(barData);

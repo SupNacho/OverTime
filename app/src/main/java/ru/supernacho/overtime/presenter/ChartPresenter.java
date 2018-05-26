@@ -57,12 +57,19 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
                 });
     }
 
-    public void sendReport(){
+    public void sendReport(String overtimeLabel, String startDateLabel,
+                           String stopDateLabel, String durationLabel,
+                           String commentLabel){
         stringBuilder.setLength(0);
         for (OverTimeEntity entity : entities) {
-            stringBuilder.append(entity.getStartDateTimeLabel()).append(" -> ").append(entity.getStopDateTimeLabel())
-                    .append(" : ").append(entity.getDurationString()).append(" - ").append(entity.getComment())
-                    .append("\n");
+            stringBuilder
+                    .append(overtimeLabel).append("\n")
+                    .append(startDateLabel).append(" ")
+                    .append(entity.getStartDateTimeLabel()).append("\n").append(stopDateLabel)
+                    .append(" ").append(entity.getStopDateTimeLabel()).append("\n")
+                    .append(durationLabel).append(" ").append(entity.getDurationString())
+                    .append("\n").append(commentLabel).append("\n").append(entity.getComment())
+                    .append("\n\n");
         }
         Timber.d("Report: %s", stringBuilder.toString());
         getViewState().shareReport(stringBuilder.toString());
