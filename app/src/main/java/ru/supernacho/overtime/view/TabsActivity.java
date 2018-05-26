@@ -1,19 +1,16 @@
 package ru.supernacho.overtime.view;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -25,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.R;
-import ru.supernacho.overtime.model.repository.LogRepository;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
@@ -60,15 +56,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
         init();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
     @ProvidePresenter
@@ -77,6 +64,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     }
 
     private void init() {
+        Timber.d("+++ INIT");
         initFragments();
         initPagerAdapter();
         initViewPager();
@@ -91,7 +79,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     private void initFragments() {
         timerFragment = new TimerFragment();
-        logsFragment = new LogsFragment();
+        logsFragment = LogsFragment.newInstance();
         managerFragment = new ManagerFragment();
     }
 
@@ -123,9 +111,14 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void onBackPressed() {
         if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
+            if (!logsFragment.isAdded()){
+                Timber.d("JOPA");
+                if (tabLayout.getTabAt(1).getTag() instanceof LogsFragment) Timber.d("yes YES YES");
+                return;
+            }
             for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
-                    ((LogsFragment)logsFragment).backToDateChooser();
+                    ((LogsFragment)logsFragment).startDateChooser();
                 } else {
                     super.onBackPressed();
                 }
