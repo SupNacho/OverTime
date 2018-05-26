@@ -8,4 +8,5 @@ public interface ParseFields {
     String createdAt = "createdAt";
     String monthNum = "monthNum";
     String yearNum = "yearNum";
+    String timeZoneID = "timeZoneID";
 }
