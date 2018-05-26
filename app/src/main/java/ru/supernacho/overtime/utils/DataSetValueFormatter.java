@@ -10,6 +10,6 @@ import java.util.Locale;
 public class DataSetValueFormatter implements IValueFormatter {
     @Override
     public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-        return new SimpleDateFormat("HH:mm", Locale.US).format((long)value);
+        return DurationToStringConverter.convert((long)value);
     }
 }
