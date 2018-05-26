@@ -7,6 +7,7 @@ import com.parse.ParseUser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import io.reactivex.Observable;
 import timber.log.Timber;
@@ -27,6 +28,7 @@ public class TimerRepository {
         String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(currentDate);
         String yearStamp = new SimpleDateFormat( "yyyy",Locale.US).format(currentDate);
         String monthStamp = new SimpleDateFormat( "MM",Locale.US).format(currentDate);
+        String timeZoneID = TimeZone.getDefault().getID();
         sb.setLength(0);
         sb.append(timeStamp).append(" ").append(comment);
         overtime.put(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId());
@@ -35,6 +37,7 @@ public class TimerRepository {
         overtime.put(ParseFields.startDate, new Date());
         overtime.put(ParseFields.stopDate, zeroTime);
         overtime.put(ParseFields.comment, sb.toString());
+        overtime.put(ParseFields.timeZoneID, timeZoneID);
 
         overtime.saveEventually(e -> {
             if (e == null) {
