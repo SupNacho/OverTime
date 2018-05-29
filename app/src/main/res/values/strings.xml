@@ -50,4 +50,5 @@
     <string name="hello_blank_fragment_three">Manager fragment</string>
     <string name="month_summary_overtime_label">Month summary overtime:</string>
     <string name="overtime_comment_label">Overtime comment:</string>
+    <string name="til_enter_job_comment">Enter job comment</string>
 </resources>
