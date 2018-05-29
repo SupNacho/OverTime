@@ -64,10 +64,10 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     }
 
     private void init() {
-        Timber.d("+++ INIT");
         initFragments();
         initPagerAdapter();
         initViewPager();
+        updatePageAdapter();
     }
 
     private void initPagerAdapter() {
@@ -75,6 +75,14 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         fragmentsPagerAdapter.addFragment(timerFragment);
         fragmentsPagerAdapter.addFragment(logsFragment);
         fragmentsPagerAdapter.addFragment(managerFragment);
+    }
+
+    private void updatePageAdapter(){
+        fragmentsPagerAdapter.startUpdate(viewPager);
+        if (!timerFragment.isAdded()) timerFragment = (TimerFragment) fragmentsPagerAdapter.instantiateItem(viewPager, 0);
+        if (!logsFragment.isAdded()) logsFragment = (LogsFragment) fragmentsPagerAdapter.instantiateItem(viewPager,1);
+        if (!managerFragment.isAdded()) managerFragment = (ManagerFragment) fragmentsPagerAdapter.instantiateItem(viewPager,2);
+        fragmentsPagerAdapter.finishUpdate(viewPager);
     }
 
     private void initFragments() {
@@ -111,11 +119,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void onBackPressed() {
         if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
-            if (!logsFragment.isAdded()){
-                Timber.d("JOPA");
-                if (tabLayout.getTabAt(1).getTag() instanceof LogsFragment) Timber.d("yes YES YES");
-                return;
-            }
             for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
                     ((LogsFragment)logsFragment).startDateChooser();
@@ -128,6 +131,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         }
     }
 
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
