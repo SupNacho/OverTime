@@ -25,7 +25,7 @@ public class TimerRepository {
     public void startOverTime(String comment) {
         ParseObject overtime = new ParseObject("OverTime");
         Date currentDate = new Date();
-        String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(currentDate);
+        String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm",Locale.US).format(currentDate);
         String yearStamp = new SimpleDateFormat( "yyyy",Locale.US).format(currentDate);
         String monthStamp = new SimpleDateFormat( "MM",Locale.US).format(currentDate);
         String timeZoneID = TimeZone.getDefault().getID();
@@ -63,7 +63,7 @@ public class TimerRepository {
             if (e == null && object != null) {
                 String oldComment = (String) object.get(ParseFields.comment);
                 if (!comment.equals(oldComment) && !comment.equals("")){
-                    String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
+                    String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm",Locale.US).format(new Date());
                     sb.setLength(0);
                     sb
                             .append(oldComment)
@@ -99,7 +99,7 @@ public class TimerRepository {
             if (e == null && object != null) {
                 String oldComment = (String) object.get(ParseFields.comment);
                 if (!comment.equals(oldComment) && !comment.equals("")){
-                    String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
+                    String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm",Locale.US).format(new Date());
                     sb.setLength(0);
                     sb
                             .append(oldComment)
