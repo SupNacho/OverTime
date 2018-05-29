@@ -12,6 +12,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.ChartRepository;
+import ru.supernacho.overtime.utils.DurationToStringConverter;
 import ru.supernacho.overtime.view.fragments.ChartView;
 import timber.log.Timber;
 
@@ -43,6 +44,11 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
                     public void onNext(List<OverTimeEntity> overTimeEntities) {
                         entities = overTimeEntities;
                         getViewState().updateChartView(overTimeEntities);
+                        long overTimeSummary = 0L;
+                        for (OverTimeEntity entity : entities) {
+                            overTimeSummary += entity.getDuration();
+                        }
+                        getViewState().viewSummary(DurationToStringConverter.convert(overTimeSummary));
                     }
 
                     @Override

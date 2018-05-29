@@ -61,9 +61,10 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
 
     @BindView(R.id.bc_chart_fragment)
     BarChart barChart;
-
     @BindView(R.id.tv_comment_chart_fragment)
     TextView tvComment;
+    @BindView(R.id.tv_month_summary_chart_fragment)
+    TextView tvSummary;
     @BindView(R.id.fab_chart_fragment)
     FloatingActionButton fab;
 
@@ -158,6 +159,11 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Subj OVerTimes");
         shareIntent.putExtra(Intent.EXTRA_TEXT, report);
         startActivity(Intent.createChooser(shareIntent, "Share shmare"));
+    }
+
+    @Override
+    public void viewSummary(String summary) {
+        tvSummary.setText(summary);
     }
 
     @Override

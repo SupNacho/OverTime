@@ -12,4 +12,5 @@ import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 public interface ChartView extends MvpView {
     void updateChartView(List<OverTimeEntity> overTimeEntityList);
     void shareReport(String report);
+    void viewSummary(String summary);
 }
