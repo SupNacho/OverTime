@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -98,6 +99,11 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         Objects.requireNonNull(tabLayout.getTabAt(0)).select();
     }
 
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+    }
+
     @Override
     public void setUserName(String userName) {
         toolbar.setTitle(userName);
@@ -131,7 +137,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         }
     }
 
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
