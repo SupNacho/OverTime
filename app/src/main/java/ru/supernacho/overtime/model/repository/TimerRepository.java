@@ -48,6 +48,42 @@ public class TimerRepository {
         });
     }
 
+    public void addComment(String comment){
+        Date zeroTime = new Date();
+        zeroTime.setTime(0L);
+        ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
+
+        runningTime
+                .whereNotEqualTo(ParseFields.startDate, null)
+                .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                .whereEqualTo(ParseFields.stopDate, zeroTime)
+                .orderByDescending(ParseFields.createdAt);
+
+        runningTime.getFirstInBackground((object, e) -> {
+            if (e == null && object != null) {
+                String oldComment = (String) object.get(ParseFields.comment);
+                if (!comment.equals(oldComment) && !comment.equals("")){
+                    String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm:ss",Locale.US).format(new Date());
+                    sb.setLength(0);
+                    sb
+                            .append(oldComment)
+                            .append("\n")
+                            .append(timeStamp)
+                            .append(" ")
+                            .append(comment);
+                    object.put(ParseFields.comment, sb.toString());
+                }
+                object.saveEventually(e1 -> {
+                    if (e1 == null) {
+                        Timber.d("Hey hey saved");
+                    } else {
+                        Timber.d("What? %s", e1.getMessage());
+                    }
+                });
+            }
+        });
+    }
+
     public void stopOverTime(String comment) {
         Date zeroTime = new Date();
         zeroTime.setTime(0L);

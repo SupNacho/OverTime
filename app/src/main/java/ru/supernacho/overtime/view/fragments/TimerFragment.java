@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -27,7 +28,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TimerPresenter;
+import ru.supernacho.overtime.view.TabsActivity;
 import timber.log.Timber;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class TimerFragment extends MvpAppCompatFragment implements TimerView {
 
@@ -54,6 +58,8 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
     ProgressBar progressBar;
     @BindView(R.id.btn_timer_control)
     Button btnTimerControl;
+    @BindView(R.id.btn_timer_add_comment)
+    Button btnAddComment;
 
     public TimerFragment() {
         // Required empty public constructor
@@ -89,13 +95,23 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
         etComment.setText("");
     }
 
+    @OnClick(R.id.btn_timer_add_comment)
+    public void onClickAddComment(){
+        presenter.addComment(etComment.getEditableText().toString());
+        etComment.setText("");
+        Objects.requireNonNull(getView()).clearFocus();
+        ((TabsActivity) Objects.requireNonNull(getActivity())).hideSoftKeyboard();
+    }
+
     @Override
     public void setTimerState(boolean isStarted) {
         this.isStarted = isStarted;
         if (isStarted) {
+            btnAddComment.setVisibility(View.VISIBLE);
             btnTimerControl.setText("Finish overtime");
             progressBar.setIndeterminate(true);
         } else {
+            btnAddComment.setVisibility(View.GONE);
             btnTimerControl.setText("Start overtime");
             progressBar.setIndeterminate(false);
         }

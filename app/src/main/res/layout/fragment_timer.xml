@@ -65,28 +65,42 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
-
+<LinearLayout
+    android:id="@+id/ll_comment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintTop_toBottomOf="@id/pb_overtime_progress"
+    app:layout_constraintBottom_toTopOf="@id/btn_timer_control"
+    >
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/pb_overtime_progress"
-        app:layout_constraintBottom_toTopOf="@id/btn_timer_control"
-        android:hint="Enter job comment">
+        android:layout_weight="8"
+        android:hint="@string/til_enter_job_comment">
 
-    <EditText
-        android:id="@+id/et_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        tools:text="Metropolis ololo"/>
+        <EditText
+            android:id="@+id/et_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            tools:text="Metropolis ololo"/>
     </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/btn_timer_add_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:visibility="gone"
+        android:text="Add"/>
+</LinearLayout>
 
     <Button
         android:id="@+id/btn_timer_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/til_comment"
+        app:layout_constraintTop_toBottomOf="@id/ll_comment_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
