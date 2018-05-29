@@ -116,7 +116,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                 break;
             case R.id.linear_layout:
                 Timber.d("LL clicked");
-                hideSoftKeybord();
+                hideSoftKeyboard();
                 break;
 
         }
@@ -246,16 +246,16 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             cancel = true;
         }
 
-//         Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
-            focusView = emailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            emailView.setError(getString(R.string.error_invalid_email));
-            focusView = emailView;
-            cancel = true;
-        }
+////         Check for a valid email address.
+//        if (TextUtils.isEmpty(email)) {
+//            emailView.setError(getString(R.string.error_field_required));
+//            focusView = emailView;
+//            cancel = true;
+//        } else if (!isEmailValid(email)) {
+//            emailView.setError(getString(R.string.error_invalid_email));
+//            focusView = emailView;
+//            cancel = true;
+//        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -313,10 +313,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-        hideSoftKeybord();
+        hideSoftKeyboard();
     }
 
-    private void hideSoftKeybord() {
+    private void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
     }
