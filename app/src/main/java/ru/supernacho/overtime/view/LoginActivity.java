@@ -3,8 +3,11 @@ package ru.supernacho.overtime.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.input.InputManager;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
@@ -104,6 +107,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         switch (view.getId()) {
             case R.id.email_sign_in_button:
                 attemptLogin();
+                view.clearFocus();
                 break;
             case R.id.btn_register:
                 showHideRegistrationUI();
@@ -287,6 +291,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        hideSoftKeyboard();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -313,14 +318,12 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-        hideSoftKeyboard();
     }
 
     private void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
     }
-
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
