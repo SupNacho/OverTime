@@ -60,6 +60,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     View loginFormView;
     @BindView(R.id.et_user_name)
     EditText editTextUserName;
+    @BindView(R.id.login_et_full_name)
+    EditText editTextFullName;
     @BindView(R.id.et_confirm_password)
     EditText editTextConfirmPassword;
     @BindView(R.id.btn_confirm_registration)
@@ -127,7 +129,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     }
 
     private void attemptRegistration() {
-        presenter.registerUser(editTextUserName.getText().toString(),
+        presenter.registerUser(editTextUserName.getText().toString(), editTextFullName.getText().toString(),
                 emailView.getText().toString(), passwordView.getText().toString());
     }
 
@@ -173,6 +175,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     private void showHideRegistrationUI() {
         isRegistering = !isRegistering;
         if (isRegistering) {
+            editTextFullName.setVisibility(View.VISIBLE);
             editTextConfirmPassword.setVisibility(View.VISIBLE);
             btnConfirm.setVisibility(View.VISIBLE);
             emailView.setVisibility(View.VISIBLE);
@@ -180,6 +183,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             btnSignIn.setVisibility(View.GONE);
             btnRegister.setVisibility(View.GONE);
         } else {
+            editTextFullName.setVisibility(View.GONE);
             editTextConfirmPassword.setVisibility(View.GONE);
             btnCancel.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);

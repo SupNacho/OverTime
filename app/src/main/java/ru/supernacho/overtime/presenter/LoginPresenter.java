@@ -73,8 +73,8 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
         repository.loginIn(userName, password);
     }
 
-    public void registerUser(String userName, String email, String password){
-        User user = new User(userName);
+    public void registerUser(String userName, String fullName, String email, String password){
+        User user = new User(userName, fullName);
         if (email != null) user.setEmail(email);
         repository.registerUser(user, password);
     }

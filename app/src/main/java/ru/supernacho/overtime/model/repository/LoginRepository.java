@@ -10,12 +10,13 @@ public class LoginRepository {
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
 
     public void registerUser(User user, String password) {
-        ParseUser puser = new ParseUser();
-        puser.setUsername(user.getUserName());
-        if (user.getEmail() != null) puser.setEmail(user.getEmail());
-        puser.setPassword(password);
+        ParseUser pUser = new ParseUser();
+        pUser.setUsername(user.getUserName());
+        pUser.put(ParseFields.fullName, user.getFullName());
+        if (user.getEmail() != null) pUser.setEmail(user.getEmail());
+        pUser.setPassword(password);
 
-        puser.signUpInBackground(e -> {
+        pUser.signUpInBackground(e -> {
             if (e == null) {
                 repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
             } else {
@@ -57,7 +58,7 @@ public class LoginRepository {
 
     public Observable<String> getUserData() {
         return Observable.create( emit ->{
-            String username = ParseUser.getCurrentUser().getUsername();
+            String username = ParseUser.getCurrentUser().getString(ParseFields.fullName);
             emit.onNext(username);
         });
     }

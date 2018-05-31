@@ -51,4 +51,6 @@
     <string name="month_summary_overtime_label">Month summary overtime:</string>
     <string name="overtime_comment_label">Overtime comment:</string>
     <string name="til_enter_job_comment">Enter job comment</string>
+    <string name="login_hint_full_name">Full name</string>
+    <string name="login_hint_user_login">User login</string>
 </resources>
