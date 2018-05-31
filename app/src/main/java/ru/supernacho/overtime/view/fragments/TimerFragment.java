@@ -4,20 +4,25 @@ package ru.supernacho.overtime.view.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -29,16 +34,14 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TimerPresenter;
 import ru.supernacho.overtime.view.TabsActivity;
-import timber.log.Timber;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
-public class TimerFragment extends MvpAppCompatFragment implements TimerView {
+public class TimerFragment extends MvpAppCompatFragment implements TimerView, View.OnKeyListener {
 
 
     private final static String MY_SHARED_PREFS = "overtime_prefs";
     private final static String PREF_IS_STARTED = "overtime_is_started";
     private SharedPreferences prefs;
+    private List<View> visibleViewList;
 
     private Unbinder unbinder;
     private boolean isStarted;
@@ -46,10 +49,14 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
     @InjectPresenter
     TimerPresenter presenter;
 
+    @BindView(R.id.cl_timer_fragment)
+    ConstraintLayout constraintLayout;
     @BindView(R.id.tc_current_time)
     TextClock textClock;
     @BindView(R.id.tv_start_time)
     TextView tvStartTime;
+    @BindView(R.id.tv_start_time_label)
+    TextView tvStartTimeLabel;
     @BindView(R.id.tv_counter)
     TextView tvCounter;
     @BindView(R.id.et_comment)
@@ -77,10 +84,29 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timer, container, false);
         unbinder = ButterKnife.bind(this, view);
+        visibleViewList = new ArrayList<>();
+        visibleViewList.add(textClock);
+        visibleViewList.add(tvStartTimeLabel);
+        visibleViewList.add(tvStartTime);
+        visibleViewList.add(tvCounter);
+        etComment.setOnKeyListener(this);
+        etComment.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus){
+                for (View elem : visibleViewList) {
+                    elem.setVisibility(View.GONE);
+                }
+            } else {
+                for (View elem : visibleViewList) {
+                    elem.setVisibility(View.VISIBLE);
+                }
+                constraintLayout.requestFocus();
+                hideSoftKeyboard();
+            }
+        });
         App.getInstance().getAppComponent().inject(presenter);
         view.clearFocus();
         if (prefs == null){
@@ -89,14 +115,47 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView {
         return view;
     }
 
-    @OnClick(R.id.btn_timer_control)
-    public void onClickTimerControl(){
-        presenter.switchTimer(etComment.getEditableText().toString());
-        etComment.setText("");
+    private void hideSoftKeyboard(){
+        ((TabsActivity) Objects.requireNonNull(getActivity())).hideSoftKeyboard();
     }
 
-    @OnClick(R.id.btn_timer_add_comment)
-    public void onClickAddComment(){
+    @OnClick({R.id.btn_timer_add_comment, R.id.btn_timer_control, R.id.cl_timer_fragment})
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.btn_timer_control:
+                addCommentAndStart();
+                break;
+            case R.id.btn_timer_add_comment:
+                addCommentInProcess();
+                break;
+            case R.id.cl_timer_fragment:
+                break;
+                default:
+                    Toast.makeText(getContext(), "No such button", Toast.LENGTH_SHORT).show();
+                    break;
+        }
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (isStarted) {
+                addCommentInProcess();
+            } else {
+                addCommentAndStart();
+            }
+        }
+        return false;
+    }
+
+    private void addCommentAndStart() {
+        presenter.switchTimer(etComment.getEditableText().toString());
+        etComment.setText("");
+        etComment.clearFocus();
+    }
+
+
+    private void addCommentInProcess() {
         presenter.addComment(etComment.getEditableText().toString());
         etComment.setText("");
         Objects.requireNonNull(getView()).clearFocus();
