@@ -1,18 +1,17 @@
 package ru.supernacho.overtime.view;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -26,9 +25,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
+import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
+import timber.log.Timber;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -56,15 +57,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
         init();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
     @ProvidePresenter
@@ -76,6 +68,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         initFragments();
         initPagerAdapter();
         initViewPager();
+        updatePageAdapter();
     }
 
     private void initPagerAdapter() {
@@ -85,9 +78,17 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         fragmentsPagerAdapter.addFragment(managerFragment);
     }
 
+    private void updatePageAdapter(){
+        fragmentsPagerAdapter.startUpdate(viewPager);
+        if (!timerFragment.isAdded()) timerFragment = (TimerFragment) fragmentsPagerAdapter.instantiateItem(viewPager, 0);
+        if (!logsFragment.isAdded()) logsFragment = (LogsFragment) fragmentsPagerAdapter.instantiateItem(viewPager,1);
+        if (!managerFragment.isAdded()) managerFragment = (ManagerFragment) fragmentsPagerAdapter.instantiateItem(viewPager,2);
+        fragmentsPagerAdapter.finishUpdate(viewPager);
+    }
+
     private void initFragments() {
         timerFragment = new TimerFragment();
-        logsFragment = new LogsFragment();
+        logsFragment = LogsFragment.newInstance();
         managerFragment = new ManagerFragment();
     }
 
@@ -96,6 +97,11 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         Objects.requireNonNull(tabLayout.getTabAt(0)).select();
+    }
+
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
     }
 
     @Override
@@ -114,6 +120,21 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void logoutFailed() {
         Snackbar.make(toolbar, "Logout failed? 8-0", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
+            for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
+                if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
+                    ((LogsFragment)logsFragment).startDateChooser();
+                } else {
+                    super.onBackPressed();
+                }
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

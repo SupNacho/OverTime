@@ -5,6 +5,8 @@ import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseACL;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import io.reactivex.plugins.RxJavaPlugins;
 import ru.supernacho.overtime.di.AppComponent;
 import ru.supernacho.overtime.di.DaggerAppComponent;
@@ -20,6 +22,9 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         Timber.plant(new Timber.DebugTree());
+
+        JodaTimeAndroid.init(this);
+
         RxJavaPlugins.setErrorHandler(e -> Timber.d("Error %s", e.getMessage()));
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))

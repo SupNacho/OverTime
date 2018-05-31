@@ -6,6 +6,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -54,7 +55,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         if (restoreDisposable != null) restoreDisposable.dispose();
     }
 
-    public void startOverTime(String comment){
+    public void startOverTime(String comment) {
         Timber.d("Start overTime");
         repository.startOverTime(comment);
         String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date());
@@ -66,7 +67,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 int hours = seconds / 3600;
                 int minutes = (seconds % 3600) / 60;
                 int secs = seconds % 60;
-                String time = String.format(Locale.US,"%d:%02d:%02d",
+                String time = String.format(Locale.US, "%d:%02d:%02d",
                         hours, minutes, secs);
                 getViewState().setCounter(time);
             }
@@ -88,19 +89,19 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 .subscribe(counterObserver);
     }
 
-    private void restoreOverTime(){
+    private void restoreOverTime() {
 
         Timber.d("restore overTime");
         restoreDisposable = repository.restoreTimerState()
                 .subscribeOn(Schedulers.io())
-        .observeOn(uiScheduler)
-        .subscribe(aLong -> {
-            long currTime = new Date().getTime();
-            seconds = (int) ((currTime - aLong) / 1000);
-            String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US)
-                    .format(aLong);
-            getViewState().setStartDate(startDate);
-        });
+                .observeOn(uiScheduler)
+                .subscribe(aLong -> {
+                    long currTime = new Date().getTime();
+                    seconds = (int) ((currTime - aLong) / 1000);
+                    String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US)
+                            .format(aLong);
+                    getViewState().setStartDate(startDate);
+                });
 
         counterObserver = new DisposableObserver<Long>() {
             @Override
@@ -109,7 +110,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 int hours = seconds / 3600;
                 int minutes = (seconds % 3600) / 60;
                 int secs = seconds % 60;
-                String time = String.format(Locale.US,"%d:%02d:%02d",
+                String time = String.format(Locale.US, "%d:%02d:%02d",
                         hours, minutes, secs);
                 getViewState().setCounter(time);
             }
@@ -131,14 +132,19 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
                 .subscribe(counterObserver);
     }
 
-    public void stopOverTime(String comment){
+    public void addComment(String comment){
+        Timber.d("Adding comment");
+        repository.addComment(comment);
+    }
+
+    public void stopOverTime(String comment) {
         Timber.d("Finish overTime");
         repository.stopOverTime(comment);
         counterObserver.dispose();
         seconds = 0;
     }
 
-    public void switchTimer(String comment){
+    public void switchTimer(String comment) {
         isStarted = !isStarted;
         if (isStarted) {
             startOverTime(comment);

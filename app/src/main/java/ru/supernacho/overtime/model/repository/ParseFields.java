@@ -1,6 +1,7 @@
 package ru.supernacho.overtime.model.repository;
 
 public interface ParseFields {
+    String fullName = "fullName";
     String createdBy = "createdById";
     String startDate = "startDate";
     String stopDate = "stopDate";
@@ -8,4 +9,5 @@ public interface ParseFields {
     String createdAt = "createdAt";
     String monthNum = "monthNum";
     String yearNum = "yearNum";
+    String timeZoneID = "timeZoneID";
 }

@@ -64,6 +64,10 @@ public class DateChooserPresenter extends MvpPresenter<DateChooserView> {
         return dateList;
     }
 
+    public void viewChart(int month, int year){
+        getViewState().viewChart(month, year);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

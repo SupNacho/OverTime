@@ -23,8 +23,34 @@
     <string name="action_logout">Logout</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <!-- Strings related to text report -->
+    <string name="text_rep_new_rec">Overtime:</string>
+    <string name="text_rep_start_date">Start: </string>
+    <string name="text_rep_end_date">Stop: </string>
+    <string name="text_rep_duration">Duration: </string>
+    <string name="text_rep_comment">Comments: </string>
+
+    <!-- Strings related to RV with months chooser -->
+    <string name="month_jan">January</string>
+    <string name="month_feb">February</string>
+    <string name="month_mar">March</string>
+    <string name="month_apr">April</string>
+    <string name="month_may">May</string>
+    <string name="month_jun">June</string>
+    <string name="month_jul">July</string>
+    <string name="month_aug">August</string>
+    <string name="month_sep">September</string>
+    <string name="month_oct">October</string>
+    <string name="month_nov">November</string>
+    <string name="month_dec">December</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Timer fragment</string>
     <string name="hello_blank_fragment_two">Logs fragment</string>
     <string name="hello_blank_fragment_three">Manager fragment</string>
+    <string name="month_summary_overtime_label">Month summary overtime:</string>
+    <string name="overtime_comment_label">Overtime comment:</string>
+    <string name="til_enter_job_comment">Enter job comment</string>
+    <string name="login_hint_full_name">Full name</string>
+    <string name="login_hint_user_login">User login</string>
 </resources>

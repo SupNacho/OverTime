@@ -3,8 +3,11 @@ package ru.supernacho.overtime.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.input.InputManager;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
@@ -57,6 +60,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     View loginFormView;
     @BindView(R.id.et_user_name)
     EditText editTextUserName;
+    @BindView(R.id.login_et_full_name)
+    EditText editTextFullName;
     @BindView(R.id.et_confirm_password)
     EditText editTextConfirmPassword;
     @BindView(R.id.btn_confirm_registration)
@@ -104,27 +109,27 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         switch (view.getId()) {
             case R.id.email_sign_in_button:
                 attemptLogin();
+                view.clearFocus();
                 break;
             case R.id.btn_register:
                 showHideRegistrationUI();
                 break;
             case R.id.btn_confirm_registration:
-                atemptRegistration();
+                attemptRegistration();
                 break;
             case R.id.btn_cancel:
                 showHideRegistrationUI();
                 break;
             case R.id.linear_layout:
                 Timber.d("LL clicked");
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+                hideSoftKeyboard();
                 break;
 
         }
     }
 
-    private void atemptRegistration() {
-        presenter.registerUser(editTextUserName.getText().toString(),
+    private void attemptRegistration() {
+        presenter.registerUser(editTextUserName.getText().toString(), editTextFullName.getText().toString(),
                 emailView.getText().toString(), passwordView.getText().toString());
     }
 
@@ -136,7 +141,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                     attemptLogin();
                     break;
                 case R.id.et_confirm_password:
-                    atemptRegistration();
+                    attemptRegistration();
                     break;
                 default:
                     break;
@@ -170,6 +175,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     private void showHideRegistrationUI() {
         isRegistering = !isRegistering;
         if (isRegistering) {
+            editTextFullName.setVisibility(View.VISIBLE);
             editTextConfirmPassword.setVisibility(View.VISIBLE);
             btnConfirm.setVisibility(View.VISIBLE);
             emailView.setVisibility(View.VISIBLE);
@@ -177,6 +183,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             btnSignIn.setVisibility(View.GONE);
             btnRegister.setVisibility(View.GONE);
         } else {
+            editTextFullName.setVisibility(View.GONE);
             editTextConfirmPassword.setVisibility(View.GONE);
             btnCancel.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);
@@ -247,7 +254,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             cancel = true;
         }
 
-        // Check for a valid email address.
+////         Check for a valid email address.
 //        if (TextUtils.isEmpty(email)) {
 //            emailView.setError(getString(R.string.error_field_required));
 //            focusView = emailView;
@@ -288,6 +295,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        hideSoftKeyboard();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -316,39 +324,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         }
     }
 
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-//        return new CursorLoader(this,
-//                // Retrieve data rows for the device user's 'profile' contact.
-//                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-//                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-//
-//                // Select only email addresses.
-//                ContactsContract.Contacts.Data.MIMETYPE +
-//                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-//                .CONTENT_ITEM_TYPE},
-//
-//                // Show primary email addresses first. Note that there won't be
-//                // a primary email address if the user hasn't specified one.
-//                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-//        List<String> emails = new ArrayList<>();
-//        cursor.moveToFirst();
-//        while (!cursor.isAfterLast()) {
-//            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-//            cursor.moveToNext();
-//        }
-//
-//        addEmailsToAutoComplete(emails);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-//
-//    }
+    private void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+    }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.

@@ -5,7 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(value = AddToEndStrategy.class)
-public interface DateChooserView extends MvpView {
-    void updateAdapters();
-    void viewChart(int month, int year);
+public interface LogsView extends MvpView{
+    void callDateChooser();
+    void openChartFragment(int month, int year);
 }
