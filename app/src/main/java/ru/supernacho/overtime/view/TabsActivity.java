@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
@@ -25,11 +24,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
+import ru.supernacho.overtime.view.custom.KeyboardStateListener;
+import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
-import timber.log.Timber;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -37,6 +37,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private Fragment timerFragment;
     private Fragment logsFragment;
     private Fragment managerFragment;
+    private SoftKeyboardCoordinatorLayout softKeyboardLayout;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -51,7 +52,8 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tabs);
+        softKeyboardLayout = new SoftKeyboardCoordinatorLayout(this);
+        setContentView(softKeyboardLayout);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
@@ -88,6 +90,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     private void initFragments() {
         timerFragment = new TimerFragment();
+        softKeyboardLayout.setKeyboardStateListener((KeyboardStateListener) timerFragment);
         logsFragment = LogsFragment.newInstance();
         managerFragment = new ManagerFragment();
     }

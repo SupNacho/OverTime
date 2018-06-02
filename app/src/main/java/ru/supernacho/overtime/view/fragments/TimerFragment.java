@@ -34,8 +34,9 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TimerPresenter;
 import ru.supernacho.overtime.view.TabsActivity;
+import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 
-public class TimerFragment extends MvpAppCompatFragment implements TimerView, View.OnKeyListener {
+public class TimerFragment extends MvpAppCompatFragment implements TimerView, View.OnKeyListener, KeyboardStateListener {
 
 
     private final static String MY_SHARED_PREFS = "overtime_prefs";
@@ -96,13 +97,9 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         etComment.setOnKeyListener(this);
         etComment.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus){
-                for (View elem : visibleViewList) {
-                    elem.setVisibility(View.GONE);
-                }
+                setViewGroupGone();
             } else {
-                for (View elem : visibleViewList) {
-                    elem.setVisibility(View.VISIBLE);
-                }
+                setViewGroupVisible();
                 constraintLayout.requestFocus();
                 hideSoftKeyboard();
             }
@@ -113,6 +110,12 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
             getSharedPrefs();
         }
         return view;
+    }
+
+    private void setViewGroupGone() {
+        for (View elem : visibleViewList) {
+            elem.setVisibility(View.GONE);
+        }
     }
 
     private void hideSoftKeyboard(){
@@ -187,13 +190,29 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
     }
 
     @Override
+    public void onKeyboardShown() {
+//        setViewGroupGone();
+    }
+
+    @Override
+    public void onKeyboardHidden() {
+        setViewGroupVisible();
+        constraintLayout.requestFocus();
+    }
+
+    private void setViewGroupVisible() {
+        for (View elem : visibleViewList) {
+            elem.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onStop() {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(PREF_IS_STARTED, isStarted);
         editor.apply();
         super.onStop();
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -29,7 +29,8 @@
         <activity
             android:name=".view.TabsActivity"
             android:label="@string/title_activity_tabs"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
