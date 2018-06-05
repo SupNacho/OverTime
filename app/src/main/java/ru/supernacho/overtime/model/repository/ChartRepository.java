@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
+import ru.supernacho.overtime.utils.NetworkStatus;
 
 public class ChartRepository {
     private List<OverTimeEntity> overTimesList = new ArrayList<>();
@@ -17,11 +18,20 @@ public class ChartRepository {
     public Observable<List<OverTimeEntity>> getOverTimes(int month, int year){
         return Observable.create( emit -> {
             ParseQuery<ParseObject> query = ParseQuery.getQuery(ParseClass.OVER_TIME);
-            query
-                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
-                    .whereEqualTo(ParseFields.monthNum, month)
-                    .whereEqualTo(ParseFields.yearNum, year)
-                    .findInBackground((objects, e) -> {
+            if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE){
+                query
+                        .fromLocalDatastore()
+                        .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                        .whereEqualTo(ParseFields.monthNum, month)
+                        .whereEqualTo(ParseFields.yearNum, year);
+            } else {
+                query
+                        .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                        .whereEqualTo(ParseFields.monthNum, month)
+                        .whereEqualTo(ParseFields.yearNum, year);
+            }
+
+            query.findInBackground((objects, e) -> {
                 overTimesList.clear();
                 if (objects != null && e == null){
                     for (ParseObject object : objects) {

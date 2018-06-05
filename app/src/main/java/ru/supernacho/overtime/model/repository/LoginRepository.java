@@ -5,6 +5,7 @@ import com.parse.ParseUser;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.User;
+import ru.supernacho.overtime.utils.NetworkStatus;
 
 public class LoginRepository {
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
@@ -35,13 +36,17 @@ public class LoginRepository {
     }
 
     public void loginIn(String userName, String password) {
-        ParseUser.logInInBackground(userName, password, (user, e) -> {
-            if (user != null) {
-                repoEventBus.onNext(RepoEvents.LOGIN_SUCCESS);
-            } else {
-                repoEventBus.onNext(RepoEvents.LOGIN_FAILED_WRONG_PASS);
-            }
-        });
+        if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE){
+            repoEventBus.onNext(RepoEvents.LOGIN_SUCCESS);
+        } else {
+            ParseUser.logInInBackground(userName, password, (user, e) -> {
+                if (user != null) {
+                    repoEventBus.onNext(RepoEvents.LOGIN_SUCCESS);
+                } else {
+                    repoEventBus.onNext(RepoEvents.LOGIN_FAILED_WRONG_PASS);
+                }
+            });
+        }
     }
 
     public Observable<Boolean> logout() {

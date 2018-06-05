@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
+import ru.supernacho.overtime.utils.NetworkStatus;
 import timber.log.Timber;
 
 public class TimerRepository {
@@ -52,12 +53,20 @@ public class TimerRepository {
         Date zeroTime = new Date();
         zeroTime.setTime(0L);
         ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
-
-        runningTime
-                .whereNotEqualTo(ParseFields.startDate, null)
-                .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
-                .whereEqualTo(ParseFields.stopDate, zeroTime)
-                .orderByDescending(ParseFields.createdAt);
+        if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE){
+            runningTime
+                    .whereNotEqualTo(ParseFields.startDate, null)
+                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                    .whereEqualTo(ParseFields.stopDate, zeroTime)
+                    .orderByDescending(ParseFields.createdAt)
+                    .fromLocalDatastore();
+        } else {
+            runningTime
+                    .whereNotEqualTo(ParseFields.startDate, null)
+                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                    .whereEqualTo(ParseFields.stopDate, zeroTime)
+                    .orderByDescending(ParseFields.createdAt);
+        }
 
         runningTime.getFirstInBackground((object, e) -> {
             if (e == null && object != null) {
@@ -71,7 +80,7 @@ public class TimerRepository {
                             .append(timeStamp)
                             .append(" ")
                             .append(comment);
-                    object.put(ParseFields.comment, sb.toString());
+                   object.put(ParseFields.comment, sb.toString());
                 }
                 object.saveEventually(e1 -> {
                     if (e1 == null) {
@@ -88,12 +97,20 @@ public class TimerRepository {
         Date zeroTime = new Date();
         zeroTime.setTime(0L);
         ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
-
-        runningTime
-                .whereNotEqualTo(ParseFields.startDate, null)
-                .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
-                .whereEqualTo(ParseFields.stopDate, zeroTime)
-                .orderByDescending(ParseFields.createdAt);
+        if(NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
+            runningTime
+                    .whereNotEqualTo(ParseFields.startDate, null)
+                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                    .whereEqualTo(ParseFields.stopDate, zeroTime)
+                    .orderByDescending(ParseFields.createdAt)
+                    .fromLocalDatastore();
+        } else {
+            runningTime
+                    .whereNotEqualTo(ParseFields.startDate, null)
+                    .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                    .whereEqualTo(ParseFields.stopDate, zeroTime)
+                    .orderByDescending(ParseFields.createdAt);
+        }
 
         runningTime.getFirstInBackground((object, e) -> {
             if (e == null && object != null) {
@@ -126,6 +143,7 @@ public class TimerRepository {
         return Observable.create( emit -> {
             final Long[] startDate = new Long[1];
             ParseQuery<ParseObject> runningTime = ParseQuery.getQuery("OverTime");
+            runningTime.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
             runningTime
                     .whereNotEqualTo(ParseFields.startDate, null)
                     .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
