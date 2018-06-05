@@ -35,7 +35,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                         getViewState().loginSuccess();
                         break;
                     case LOGIN_FAILED_WRONG_PASS:
-                        getViewState().loginError("Wrong password or login");
+                        getViewState().loginError("Wrong login/password");
                         break;
                     case LOGIN_FAILED_NO_CONNECTION:
                         Timber.d("Login failed with no connection");
@@ -46,6 +46,14 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                     case REGISTRATION_SUCCESS:
                         Timber.d("Registration success");
                         getViewState().registrationSuccess();
+                        break;
+                    case REGISTRATION_FAILED_USERNAME:
+                        Timber.d("Registration failed");
+                        getViewState().registrationFailedUserName();
+                        break;
+                    case REGISTRATION_FAILED_EMAIL:
+                        Timber.d("Registration failed");
+                        getViewState().registrationFailedEmail();
                         break;
                     case REGISTRATION_FAILED:
                         Timber.d("Registration failed");

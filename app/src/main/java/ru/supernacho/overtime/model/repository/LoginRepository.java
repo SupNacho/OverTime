@@ -20,7 +20,16 @@ public class LoginRepository {
             if (e == null) {
                 repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
             } else {
-                repoEventBus.onNext(RepoEvents.REGISTRATION_FAILED);
+                switch (e.getCode()) {
+                    case 202:
+                        repoEventBus.onNext(RepoEvents.REGISTRATION_FAILED_USERNAME);
+                        break;
+                    case 203:
+                        repoEventBus.onNext(RepoEvents.REGISTRATION_FAILED_EMAIL);
+                        break;
+                    default:
+                        repoEventBus.onNext(RepoEvents.REGISTRATION_FAILED);
+                }
             }
         });
     }
@@ -36,7 +45,7 @@ public class LoginRepository {
     }
 
     public Observable<Boolean> logout() {
-        return Observable.create( emit -> {
+        return Observable.create(emit -> {
             ParseUser.logOutInBackground(e -> {
                 if (e == null) {
                     emit.onNext(true);
@@ -57,7 +66,7 @@ public class LoginRepository {
     }
 
     public Observable<String> getUserData() {
-        return Observable.create( emit ->{
+        return Observable.create(emit -> {
             String username = ParseUser.getCurrentUser().getString(ParseFields.fullName);
             emit.onNext(username);
         });

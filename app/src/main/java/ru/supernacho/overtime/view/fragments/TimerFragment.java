@@ -46,6 +46,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
 
     private Unbinder unbinder;
     private boolean isStarted;
+    private boolean isGroupVisible = true;
 
     @InjectPresenter
     TimerPresenter presenter;
@@ -74,7 +75,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
     }
 
     @ProvidePresenter
-    public TimerPresenter providePresenter(){
+    public TimerPresenter providePresenter() {
         getSharedPrefs();
         return new TimerPresenter(AndroidSchedulers.mainThread(), isStarted);
     }
@@ -96,7 +97,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         visibleViewList.add(tvCounter);
         etComment.setOnKeyListener(this);
         etComment.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus){
+            if (hasFocus) {
                 setViewGroupGone();
             } else {
                 setViewGroupVisible();
@@ -106,25 +107,28 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         });
         App.getInstance().getAppComponent().inject(presenter);
         view.clearFocus();
-        if (prefs == null){
+        if (prefs == null) {
             getSharedPrefs();
         }
         return view;
     }
 
     private void setViewGroupGone() {
-        for (View elem : visibleViewList) {
-            elem.setVisibility(View.GONE);
+        if (isGroupVisible) {
+            for (View elem : visibleViewList) {
+                elem.setVisibility(View.GONE);
+            }
+            isGroupVisible = false;
         }
     }
 
-    private void hideSoftKeyboard(){
+    private void hideSoftKeyboard() {
         ((TabsActivity) Objects.requireNonNull(getActivity())).hideSoftKeyboard();
     }
 
     @OnClick({R.id.btn_timer_add_comment, R.id.btn_timer_control, R.id.cl_timer_fragment})
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btn_timer_control:
                 addCommentAndStart();
                 break;
@@ -133,9 +137,9 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
                 break;
             case R.id.cl_timer_fragment:
                 break;
-                default:
-                    Toast.makeText(getContext(), "No such button", Toast.LENGTH_SHORT).show();
-                    break;
+            default:
+                Toast.makeText(getContext(), "No such button", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -191,7 +195,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
 
     @Override
     public void onKeyboardShown() {
-//        setViewGroupGone();
+        setViewGroupGone();
     }
 
     @Override
@@ -201,8 +205,11 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
     }
 
     private void setViewGroupVisible() {
-        for (View elem : visibleViewList) {
-            elem.setVisibility(View.VISIBLE);
+        if (!isGroupVisible) {
+            for (View elem : visibleViewList) {
+                elem.setVisibility(View.VISIBLE);
+            }
+            isGroupVisible = true;
         }
     }
 
@@ -213,6 +220,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         editor.apply();
         super.onStop();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

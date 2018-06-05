@@ -11,8 +11,11 @@
     <string name="prompt_password">Password</string>
     <string name="action_login">Login</string>
     <string name="action_login_short">Login</string>
+    <string name="error_invalid_username">This username is empty</string>
+    <string name="error_invalid_full_name">This full name is empty</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_confirm_password">Passwords not matches</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email

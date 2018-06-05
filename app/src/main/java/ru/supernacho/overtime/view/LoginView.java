@@ -9,5 +9,7 @@ public interface LoginView extends MvpView {
     void loginError(String msg);
     void loginSuccess();
     void registrationSuccess();
+    void registrationFailedUserName();
+    void registrationFailedEmail();
     void registrationFailed();
 }
