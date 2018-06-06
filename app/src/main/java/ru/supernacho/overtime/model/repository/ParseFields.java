@@ -13,5 +13,7 @@ public interface ParseFields {
     String timeZoneID = "timeZoneID";
     //User class fields
     String userId = "objectId";
+    String userName = "username";
     String email = "email";
+    String userZero = "0"; // ID for null userId
 }
