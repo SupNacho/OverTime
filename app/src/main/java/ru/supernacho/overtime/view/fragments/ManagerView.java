@@ -10,5 +10,7 @@ import ru.supernacho.overtime.model.Entity.User;
 
 @StateStrategyType(value = AddToEndStrategy.class)
 public interface ManagerView extends MvpView {
-    void viewEmployees();
+    void callEmployeesChooser();
+    void openDateFragment(String userId);
+    void openChartFragment(int month, int year);
 }

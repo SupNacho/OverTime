@@ -30,25 +30,25 @@ public class ManagerPresenter extends MvpPresenter<ManagerView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getEmploysList();
+//        getEmploysList();
     }
 
     public List<User> getEmploysDataLink(){
         return repository.getEmployeesList();
     }
 
-    public void getEmploysList(){
-       disposable = repository.getEmployees()
-                .subscribeOn(Schedulers.io())
-                .observeOn(uiScheduler)
-                .subscribe(employeeStatus -> {
-                    if (employeeStatus) {
-                        getViewState().viewEmployees();
-                    } else {
-                        Timber.d("No data");
-                    }
-                } );
-    }
+//    public void getEmploysList(){
+//       disposable = repository.getEmployees()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(uiScheduler)
+//                .subscribe(employeeStatus -> {
+//                    if (employeeStatus) {
+//                        getViewState().viewEmployees();
+//                    } else {
+//                        Timber.d("No data");
+//                    }
+//                } );
+//    }
 
     @Override
     public void onDestroy() {

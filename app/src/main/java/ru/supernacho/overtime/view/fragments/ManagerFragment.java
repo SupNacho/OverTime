@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,15 +32,7 @@ import ru.supernacho.overtime.view.adapters.EmployeeRvAdapter;
 public class ManagerFragment extends MvpAppCompatFragment implements ManagerView {
 
     private Unbinder unbinder;
-
-    @BindView(R.id.cl_manager_fragment)
-    ConstraintLayout constraintLayout;
-    @BindView(R.id.srl_manager_fragment)
-    SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.rv_manager_fragment_emp_chooser)
-    RecyclerView recyclerView;
-
-    private EmployeeRvAdapter adapter;
+    private FragmentManager fragmentManager;
 
     @InjectPresenter
     ManagerPresenter presenter;
@@ -61,12 +54,11 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     }
 
     private void initUI() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new EmployeeRvAdapter(presenter);
-        recyclerView.setAdapter(adapter);
-        swipeRefreshLayout.setOnRefreshListener(presenter::getEmploysList);
+        fragmentManager = getChildFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.fl_manager_frag_container, new EmployeesFragment(), FragmentTag.EMPLOYEES)
+                .commit();
     }
 
     @Override
@@ -76,12 +68,28 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     }
 
     @Override
-    public void viewEmployees() {
-        swipeRefreshLayout.setRefreshing(false);
-        adapter.notifyDataSetChanged();
+    public void callEmployeesChooser() {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_manager_frag_container, new EmployeesFragment(), FragmentTag.EMPLOYEES)
+                .commit();
     }
 
+    @Override
+    public void openDateFragment(String userId) {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_manager_frag_container, DateChooserFragment.newInstance(userId), FragmentTag.EMP_DATE_CHOOSER)
+                .commit();
+    }
 
+    @Override
+    public void openChartFragment(int month, int year) {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_manager_frag_container, ChartFragment.newInstance(month, year), FragmentTag.EMPL_CHART)
+                .commit();
+    }
 
     @ProvidePresenter
     public ManagerPresenter providePresenter(){
