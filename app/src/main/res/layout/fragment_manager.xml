@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    android:id="@+id/cl_manager_fragment"
+<FrameLayout
+    android:id="@+id/fl_manager_frag_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fab_margin"
     tools:context=".view.fragments.ManagerFragment">
-<android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/srl_manager_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_manager_fragment_emp_chooser"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</android.support.v4.widget.SwipeRefreshLayout>
-</android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
