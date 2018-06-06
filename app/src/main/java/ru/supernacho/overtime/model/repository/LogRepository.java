@@ -17,16 +17,22 @@ public class LogRepository {
     private Set<DateChooserEntry> set = new HashSet<>();
 
 
-    public Observable<Object[]> getMonths() {
+    public Observable<Object[]> getMonths(String userId) {
         return Observable.create(emit -> {
-            ParseQuery<ParseObject> query = new ParseQuery<>("OverTime");
+            String user;
+            if (userId.equals(ParseFields.userZero)) {
+                user = ParseUser.getCurrentUser().getObjectId();
+            } else {
+                user = userId;
+            }
+            ParseQuery<ParseObject> query = new ParseQuery<>(ParseClass.OVER_TIME);
             if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
                 query
                         .fromLocalDatastore()
-                        .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                        .whereEqualTo(ParseFields.createdBy, user)
                         ;
             } else {
-                query.whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId());
+                query.whereEqualTo(ParseFields.createdBy, user);
             }
 
             query.findInBackground((objects, e) -> {
