@@ -1,6 +1,7 @@
 package ru.supernacho.overtime.model.repository;
 
 public interface ParseFields {
+    //OverTime class fields
     String fullName = "fullName";
     String createdBy = "createdById";
     String startDate = "startDate";
@@ -10,4 +11,7 @@ public interface ParseFields {
     String monthNum = "monthNum";
     String yearNum = "yearNum";
     String timeZoneID = "timeZoneID";
+    //User class fields
+    String userId = "objectId";
+    String email = "email";
 }

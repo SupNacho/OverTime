@@ -10,6 +10,12 @@ public class User {
         this.fullName = fullName;
     }
 
+    public User(String userName, String fullName, String email) {
+        this.userName = userName;
+        this.fullName = fullName;
+        this.email = email;
+    }
+
     public String getUserName() {
         return userName;
     }
