@@ -13,6 +13,7 @@ import ru.supernacho.overtime.model.repository.LoginRepository;
 import ru.supernacho.overtime.model.repository.TimerRepository;
 import ru.supernacho.overtime.presenter.ChartPresenter;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
+import ru.supernacho.overtime.presenter.EmployeesPresenter;
 import ru.supernacho.overtime.presenter.LoginPresenter;
 import ru.supernacho.overtime.presenter.ManagerPresenter;
 import ru.supernacho.overtime.presenter.TabsPresenter;
@@ -30,4 +31,5 @@ public interface AppComponent {
     void inject(DateChooserPresenter presenter);
     void inject(ChartPresenter presenter);
     void inject(ManagerPresenter presenter);
+    void inject(EmployeesPresenter presenter);
 }

@@ -5,6 +5,7 @@ import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(value = AddToEndStrategy.class)
-public interface EployeesView extends MvpView {
+public interface EmployeesView extends MvpView {
     void viewEmployees();
+    void selectEmployee(String userId);
 }

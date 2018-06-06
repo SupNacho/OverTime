@@ -4,7 +4,6 @@ package ru.supernacho.overtime.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
-import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,11 +23,11 @@ import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
-import ru.supernacho.overtime.model.Entity.User;
+import ru.supernacho.overtime.presenter.EmployeesPresenter;
 import ru.supernacho.overtime.presenter.ManagerPresenter;
 import ru.supernacho.overtime.view.adapters.EmployeeRvAdapter;
 
-public class ManagerFragment extends MvpAppCompatFragment implements ManagerView {
+public class EmployeesFragment extends MvpAppCompatFragment implements EmployeesView {
 
     private Unbinder unbinder;
 
@@ -42,9 +41,9 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     private EmployeeRvAdapter adapter;
 
     @InjectPresenter
-    ManagerPresenter presenter;
+    EmployeesPresenter presenter;
 
-    public ManagerFragment() {
+    public EmployeesFragment() {
         // Required empty public constructor
     }
 
@@ -52,7 +51,7 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_manager, container, false);
+        View view = inflater.inflate(R.layout.fragment_employees, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         initUI();
@@ -81,11 +80,14 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
         adapter.notifyDataSetChanged();
     }
 
-
+    @Override
+    public void selectEmployee(String userId) {
+        ((ManagerFragment) Objects.requireNonNull(getParentFragment())).openDateFragment(userId);
+    }
 
     @ProvidePresenter
-    public ManagerPresenter providePresenter(){
-        ManagerPresenter presenter = new ManagerPresenter(AndroidSchedulers.mainThread());
+    public EmployeesPresenter providePresenter(){
+        EmployeesPresenter presenter = new EmployeesPresenter(AndroidSchedulers.mainThread());
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
     }

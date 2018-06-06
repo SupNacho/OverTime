@@ -12,18 +12,19 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.EmployeeRepository;
+import ru.supernacho.overtime.view.fragments.EmployeesView;
 import ru.supernacho.overtime.view.fragments.ManagerView;
 import timber.log.Timber;
 
 @InjectViewState
-public class ManagerPresenter extends MvpPresenter<ManagerView> {
+public class EmployeesPresenter extends MvpPresenter<EmployeesView> {
     private Scheduler uiScheduler;
     private Disposable disposable;
 
     @Inject
     EmployeeRepository repository;
 
-    public ManagerPresenter(Scheduler uiScheduler) {
+    public EmployeesPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
     }
 
@@ -48,6 +49,10 @@ public class ManagerPresenter extends MvpPresenter<ManagerView> {
                         Timber.d("No data");
                     }
                 } );
+    }
+
+    public void chooseEmployee(String userId){
+        getViewState().selectEmployee(userId);
     }
 
     @Override
