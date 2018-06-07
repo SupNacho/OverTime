@@ -12,5 +12,5 @@ import ru.supernacho.overtime.model.Entity.User;
 public interface ManagerView extends MvpView {
     void callEmployeesChooser();
     void openDateFragment(String userId);
-    void openChartFragment(int month, int year);
+    void startChartFragment(int month, int year);
 }

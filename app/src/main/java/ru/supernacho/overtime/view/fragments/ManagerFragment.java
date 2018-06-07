@@ -18,6 +18,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +28,14 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.presenter.ManagerPresenter;
+import ru.supernacho.overtime.view.TabsActivity;
 import ru.supernacho.overtime.view.adapters.EmployeeRvAdapter;
 
 public class ManagerFragment extends MvpAppCompatFragment implements ManagerView {
 
     private Unbinder unbinder;
     private FragmentManager fragmentManager;
+    private String userId;
 
     @InjectPresenter
     ManagerPresenter presenter;
@@ -57,7 +60,7 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
         fragmentManager = getChildFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .add(R.id.fl_manager_frag_container, new EmployeesFragment(), FragmentTag.EMPLOYEES)
+                .replace(R.id.fl_manager_frag_container, new EmployeesFragment(), FragmentTag.EMPLOYEES)
                 .commit();
     }
 
@@ -77,6 +80,8 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
 
     @Override
     public void openDateFragment(String userId) {
+        this.userId = userId;
+        ((TabsActivity) Objects.requireNonNull(getActivity())).setUserId(userId);
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.fl_manager_frag_container, DateChooserFragment.newInstance(userId), FragmentTag.EMP_DATE_CHOOSER)
@@ -84,10 +89,10 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     }
 
     @Override
-    public void openChartFragment(int month, int year) {
+    public void startChartFragment(int month, int year) {
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fl_manager_frag_container, ChartFragment.newInstance(month, year), FragmentTag.EMPL_CHART)
+                .replace(R.id.fl_manager_frag_container, ChartFragment.newInstance(month, year, userId), FragmentTag.EMPL_CHART)
                 .commit();
     }
 
