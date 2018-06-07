@@ -35,8 +35,8 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
         super.onFirstViewAttach();
     }
 
-    public void getOverTimes(int month, int year){
-        repository.getOverTimes(month, year)
+    public void getOverTimes(int month, int year, String userId){
+        repository.getOverTimes(month, year, userId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<List<OverTimeEntity>>() {

@@ -14,19 +14,26 @@ import ru.supernacho.overtime.utils.NetworkStatus;
 
 public class ChartRepository {
     private List<OverTimeEntity> overTimesList = new ArrayList<>();
+    private String userId = ParseFields.userZero;
 
-    public Observable<List<OverTimeEntity>> getOverTimes(int month, int year){
+    public Observable<List<OverTimeEntity>> getOverTimes(int month, int year, String userId){
         return Observable.create( emit -> {
             ParseQuery<ParseObject> query = ParseQuery.getQuery(ParseClass.OVER_TIME);
+            if (userId != null) {
+                this.userId = userId;
+            } else {
+                this.userId = ParseUser.getCurrentUser().getObjectId();
+            }
+
             if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE){
                 query
                         .fromLocalDatastore()
-                        .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                        .whereEqualTo(ParseFields.createdBy, this.userId)
                         .whereEqualTo(ParseFields.monthNum, month)
                         .whereEqualTo(ParseFields.yearNum, year);
             } else {
                 query
-                        .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())
+                        .whereEqualTo(ParseFields.createdBy, this.userId)
                         .whereEqualTo(ParseFields.monthNum, month)
                         .whereEqualTo(ParseFields.yearNum, year);
             }
