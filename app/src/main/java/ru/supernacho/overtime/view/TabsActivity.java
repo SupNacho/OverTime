@@ -37,6 +37,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private Fragment timerFragment;
     private Fragment logsFragment;
     private Fragment managerFragment;
+    private String userId;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
 
     @BindView(R.id.toolbar)
@@ -135,9 +136,24 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                     super.onBackPressed();
                 }
             }
+        } else if (Objects.requireNonNull(tabLayout.getTabAt(2)).isSelected()){
+            for (Fragment fragment : managerFragment.getChildFragmentManager().getFragments()) {
+                if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.EMPL_CHART)){
+                    ((ManagerFragment)managerFragment).openDateFragment(userId);
+                } else if (fragment.getTag().equals(FragmentTag.EMP_DATE_CHOOSER)){
+                    ((ManagerFragment)managerFragment).callEmployeesChooser();
+                }
+                else {
+                    super.onBackPressed();
+                }
+            }
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void setUserId(String userId){
+        this.userId = userId;
     }
 
     @Override
