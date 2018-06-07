@@ -24,6 +24,7 @@ import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
 import ru.supernacho.overtime.view.adapters.DateLogRvAdapter;
+import timber.log.Timber;
 
 public class DateChooserFragment extends MvpAppCompatFragment implements DateChooserView {
 
@@ -105,7 +106,13 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
 
     @Override
     public void viewChart(int month, int year) {
-        ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        Timber.d("Fragment is Log %s",getParentFragment() instanceof LogsFragment);
+        Timber.d("Fragment is Manager %s",getParentFragment() instanceof ManagerFragment);
+        if (getParentFragment() instanceof LogsFragment) {
+            ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        } else if (getParentFragment() instanceof ManagerFragment) {
+            ((ManagerFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        }
     }
 
     public void backToParent(){
