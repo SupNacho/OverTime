@@ -24,7 +24,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -350,7 +349,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         if (progressView.getVisibility() == View.GONE) {
             hideSoftKeyboard();
         }
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 

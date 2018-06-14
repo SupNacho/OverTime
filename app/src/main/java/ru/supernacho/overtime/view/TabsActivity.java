@@ -21,6 +21,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
@@ -30,6 +31,7 @@ import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
+import timber.log.Timber;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -38,6 +40,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private Fragment logsFragment;
     private Fragment managerFragment;
     private String userId;
+    private boolean isAdmin;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
 
     @BindView(R.id.toolbar)
@@ -55,16 +58,20 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         super.onCreate(savedInstanceState);
         softKeyboardLayout = new SoftKeyboardCoordinatorLayout(this);
         setContentView(softKeyboardLayout);
+        presenter.userIsAdmin();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
         init();
 
     }
 
+
+
     @ProvidePresenter
     public TabsPresenter providePresenter(){
-        return new TabsPresenter(AndroidSchedulers.mainThread());
+        TabsPresenter presenter = new TabsPresenter(AndroidSchedulers.mainThread());
+        App.getInstance().getAppComponent().inject(presenter);
+        return presenter;
     }
 
     private void init() {
@@ -78,14 +85,21 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         fragmentsPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
         fragmentsPagerAdapter.addFragment(timerFragment);
         fragmentsPagerAdapter.addFragment(logsFragment);
-        fragmentsPagerAdapter.addFragment(managerFragment);
+        addManagerTab();
+    }
+
+    private void addManagerTab() {
+        if (isAdmin) {
+            tabLayout.addTab(tabLayout.newTab().setText("Manager text"));
+            fragmentsPagerAdapter.addFragment(managerFragment);
+        }
     }
 
     private void updatePageAdapter(){
         fragmentsPagerAdapter.startUpdate(viewPager);
         if (!timerFragment.isAdded()) timerFragment = (TimerFragment) fragmentsPagerAdapter.instantiateItem(viewPager, 0);
         if (!logsFragment.isAdded()) logsFragment = (LogsFragment) fragmentsPagerAdapter.instantiateItem(viewPager,1);
-        if (!managerFragment.isAdded()) managerFragment = (ManagerFragment) fragmentsPagerAdapter.instantiateItem(viewPager,2);
+        if (!managerFragment.isAdded() && isAdmin) managerFragment = (ManagerFragment) fragmentsPagerAdapter.instantiateItem(viewPager,2);
         fragmentsPagerAdapter.finishUpdate(viewPager);
     }
 
@@ -111,6 +125,13 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void setUserName(String userName) {
         toolbar.setTitle(userName);
+    }
+
+    @Override
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+        addManagerTab();
+        Timber.d("ADMIN: %s", isAdmin);
     }
 
     @Override

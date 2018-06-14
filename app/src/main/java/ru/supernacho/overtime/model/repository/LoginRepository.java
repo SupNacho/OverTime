@@ -6,6 +6,7 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.utils.NetworkStatus;
+import timber.log.Timber;
 
 public class LoginRepository {
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
@@ -74,6 +75,12 @@ public class LoginRepository {
         return Observable.create(emit -> {
             String username = ParseUser.getCurrentUser().getString(ParseFields.fullName);
             emit.onNext(username);
+        });
+    }
+    public Observable<Boolean> userIsAdmin() {
+        return Observable.create(emit -> {
+            boolean isAdmin = ParseUser.getCurrentUser().getBoolean(ParseFields.isAdmin);
+            emit.onNext(isAdmin);
         });
     }
 

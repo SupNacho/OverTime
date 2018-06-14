@@ -3,6 +3,7 @@ package ru.supernacho.overtime.model.repository;
 public interface ParseFields {
     //OverTime class fields
     String fullName = "fullName";
+    String isAdmin = "isAdmin";
     String createdBy = "createdById";
     String startDate = "startDate";
     String stopDate = "stopDate";
