@@ -15,6 +15,17 @@ public interface ParseFields {
     //User class fields
     String userId = "objectId";
     String userName = "username";
-    String email = "email";
+    String userEmail = "userEmail";
+    String userCompany = "companyId";
     String userZero = "0"; // ID for null userId
+    //Company class field
+    String companyId = "objectId";
+    String companyName = "name";
+    String companyAddress = "address";
+    String companyPhone = "phone";
+    String companyEmail = "email";
+    String companyChief = "chief";
+    String companyAdminPin = "adminPin";
+    String companyEmpPin = "empPin";
+
 }

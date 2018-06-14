@@ -17,45 +17,29 @@ public class EmployeeRepository {
         employees = new ArrayList<>();
     }
 
-    public List<User> getEmployeesList(){
+    public List<User> getEmployeesList() {
         return employees;
     }
 
-    public Observable<Boolean> getEmployees(){
-        return Observable.create( emit -> {
+    public Observable<Boolean> getEmployees() {
+        return Observable.create(emit -> {
             employees.clear();
+
             ParseQuery<ParseObject> query = ParseQuery.getQuery(ParseClass.PARSE_USER);
             query
+                    .whereEqualTo(ParseFields.userCompany, ParseUser.getCurrentUser().get(ParseFields.userCompany))
                     .findInBackground((objects, e) -> {
-                if (objects != null && e == null) {
-                    for (ParseObject object : objects) {
-                        object.getString(ParseFields.userId);
-                        employees.add(new User(object.getObjectId(), object.getString(ParseFields.userName), object.getString(ParseFields.fullName),
-                                object.getString(ParseFields.email)));
-                    }
-                    emit.onNext(true);
-                } else {
-                    emit.onNext(false);
-                }
-            });
+                        if (objects != null && e == null) {
+                            for (ParseObject object : objects) {
+                                object.getString(ParseFields.userId);
+                                employees.add(new User(object.getObjectId(), object.getString(ParseFields.userName), object.getString(ParseFields.fullName),
+                                        object.getString(ParseFields.userEmail)));
+                            }
+                            emit.onNext(true);
+                        } else {
+                            emit.onNext(false);
+                        }
+                    });
         });
     }
-//    public Observable<Boolean> getEmployees(){
-//        return Observable.create( emit -> {
-//            employees.clear();
-//            ParseQuery<ParseUser> query = ParseUser.getQuery();
-//            query
-//                    .findInBackground((objects, e) -> {
-//                if (objects != null && e == null) {
-//                    for (ParseUser object : objects) {
-//                        employees.add(new User(object.getString(ParseFields.userId), object.getUsername(), object.getString(ParseFields.fullName),
-//                                object.getString(ParseFields.email)));
-//                    }
-//                    emit.onNext(true);
-//                } else {
-//                    emit.onNext(false);
-//                }
-//            });
-//        });
-//    }
 }
