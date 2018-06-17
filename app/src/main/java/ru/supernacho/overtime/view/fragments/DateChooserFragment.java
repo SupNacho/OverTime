@@ -21,11 +21,15 @@ import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
 import ru.supernacho.overtime.view.adapters.DateLogRvAdapter;
+import timber.log.Timber;
 
 public class DateChooserFragment extends MvpAppCompatFragment implements DateChooserView {
 
+    private static final String ARG_PARAM_1 = "userId";
+    private String userId;
     private Unbinder unbinder;
     private DateLogRvAdapter adapter;
 
@@ -42,11 +46,33 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         // Required empty public constructor
     }
 
+    public static DateChooserFragment newInstance(String userId){
+        DateChooserFragment fragment = new DateChooserFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM_1, userId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @ProvidePresenter
     public DateChooserPresenter providePresenter(){
-        DateChooserPresenter presenter = new DateChooserPresenter(AndroidSchedulers.mainThread());
+        String userId;
+        if (getArguments() != null) {
+            userId = getArguments().getString(ARG_PARAM_1);
+        } else {
+            userId = ParseFields.userZero;
+        }
+        DateChooserPresenter presenter = new DateChooserPresenter(AndroidSchedulers.mainThread(), userId);
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            userId = getArguments().getString(ARG_PARAM_1);
+        }
     }
 
     @Override
@@ -80,7 +106,13 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
 
     @Override
     public void viewChart(int month, int year) {
-        ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        Timber.d("Fragment is Log %s",getParentFragment() instanceof LogsFragment);
+        Timber.d("Fragment is Manager %s",getParentFragment() instanceof ManagerFragment);
+        if (getParentFragment() instanceof LogsFragment) {
+            ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        } else if (getParentFragment() instanceof ManagerFragment) {
+            ((ManagerFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
+        }
     }
 
     public void backToParent(){

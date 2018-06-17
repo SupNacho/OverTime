@@ -69,6 +69,28 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
                 });
     }
 
+    public void userIsAdmin(){
+        repository.userIsAdmin()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        getViewState().setAdmin(aBoolean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     public void logout(){
         repository.logout()
                 .subscribeOn(Schedulers.io())

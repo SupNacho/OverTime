@@ -50,9 +50,11 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         OnChartValueSelectedListener{
     private static final String ARG_PARAM1 = "month";
     private static final String ARG_PARAM2 = "year";
+    private static final String ARG_PARAM3 = "userId";
 
     private int month;
     private int year;
+    private String userId;
     private List<OverTimeEntity> overTimesList;
     private Unbinder unbinder;
 
@@ -84,6 +86,15 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         fragment.setArguments(args);
         return fragment;
     }
+    public static ChartFragment newInstance(int month, int year, String userId) {
+        ChartFragment fragment = new ChartFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_PARAM1, month);
+        args.putInt(ARG_PARAM2, year);
+        args.putString(ARG_PARAM3, userId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +102,7 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         if (getArguments() != null) {
             month = getArguments().getInt(ARG_PARAM1);
             year = getArguments().getInt(ARG_PARAM2);
+            userId = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -99,7 +111,7 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         unbinder = ButterKnife.bind(this, view);
-        presenter.getOverTimes(month, year);
+        presenter.getOverTimes(month, year, userId);
         fab.setOnClickListener(v -> presenter.sendReport(
                 getResources().getString(R.string.text_rep_new_rec),
                 getResources().getString(R.string.text_rep_start_date),

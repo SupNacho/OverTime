@@ -115,8 +115,10 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
 
     private void setViewGroupGone() {
         if (isGroupVisible) {
-            for (View elem : visibleViewList) {
-                elem.setVisibility(View.GONE);
+            if (visibleViewList != null) {
+                for (View elem : visibleViewList) {
+                    elem.setVisibility(View.GONE);
+                }
             }
             isGroupVisible = false;
         }
@@ -201,13 +203,15 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
     @Override
     public void onKeyboardHidden() {
         setViewGroupVisible();
-        constraintLayout.requestFocus();
+        if (constraintLayout != null) constraintLayout.requestFocus();
     }
 
     private void setViewGroupVisible() {
         if (!isGroupVisible) {
-            for (View elem : visibleViewList) {
-                elem.setVisibility(View.VISIBLE);
+            if (visibleViewList != null) {
+                for (View elem : visibleViewList) {
+                    elem.setVisibility(View.VISIBLE);
+                }
             }
             isGroupVisible = true;
         }

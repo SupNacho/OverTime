@@ -7,6 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 @StateStrategyType(value = SingleStateStrategy.class)
 public interface TabsView extends MvpView {
     void setUserName(String userName);
+    void setAdmin(boolean isAdmin);
     void logoutDone();
     void logoutFailed();
 }

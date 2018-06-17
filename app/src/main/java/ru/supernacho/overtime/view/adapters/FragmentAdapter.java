@@ -17,6 +17,14 @@ public class FragmentAdapter extends FragmentPagerAdapter {
 
     public void addFragment(Fragment fragment){
         fragments.add(fragment);
+        notifyDataSetChanged();
+    }
+
+    public void removeTabPage(int position){
+        if (!fragments.isEmpty() && position < fragments.size()){
+            fragments.remove(position);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
