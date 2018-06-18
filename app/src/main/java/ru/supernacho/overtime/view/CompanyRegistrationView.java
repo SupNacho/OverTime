@@ -6,6 +6,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(value = AddToEndStrategy.class)
 public interface CompanyRegistrationView extends MvpView {
-    void registrationSuccess();
+    void registrationSuccess(String companyId);
     void registrationFail();
 }

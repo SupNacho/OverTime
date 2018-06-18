@@ -8,11 +8,12 @@ import com.parse.ParseUser;
 import java.util.List;
 
 import io.reactivex.Observable;
+import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.utils.PinGenerator;
 
 public class CompanyRepository {
 
-    public Observable<Boolean> registerCompany(String name, String address, String email, String phone, String chief){
+    public Observable<UserCompany> registerCompany(String name, String address, String email, String phone, String chief){
         return Observable.create( emit -> {
 
                 ParseObject company = new ParseObject(ParseClass.COMPANY);
@@ -31,12 +32,12 @@ public class CompanyRepository {
                         break;
                     }
                 }
-
                 company.saveEventually(e -> {
                     if (e == null){
-                        emit.onNext(true);
+                        String id = company.getObjectId();
+                        emit.onNext(new UserCompany(id, true));
                     } else {
-                        emit.onNext(false);
+                        emit.onNext(new UserCompany(null, false));
                     }
                 });
         });

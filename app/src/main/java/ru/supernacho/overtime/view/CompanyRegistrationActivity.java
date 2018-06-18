@@ -1,5 +1,6 @@
 package ru.supernacho.overtime.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -70,6 +71,7 @@ public class CompanyRegistrationActivity extends MvpAppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_cancel_company_registration:
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
             case R.id.btn_register_company_registration:
@@ -84,8 +86,12 @@ public class CompanyRegistrationActivity extends MvpAppCompatActivity implements
     }
 
     @Override
-    public void registrationSuccess() {
+    public void registrationSuccess(String companyId) {
         Timber.d("Register Successfully");
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(ActivityResultExtra.COMPANY_ID, companyId);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override
