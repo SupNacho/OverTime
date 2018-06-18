@@ -55,9 +55,9 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         if (restoreDisposable != null) restoreDisposable.dispose();
     }
 
-    public void startOverTime(String comment) {
+    public void startOverTime(String comment, String companyId) {
         Timber.d("Start overTime");
-        repository.startOverTime(comment);
+        repository.startOverTime(comment, companyId);
         String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date());
         getViewState().setStartDate(startDate);
         counterObserver = new DisposableObserver<Long>() {
@@ -144,10 +144,10 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         seconds = 0;
     }
 
-    public void switchTimer(String comment) {
+    public void switchTimer(String comment, String companyId) {
         isStarted = !isStarted;
         if (isStarted) {
-            startOverTime(comment);
+            startOverTime(comment, companyId);
         } else {
             stopOverTime(comment);
         }

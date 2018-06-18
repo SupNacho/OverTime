@@ -23,7 +23,7 @@ public class TimerRepository {
         sb = new StringBuilder();
     }
 
-    public void startOverTime(String comment) {
+    public void startOverTime(String comment, String companyId) {
         ParseObject overtime = new ParseObject("OverTime");
         Date currentDate = new Date();
         String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm",Locale.US).format(currentDate);
@@ -39,6 +39,7 @@ public class TimerRepository {
         overtime.put(ParseFields.stopDate, zeroTime);
         overtime.put(ParseFields.comment, sb.toString());
         overtime.put(ParseFields.timeZoneID, timeZoneID);
+        overtime.put(ParseFields.forCompany, companyId);
 
         overtime.saveEventually(e -> {
             if (e == null) {

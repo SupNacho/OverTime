@@ -10,4 +10,5 @@ public interface TabsView extends MvpView {
     void setAdmin(boolean isAdmin);
     void logoutDone();
     void logoutFailed();
+    void setCompanyId(String companyId);
 }

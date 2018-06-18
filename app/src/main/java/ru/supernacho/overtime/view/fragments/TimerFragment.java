@@ -158,7 +158,8 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
     }
 
     private void addCommentAndStart() {
-        presenter.switchTimer(etComment.getEditableText().toString());
+        presenter.switchTimer(etComment.getEditableText().toString(),
+                ((TabsActivity) Objects.requireNonNull(getActivity())).getCompanyId());
         etComment.setText("");
         etComment.clearFocus();
     }
