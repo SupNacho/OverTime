@@ -94,31 +94,6 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
                 });
     }
 
-    //Temp method for test
-    public void addArrToCompanies(){
-        repository.addCompanyToUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(uiScheduler)
-                .subscribe(new DisposableObserver<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean){
-                            Timber.d("DONE");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
     public void logout(){
         repository.logout()
                 .subscribeOn(Schedulers.io())

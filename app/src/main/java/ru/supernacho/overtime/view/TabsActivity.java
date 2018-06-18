@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -200,9 +199,8 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         int id = item.getItemId();
         switch (id){
             case R.id.action_employee_management:
-                presenter.addArrToCompanies();
                 return true;
-            case R.id.action_Choose_company:
+            case R.id.action_choose_company:
                 return true;
             case R.id.action_reg_company:
                 return true;
