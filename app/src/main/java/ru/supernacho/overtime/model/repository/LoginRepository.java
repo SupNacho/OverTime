@@ -23,6 +23,7 @@ public class LoginRepository {
         pUser.signUpInBackground(e -> {
             if (e == null) {
                 repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
+
             } else {
                 switch (e.getCode()) {
                     case 202:
@@ -52,12 +53,12 @@ public class LoginRepository {
         }
     }
 
-    public Observable<Boolean> addCompanyToUser() {
+    public Observable<Boolean> addCompanyToUser(String companyId) {
         return Observable.create(e -> {
             ParseObject companies = new ParseObject(ParseClass.USER_COMPANIES);
             companies.put(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
-            companies.put(ParseFields.userCompaniesActiveCompany, ParseUser.getCurrentUser().get(ParseFields.userCompany));
-            companies.addUnique(ParseFields.userCompaniesCompanies, ParseUser.getCurrentUser().get(ParseFields.userCompany));
+            companies.put(ParseFields.userCompaniesActiveCompany, companyId);
+            companies.addUnique(ParseFields.userCompaniesCompanies, companyId);
             companies.saveEventually(e1 -> {
                 if (e1 == null) {
                     e.onNext(true);

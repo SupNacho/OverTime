@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import javax.inject.Inject;
 
+import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
@@ -18,14 +19,18 @@ import timber.log.Timber;
 public class LoginPresenter extends MvpPresenter<LoginView> {
 
     private DisposableObserver<RepoEvents> repoEventObserver;
+    private Scheduler uiScheduler;
 
     @Inject
     LoginRepository repository;
 
+    public LoginPresenter(Scheduler uiScheduler) {
+        this.uiScheduler = uiScheduler;
+    }
+
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        App.getInstance().getAppComponent().inject(this);
         repoEventObserver = new DisposableObserver<RepoEvents>() {
             @Override
             public void onNext(RepoEvents repoEvents) {
@@ -75,6 +80,30 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
         repository.getRepoEventBus().subscribeOn(Schedulers.io())
                 .subscribe(repoEventObserver);
         checkLoginStatus();
+    }
+
+    public void addUserToCompanies(String companyId){
+        repository.addCompanyToUser(companyId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean){
+                            Timber.d("DONE");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     public void attemptLogin(String userName, String password){
