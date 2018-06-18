@@ -3,6 +3,7 @@ package ru.supernacho.overtime.model.repository;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -21,19 +22,12 @@ public class CompanyRepository {
                 company.put(ParseFields.companyEmail, email);
                 company.put(ParseFields.companyPhone, phone);
                 company.put(ParseFields.companyChief, chief);
+                company.addUnique(ParseFields.companyAdmins, ParseUser.getCurrentUser().getObjectId());
 
                 for (;;) {
-                    String emplPin = PinGenerator.getEmplPin();
+                    String emplPin = PinGenerator.getPin();
                     if (checkPin(ParseFields.companyEmpPin, emplPin)) {
                         company.put(ParseFields.companyEmpPin, emplPin);
-                        break;
-                    }
-                }
-
-                for (;;) {
-                    String adminPin = PinGenerator.getAdminPin();
-                    if (checkPin(ParseFields.companyAdminPin, adminPin)) {
-                        company.put(ParseFields.companyAdminPin, adminPin);
                         break;
                     }
                 }
