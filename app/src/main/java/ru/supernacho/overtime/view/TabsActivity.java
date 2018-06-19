@@ -27,6 +27,7 @@ import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
+import ru.supernacho.overtime.view.fragments.CompanyInfoFragment;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
@@ -198,6 +199,10 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
+            case R.id.action_info_company:
+                CompanyInfoFragment infoFragment = new CompanyInfoFragment();
+                infoFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_INFO_DIALOG);
+                return true;
             case R.id.action_employee_management:
                 return true;
             case R.id.action_choose_company:
