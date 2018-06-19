@@ -17,11 +17,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -31,6 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.LoginPresenter;
@@ -59,6 +62,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     EditText editTextFullName;
     @BindView(R.id.et_confirm_password)
     EditText editTextConfirmPassword;
+    @BindView(R.id.ll_reg_company_group_login_actvt)
+    LinearLayout llCompanyRegLayout;
+    @BindView(R.id.chkbox_register_company_login_actvt)
+    CheckBox checkBoxRegCompany;
     @BindView(R.id.btn_confirm_registration)
     Button btnConfirm;
     @BindView(R.id.btn_register)
@@ -98,6 +105,13 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             }
             return false;
         });
+    }
+
+    @ProvidePresenter
+    public LoginPresenter providePresenter(){
+        LoginPresenter presenter = new LoginPresenter(AndroidSchedulers.mainThread());
+        App.getInstance().getAppComponent().inject(presenter);
+        return presenter;
     }
 
     @OnClick({R.id.email_sign_in_button, R.id.btn_cancel,
@@ -161,7 +175,32 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
 
     @Override
     public void registrationSuccess() {
-        presenter.checkLoginStatus();
+        if (checkBoxRegCompany.isChecked()) {
+            Intent registerCompanyIntent = new Intent(this, CompanyRegistrationActivity.class);
+            startActivityForResult(registerCompanyIntent, ActivityRequestCodes.REGISTRATION_REQUEST);
+        } else {
+            presenter.checkLoginStatus();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ActivityRequestCodes.REGISTRATION_REQUEST && data != null) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    Snackbar.make(linearLayout, "Company registered successfully!", Snackbar.LENGTH_SHORT).show();
+                    presenter.addUserToCompanies(data.getStringExtra(ActivityResultExtra.COMPANY_ID));
+                    presenter.checkLoginStatus();
+                    break;
+                case RESULT_CANCELED:
+                    break;
+                default:
+                    Timber.d("Wrong result");
+                    break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -187,6 +226,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             btnConfirm.setVisibility(View.VISIBLE);
             emailView.setVisibility(View.VISIBLE);
             btnCancel.setVisibility(View.VISIBLE);
+            llCompanyRegLayout.setVisibility(View.VISIBLE);
             btnSignIn.setVisibility(View.GONE);
             btnRegister.setVisibility(View.GONE);
         } else {
@@ -195,6 +235,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             btnCancel.setVisibility(View.GONE);
             emailView.setVisibility(View.GONE);
             btnConfirm.setVisibility(View.GONE);
+            llCompanyRegLayout.setVisibility(View.GONE);
             btnRegister.setVisibility(View.VISIBLE);
             btnSignIn.setVisibility(View.VISIBLE);
         }
@@ -248,7 +289,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         boolean cancel = false;
         View focusView = null;
 
-        if (TextUtils.isEmpty(userName)){
+        if (TextUtils.isEmpty(userName)) {
             editTextUserName.setError(getString(R.string.error_invalid_username));
             focusView = editTextUserName;
             cancel = true;
@@ -287,12 +328,12 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         boolean cancel = false;
         View focusView = null;
 
-        if (userName.length() <=0) {
+        if (userName.length() <= 0) {
             editTextUserName.setError(getString(R.string.error_invalid_username));
             focusView = editTextUserName;
             cancel = true;
         }
-        if (fullName.length() <=0) {
+        if (fullName.length() <= 0) {
             editTextFullName.setError(getString(R.string.error_invalid_full_name));
             focusView = editTextFullName;
             cancel = true;
@@ -305,7 +346,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             cancel = true;
         }
 
-        if (!(passwordView.getText().toString().equals(editTextConfirmPassword.getText().toString()))){
+        if (!(passwordView.getText().toString().equals(editTextConfirmPassword.getText().toString()))) {
             editTextConfirmPassword.setError(getString(R.string.error_invalid_confirm_password));
             focusView = editTextConfirmPassword;
             cancel = true;

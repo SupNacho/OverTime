@@ -27,6 +27,7 @@ import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
+import ru.supernacho.overtime.view.fragments.CompanyInfoFragment;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
@@ -41,6 +42,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private Fragment managerFragment;
     private String userId;
     private boolean isAdmin;
+    private String companyId;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
 
     @BindView(R.id.toolbar)
@@ -135,6 +137,11 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     }
 
     @Override
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    @Override
     public void logoutDone() {
         Snackbar.make(toolbar, "Logout done", Snackbar.LENGTH_SHORT).show();
         Intent logoutIntent = new Intent(this, LoginActivity.class);
@@ -177,6 +184,10 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         this.userId = userId;
     }
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -186,21 +197,25 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_info_company:
+                CompanyInfoFragment infoFragment = new CompanyInfoFragment();
+                infoFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_INFO_DIALOG);
+                return true;
+            case R.id.action_employee_management:
+                return true;
+            case R.id.action_choose_company:
+                return true;
+            case R.id.action_reg_company:
+                return true;
+            case R.id.action_settings:
+                return true;
+            case R.id.action_logout:
+                presenter.logout();
+                return true;
+                default:
+                    return super.onOptionsItemSelected(item);
         }
-
-        if (id == R.id.action_logout) {
-            presenter.logout();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

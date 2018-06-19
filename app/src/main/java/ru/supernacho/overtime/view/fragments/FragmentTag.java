@@ -9,4 +9,5 @@ public interface FragmentTag {
     String EMPLOYEES = "c14db49d-de83-4f18-ae9a-bcc2e94a2bea";
     String EMP_DATE_CHOOSER = "8dd4ae51-7e49-478d-bda6-51bc8b3a27bb";
     String EMPL_CHART = "e1ceb620-3b4a-4064-b385-73068576d292";
+    String COMPANY_INFO_DIALOG = "a992cdd2-5527-4734-85ba-c25f263535a9";
 }

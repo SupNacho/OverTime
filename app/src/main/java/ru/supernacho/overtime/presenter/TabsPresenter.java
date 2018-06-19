@@ -9,8 +9,10 @@ import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
+import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.model.repository.LoginRepository;
 import ru.supernacho.overtime.view.TabsView;
+import timber.log.Timber;
 
 @InjectViewState
 public class TabsPresenter extends MvpPresenter<TabsView> {
@@ -73,10 +75,11 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
         repository.userIsAdmin()
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
-                .subscribe(new DisposableObserver<Boolean>() {
+                .subscribe(new DisposableObserver<UserCompany>() {
                     @Override
-                    public void onNext(Boolean aBoolean) {
-                        getViewState().setAdmin(aBoolean);
+                    public void onNext(UserCompany userCompany) {
+                        getViewState().setAdmin(userCompany.isAdmin());
+                        getViewState().setCompanyId(userCompany.getCompanyId());
                     }
 
                     @Override

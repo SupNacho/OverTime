@@ -116,6 +116,27 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <LinearLayout
+                android:id="@+id/ll_reg_company_group_login_actvt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/tv_register_company_label_login_actvt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:textSize="24sp"
+                    android:text="Register new company"/>
+                <CheckBox
+                    android:id="@+id/chkbox_register_company_login_actvt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btn_confirm_registration"
                 style="?android:textAppearanceSmall"
@@ -146,7 +167,7 @@
                 android:id="@+id/btn_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Register"/>
+                android:text="Register user or company"/>
 
         </LinearLayout>
     </ScrollView>

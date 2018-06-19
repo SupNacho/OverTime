@@ -12,6 +12,7 @@ public interface ParseFields {
     String monthNum = "monthNum";
     String yearNum = "yearNum";
     String timeZoneID = "timeZoneID";
+    String forCompany = "forCompany";
     //User class fields
     String userId = "objectId";
     String userName = "username";
@@ -27,5 +28,10 @@ public interface ParseFields {
     String companyChief = "chief";
     String companyAdminPin = "adminPin";
     String companyEmpPin = "empPin";
+    String companyAdmins = "admins";
+    //UserCompanies
+    String userCompaniesUserId = "userId";
+    String userCompaniesCompanies = "companies";
+    String userCompaniesActiveCompany = "activeCompany";
 
 }
