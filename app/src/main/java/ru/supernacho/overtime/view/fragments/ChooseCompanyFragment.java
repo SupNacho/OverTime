@@ -1,4 +1,88 @@
 package ru.supernacho.overtime.view.fragments;
 
-public class ChooseCompanyFragment {
+import android.app.Dialog;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.arellomobile.mvp.MvpAppCompatDialogFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
+
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import ru.supernacho.overtime.App;
+import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
+import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
+
+public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements ChooseCompanyView {
+
+    private Unbinder unbinder;
+    private CompanyChooseRvAdapter adapter;
+
+    @InjectPresenter
+    ChooseCompanyPresenter presenter;
+
+    @BindView(R.id.et_join_pin_choose_comp)
+    EditText etPin;
+    @BindView(R.id.btn_join_comp_choose_comp)
+    Button btnJoin;
+    @BindView(R.id.rv_joined_companies_choose_comp)
+    RecyclerView rvCompanies;
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_fragment_choose_company, null);
+        builder.setView(view);
+        unbinder = ButterKnife.bind(this, view);
+        initRv();
+        presenter.getUserCompanies();
+        return builder.create();
+    }
+
+    private void initRv() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        adapter = new CompanyChooseRvAdapter(presenter);
+        rvCompanies.setLayoutManager(layoutManager);
+        rvCompanies.setAdapter(adapter);
+    }
+
+    @ProvidePresenter
+    public ChooseCompanyPresenter providePresenter(){
+        ChooseCompanyPresenter presenter = new ChooseCompanyPresenter(AndroidSchedulers.mainThread());
+        App.getInstance().getAppComponent().inject(presenter);
+        return presenter;
+    }
+
+    @OnClick(R.id.btn_close_choose_comp)
+    public void onClickClose(){
+        dismiss();
+    }
+
+    @Override
+    public void updateAdapters() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (unbinder != null) unbinder.unbind();
+        super.onDestroy();
+    }
 }
