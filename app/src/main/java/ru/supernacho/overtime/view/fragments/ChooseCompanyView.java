@@ -7,4 +7,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 @StateStrategyType(value = SingleStateStrategy.class)
 public interface ChooseCompanyView extends MvpView {
     void updateAdapters();
+    void activationSuccess();
+    void activationFail();
+    void deactivationSuccess();
+    void deactivationFail();
+
 }
