@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 
 public class ChooseCompanyRepository {
@@ -75,6 +76,26 @@ public class ChooseCompanyRepository {
                     emit.onNext(false);
                 }
             });
+        });
+    }
+
+    public Observable<Boolean> joinCompany(String pin){
+        return Observable.create( emit -> {
+           ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
+           ParseObject company = companyQuery.whereEqualTo(ParseFields.companyEmpPin, pin).getFirst();
+
+           ParseQuery<ParseObject> userCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+           ParseObject userCompanies = userCompanyQuery.whereEqualTo(ParseFields.userCompaniesUserId,
+                   ParseUser.getCurrentUser().getObjectId())
+                   .getFirst();
+           userCompanies.addUnique(ParseFields.userCompaniesCompanies, company.getObjectId());
+           userCompanies.saveEventually(e -> {
+               if (e == null){
+                   emit.onNext(true);
+               } else {
+                   emit.onNext(false);
+               }
+           });
         });
     }
 }

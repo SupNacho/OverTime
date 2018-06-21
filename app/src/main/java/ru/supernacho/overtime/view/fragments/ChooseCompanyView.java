@@ -12,5 +12,7 @@ public interface ChooseCompanyView extends MvpView {
     void deactivationSuccess();
     void deactivationFail();
     void updateUser();
+    void joinFail();
+    void joinSuccess();
 
 }

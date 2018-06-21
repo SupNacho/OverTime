@@ -28,6 +28,7 @@ import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
 import ru.supernacho.overtime.view.TabsActivity;
 import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
+import timber.log.Timber;
 
 public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements ChooseCompanyView {
 
@@ -66,15 +67,25 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     }
 
     @ProvidePresenter
-    public ChooseCompanyPresenter providePresenter(){
+    public ChooseCompanyPresenter providePresenter() {
         ChooseCompanyPresenter presenter = new ChooseCompanyPresenter(AndroidSchedulers.mainThread());
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
     }
 
-    @OnClick(R.id.btn_close_choose_comp)
-    public void onClickClose(){
-        dismiss();
+    @OnClick({R.id.btn_close_choose_comp, R.id.btn_join_comp_choose_comp})
+    public void onClickClose(View view) {
+        switch (view.getId()) {
+            case R.id.btn_join_comp_choose_comp:
+                presenter.joinCompany(etPin.getText().toString());
+                break;
+            case R.id.btn_close_choose_comp:
+                dismiss();
+                break;
+            default:
+                Timber.d("no such btn");
+                break;
+        }
     }
 
     @Override
@@ -106,6 +117,16 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @Override
     public void deactivationFail() {
         Snackbar.make(etPin, "Deactivation fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void joinFail() {
+        Snackbar.make(etPin, "Join company fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void joinSuccess() {
+        Snackbar.make(etPin, "Join company success", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
