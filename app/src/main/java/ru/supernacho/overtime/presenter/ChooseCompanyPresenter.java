@@ -52,6 +52,58 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                 });
     }
 
+    public void setActiveCompany(String companyId){
+        repository.setActiveCompany(companyId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            getViewState().activationSuccess();
+                        } else {
+                            getViewState().activationFail();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void deactivateCompany(){
+        repository.deactivateCompany()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            getViewState().deactivationSuccess();
+                        } else {
+                            getViewState().deactivationFail();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     public List<CompanyEntity> getCompanies() {
         return companies;
     }

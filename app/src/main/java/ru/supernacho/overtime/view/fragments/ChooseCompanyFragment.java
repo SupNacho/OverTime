@@ -3,6 +3,7 @@ package ru.supernacho.overtime.view.fragments;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,6 +79,26 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @Override
     public void updateAdapters() {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void activationSuccess() {
+        Snackbar.make(etPin, "Activation Success", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void activationFail() {
+        Snackbar.make(etPin, "Activation fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deactivationSuccess() {
+        Snackbar.make(etPin, "Deactivation Success", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void deactivationFail() {
+        Snackbar.make(etPin, "Deactivation fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
