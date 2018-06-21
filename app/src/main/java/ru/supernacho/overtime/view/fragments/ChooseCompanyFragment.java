@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
+import ru.supernacho.overtime.view.TabsActivity;
 import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
 
 public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements ChooseCompanyView {
@@ -74,6 +75,12 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @OnClick(R.id.btn_close_choose_comp)
     public void onClickClose(){
         dismiss();
+    }
+
+    @Override
+    public void updateUser() {
+        ((TabsActivity) Objects.requireNonNull(getActivity())).checkUserIsAdmin();
+
     }
 
     @Override

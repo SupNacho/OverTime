@@ -61,6 +61,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             getViewState().activationSuccess();
+                            getViewState().updateUser();
                         } else {
                             getViewState().activationFail();
                         }
@@ -87,6 +88,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             getViewState().deactivationSuccess();
+                            getViewState().updateUser();
                         } else {
                             getViewState().deactivationFail();
                         }

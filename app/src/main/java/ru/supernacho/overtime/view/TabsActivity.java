@@ -61,13 +61,16 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         super.onCreate(savedInstanceState);
         softKeyboardLayout = new SoftKeyboardCoordinatorLayout(this);
         setContentView(softKeyboardLayout);
-        presenter.userIsAdmin();
+        checkUserIsAdmin();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         init();
 
     }
 
+    public void checkUserIsAdmin() {
+        presenter.userIsAdmin();
+    }
 
 
     @ProvidePresenter
@@ -95,6 +98,9 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         if (isAdmin) {
             tabLayout.addTab(tabLayout.newTab().setText("Manager text"));
             fragmentsPagerAdapter.addFragment(managerFragment);
+        } else if(tabLayout.getTabCount() > 2){
+            tabLayout.removeTabAt(2);
+            fragmentsPagerAdapter.removeTabPage(2);
         }
     }
 
