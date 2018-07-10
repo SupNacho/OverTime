@@ -29,6 +29,7 @@
             android:id="@+id/et_join_pin_choose_comp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="Join company using pin code"/>
         </android.support.design.widget.TextInputLayout>
         <Button

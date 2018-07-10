@@ -98,4 +98,24 @@ public class ChooseCompanyRepository {
            });
         });
     }
+
+    public Observable<Boolean> exitFromCompany(String companyId){
+        return Observable.create( emitter -> {
+            ParseQuery<ParseObject> userCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+            ParseObject userCompanies = userCompanyQuery.whereEqualTo(ParseFields.userCompaniesUserId,
+                    ParseUser.getCurrentUser().getObjectId()).getFirst();
+            JSONArray companies = userCompanies.getJSONArray(ParseFields.userCompaniesCompanies);
+            for (int i = 0; i < companies.length(); i++) {
+                if (companies.get(i).equals(companyId)) companies.remove(i);
+            }
+            userCompanies.put(ParseFields.userCompaniesCompanies, companies);
+            userCompanies.saveEventually( e -> {
+                if (e == null){
+                    emitter.onNext(true);
+                } else {
+                    emitter.onNext(false);
+                }
+            });
+        });
+    }
 }

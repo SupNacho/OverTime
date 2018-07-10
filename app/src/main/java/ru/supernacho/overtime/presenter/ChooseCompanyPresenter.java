@@ -133,6 +133,37 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                 });
     }
 
+    public void InitExitFromCompany(String companyId){
+        getViewState().initExitFromCompany(companyId);
+    }
+
+    public void exitFromCompany(String companyId){
+        repository.exitFromCompany(companyId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean exited) {
+                        if (exited){
+                            getUserCompanies();
+                            getViewState().updateAdapters();
+                        } else {
+                            getViewState().exitError();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     public List<CompanyEntity> getCompanies() {
         return companies;
     }

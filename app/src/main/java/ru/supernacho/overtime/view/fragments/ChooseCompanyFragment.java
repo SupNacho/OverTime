@@ -1,6 +1,8 @@
 package ru.supernacho.overtime.view.fragments;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatDialogFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -28,7 +31,6 @@ import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
 import ru.supernacho.overtime.view.TabsActivity;
 import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
-import timber.log.Timber;
 
 public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements ChooseCompanyView {
 
@@ -38,6 +40,8 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @InjectPresenter
     ChooseCompanyPresenter presenter;
 
+    @BindView(R.id.ll_join_comp_choose_comp)
+    LinearLayout linearLayout;
     @BindView(R.id.et_join_pin_choose_comp)
     EditText etPin;
     @BindView(R.id.btn_join_comp_choose_comp)
@@ -66,6 +70,25 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
         rvCompanies.setAdapter(adapter);
     }
 
+    private void alertExitDialog(String companyId) {
+        AlertDialog.Builder exitDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        exitDialog.setTitle("Exit company?")
+                .setMessage("Are your sure?")
+                .setCancelable(true)
+                .setPositiveButton("Exit", (dialog, which) -> {
+                    presenter.exitFromCompany(companyId);
+                })
+                .setNegativeButton("cancel", (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .show();
+    }
+
+    @Override
+    public void initExitFromCompany(String companyId) {
+        alertExitDialog(companyId);
+    }
+
     @ProvidePresenter
     public ChooseCompanyPresenter providePresenter() {
         ChooseCompanyPresenter presenter = new ChooseCompanyPresenter(AndroidSchedulers.mainThread());
@@ -73,25 +96,29 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
         return presenter;
     }
 
-    @OnClick({R.id.btn_close_choose_comp, R.id.btn_join_comp_choose_comp})
-    public void onClickClose(View view) {
-        switch (view.getId()) {
-            case R.id.btn_join_comp_choose_comp:
-                presenter.joinCompany(etPin.getText().toString());
-                break;
-            case R.id.btn_close_choose_comp:
-                dismiss();
-                break;
-            default:
-                Timber.d("no such btn");
-                break;
-        }
+    @OnClick(R.id.ll_join_comp_choose_comp)
+    public void onClickBody() {
+        hideKeyboard();
+    }
+
+    @OnClick(R.id.btn_close_choose_comp)
+    public void onClickClose() {
+        dismiss();
+    }
+
+    @OnClick(R.id.btn_join_comp_choose_comp)
+    public void onClickJoin() {
+        presenter.joinCompany(etPin.getText().toString());
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        ((TabsActivity) Objects.requireNonNull(getActivity())).hideSoftKeyboard();
     }
 
     @Override
     public void updateUser() {
         ((TabsActivity) Objects.requireNonNull(getActivity())).checkUserIsAdmin();
-
     }
 
     @Override
@@ -127,6 +154,11 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @Override
     public void joinSuccess() {
         Snackbar.make(etPin, "Join company success", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void exitError() {
+        Snackbar.make(etPin, "Exit error", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

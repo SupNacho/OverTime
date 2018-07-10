@@ -6,6 +6,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -48,11 +49,13 @@ public class CompanyChooseRvAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     class CompanyView extends RecyclerView.ViewHolder{
         private TextView tvName;
         private SwitchCompat swtActive;
+        private ImageButton iBtnExitCompany;
 
         public CompanyView(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_name_comp_choose_view);
             swtActive = itemView.findViewById(R.id.swt_active_comp_choose_view);
+            iBtnExitCompany = itemView.findViewById(R.id.ibtn_exit_company_comp_choose_view);
             swtActive.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 CompanyEntity chosenCompany = companies.get(getLayoutPosition());
                 if (isChecked && !chosenCompany.isActive()){
@@ -69,6 +72,9 @@ public class CompanyChooseRvAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     chosenCompany.setActive(false);
                     notifyDataSetChanged();
                 }
+            });
+            iBtnExitCompany.setOnClickListener(v -> {
+                presenter.InitExitFromCompany(companies.get(getLayoutPosition()).getObjectId());
             });
         }
     }

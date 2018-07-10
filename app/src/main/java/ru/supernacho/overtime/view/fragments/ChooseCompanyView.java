@@ -14,5 +14,7 @@ public interface ChooseCompanyView extends MvpView {
     void updateUser();
     void joinFail();
     void joinSuccess();
+    void exitError();
+    void initExitFromCompany(String companyId);
 
 }
