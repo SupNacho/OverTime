@@ -27,7 +27,6 @@ import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
-import ru.supernacho.overtime.view.fragments.ChooseCompanyFragment;
 import ru.supernacho.overtime.view.fragments.CompanyInfoFragment;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
@@ -213,8 +212,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
             case R.id.action_employee_management:
                 return true;
             case R.id.action_choose_company:
-                ChooseCompanyFragment chooseCompanyFragment = new ChooseCompanyFragment();
-                chooseCompanyFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_CHOOSE_DIALOG);
+                startActivity(new Intent(this, ChooseCompanyActivity.class));
                 return true;
             case R.id.action_reg_company:
                 return true;

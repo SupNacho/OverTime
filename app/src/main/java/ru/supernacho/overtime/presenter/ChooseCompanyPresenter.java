@@ -13,7 +13,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.repository.ChooseCompanyRepository;
-import ru.supernacho.overtime.view.fragments.ChooseCompanyView;
+import ru.supernacho.overtime.view.ChooseCompanyView;
 
 @InjectViewState
 public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
@@ -61,7 +61,6 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             getViewState().activationSuccess();
-                            getViewState().updateUser();
                         } else {
                             getViewState().activationFail();
                         }
@@ -88,7 +87,6 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             getViewState().deactivationSuccess();
-                            getViewState().updateUser();
                         } else {
                             getViewState().deactivationFail();
                         }

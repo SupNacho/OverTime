@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.view.fragments;
+package ru.supernacho.overtime.view;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
@@ -11,7 +11,6 @@ public interface ChooseCompanyView extends MvpView {
     void activationFail();
     void deactivationSuccess();
     void deactivationFail();
-    void updateUser();
     void joinFail();
     void joinSuccess();
     void exitError();

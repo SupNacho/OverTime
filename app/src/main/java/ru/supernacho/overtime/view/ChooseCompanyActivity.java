@@ -1,21 +1,18 @@
-package ru.supernacho.overtime.view.fragments;
+package ru.supernacho.overtime.view;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.hardware.input.InputManager;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.arellomobile.mvp.MvpAppCompatDialogFragment;
+import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
@@ -24,17 +21,14 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
-import ru.supernacho.overtime.view.TabsActivity;
 import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
 
-public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements ChooseCompanyView {
+public class ChooseCompanyActivity extends MvpAppCompatActivity implements ChooseCompanyView, View.OnKeyListener {
 
-    private Unbinder unbinder;
     private CompanyChooseRvAdapter adapter;
 
     @InjectPresenter
@@ -49,21 +43,23 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @BindView(R.id.rv_joined_companies_choose_comp)
     RecyclerView rvCompanies;
 
-    @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_fragment_choose_company, null);
-        builder.setView(view);
-        unbinder = ButterKnife.bind(this, view);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choose_company);
+        ButterKnife.bind(this);
         initRv();
+        initEditText();
         presenter.getUserCompanies();
-        return builder.create();
+    }
+
+    private void initEditText() {
+        etPin.clearFocus();
+        etPin.setOnKeyListener(this);
     }
 
     private void initRv() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         adapter = new CompanyChooseRvAdapter(presenter);
         rvCompanies.setLayoutManager(layoutManager);
@@ -71,7 +67,7 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     }
 
     private void alertExitDialog(String companyId) {
-        AlertDialog.Builder exitDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+        AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
         exitDialog.setTitle("Exit company?")
                 .setMessage("Are your sure?")
                 .setCancelable(true)
@@ -82,6 +78,22 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
                     dialog.cancel();
                 })
                 .show();
+    }
+
+    @Override
+    public boolean onKey(View view, int keyCode, KeyEvent event) {
+        int i = keyCode;
+        if (keyCode == KeyEvent.KEYCODE_ENTER  && event.getAction() == KeyEvent.ACTION_DOWN){
+            if (view.getId() == R.id.et_join_pin_choose_comp) {
+                presenter.joinCompany(etPin.getText().toString());
+                etPin.setText(null);
+                etPin.clearFocus();
+                hideKeyboard();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -101,11 +113,6 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
         hideKeyboard();
     }
 
-    @OnClick(R.id.btn_close_choose_comp)
-    public void onClickClose() {
-        dismiss();
-    }
-
     @OnClick(R.id.btn_join_comp_choose_comp)
     public void onClickJoin() {
         presenter.joinCompany(etPin.getText().toString());
@@ -113,12 +120,8 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     }
 
     private void hideKeyboard() {
-        ((TabsActivity) Objects.requireNonNull(getActivity())).hideSoftKeyboard();
-    }
-
-    @Override
-    public void updateUser() {
-        ((TabsActivity) Objects.requireNonNull(getActivity())).checkUserIsAdmin();
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
     }
 
     @Override
@@ -159,11 +162,5 @@ public class ChooseCompanyFragment extends MvpAppCompatDialogFragment implements
     @Override
     public void exitError() {
         Snackbar.make(etPin, "Exit error", Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (unbinder != null) unbinder.unbind();
-        super.onDestroy();
     }
 }
