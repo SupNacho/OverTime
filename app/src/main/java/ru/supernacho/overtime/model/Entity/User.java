@@ -13,11 +13,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public User(String userId, String userName, String fullName, String email) {
+    public User(String userId, String userName, String fullName, String email, boolean isAdmin) {
         this.userId = userId;
         this.userName = userName;
         this.fullName = fullName;
         this.email = email;
+        this.isAdmin = isAdmin;
     }
 
     public String getUserId() {

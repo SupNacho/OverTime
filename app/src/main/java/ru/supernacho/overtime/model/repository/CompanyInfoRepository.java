@@ -18,6 +18,7 @@ public class CompanyInfoRepository {
                     .getFirst();
             if (company != null) {
                 emit.onNext(new CompanyEntity(
+                        company.getObjectId(),
                         company.getString(ParseFields.companyName),
                         company.getString(ParseFields.companyAddress),
                         company.getString(ParseFields.companyPhone),

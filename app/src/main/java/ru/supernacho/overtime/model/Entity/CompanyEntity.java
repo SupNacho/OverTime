@@ -1,7 +1,7 @@
 package ru.supernacho.overtime.model.Entity;
 
 public class CompanyEntity {
-    private String objectId;
+    private final String objectId;
     private String name;
     private String address;
     private String phone;
@@ -20,7 +20,8 @@ public class CompanyEntity {
         this.pin = "";
         this.isActive = isActive;
     }
-    public CompanyEntity(String name, String address, String phone, String email, String chief, String pin) {
+    public CompanyEntity(String objectId, String name, String address, String phone, String email, String chief, String pin) {
+        this.objectId = objectId;
         this.name = name;
         this.address = address;
         this.phone = phone;

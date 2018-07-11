@@ -162,7 +162,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void onBackPressed() {
-        if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
+        if (tabLayout.getTabAt(1) != null && Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
             for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
                     ((LogsFragment)logsFragment).startDateChooser();
@@ -170,7 +170,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                     super.onBackPressed();
                 }
             }
-        } else if (Objects.requireNonNull(tabLayout.getTabAt(2)).isSelected()){
+        } else if (tabLayout.getTabAt(2)!= null && Objects.requireNonNull(tabLayout.getTabAt(2)).isSelected()){
             for (Fragment fragment : managerFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.EMPL_CHART)){
                     ((ManagerFragment)managerFragment).openDateFragment(userId);

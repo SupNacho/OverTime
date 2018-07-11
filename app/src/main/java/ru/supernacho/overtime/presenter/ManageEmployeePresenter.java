@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.EmployeeRepository;
 import ru.supernacho.overtime.view.ManageEmployeeView;
@@ -51,8 +52,53 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> {
                 });
     }
 
-    public void grantAdmin(User employee){
+    public void getCompany(){
+        repository.getCompany()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<CompanyEntity>() {
+                    @Override
+                    public void onNext(CompanyEntity companyEntity) {
+                        getViewState().setCompany(companyEntity);
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
+                });
+    }
+
+    public void grantAdmin(User employee){
+        employee.setAdmin(!employee.isAdmin());
+        repository.setAdminStatus(employee)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            getEmployees();
+                        } else {
+                            getViewState().grantAdminFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        throw new RuntimeException(e.getCause());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
+                });
     }
 
     public void fireEmployee(User employee){

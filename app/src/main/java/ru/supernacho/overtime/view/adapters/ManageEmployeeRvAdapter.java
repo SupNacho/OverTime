@@ -17,12 +17,12 @@ import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.presenter.ManageEmployeePresenter;
 import timber.log.Timber;
 
-public class ManageEmplyeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ManageEmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<User> employeesList;
     private ManageEmployeePresenter presenter;
 
-    public ManageEmplyeeRvAdapter(ManageEmployeePresenter presenter) {
+    public ManageEmployeeRvAdapter(ManageEmployeePresenter presenter) {
         this.presenter = presenter;
         this.employeesList = presenter.getEmployeesList();
     }
@@ -57,21 +57,11 @@ public class ManageEmplyeeRvAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ibFire = itemView.findViewById(R.id.ibtn_fire_employee_comp_manage_view);
             swtAdmin = itemView.findViewById(R.id.swt_admin_employee_manage_view);
             tvName = itemView.findViewById(R.id.tv_name_employee_manage_view);
-            swtAdmin.setChecked(false);
-            User employee = employeesList.get(getLayoutPosition());
-            swtAdmin.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                Timber.d("Admin status changed to %s", isChecked);
-                presenter.grantAdmin(employee);
-            });
+            swtAdmin.setOnClickListener(v -> presenter.grantAdmin(employeesList.get(getLayoutPosition())));
             ibFire.setOnClickListener(v -> {
                 Timber.d("Fired user: %s", employeesList.get(getLayoutPosition()).getFullName());
-                presenter.fireEmployee(employee);
+                presenter.fireEmployee(employeesList.get(getLayoutPosition()));
             });
-        }
-
-        @OnClick(R.id.ibtn_fire_employee_comp_manage_view)
-        void onClickFire(){
-            Timber.d("Pressed Fire");
         }
     }
 }

@@ -8,13 +8,10 @@ import ru.supernacho.overtime.di.modules.ChartRepoModule;
 import ru.supernacho.overtime.di.modules.ChooseCompanyRepoModule;
 import ru.supernacho.overtime.di.modules.CompanyInfoRepoModule;
 import ru.supernacho.overtime.di.modules.CompanyRepoModule;
-import ru.supernacho.overtime.di.modules.EmploeeRepoModule;
+import ru.supernacho.overtime.di.modules.EmployeeRepoModule;
 import ru.supernacho.overtime.di.modules.LogRepoModule;
 import ru.supernacho.overtime.di.modules.LoginRepoModule;
 import ru.supernacho.overtime.di.modules.TimerRepoModule;
-import ru.supernacho.overtime.model.repository.CompanyRepository;
-import ru.supernacho.overtime.model.repository.LoginRepository;
-import ru.supernacho.overtime.model.repository.TimerRepository;
 import ru.supernacho.overtime.presenter.ChartPresenter;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
 import ru.supernacho.overtime.presenter.CompanyInfoPresenter;
@@ -30,7 +27,7 @@ import ru.supernacho.overtime.view.LoginActivity;
 
 @Singleton
 @Component(modules = {AppModule.class, LoginRepoModule.class, TimerRepoModule.class, LogRepoModule.class,
-        ChartRepoModule.class, EmploeeRepoModule.class, CompanyRepoModule.class, CompanyInfoRepoModule.class,
+        ChartRepoModule.class, EmployeeRepoModule.class, CompanyRepoModule.class, CompanyInfoRepoModule.class,
         ChooseCompanyRepoModule.class})
 public interface AppComponent {
     void inject(LoginActivity activity);
