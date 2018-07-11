@@ -40,6 +40,13 @@ public class CompanyRepository {
                         emit.onNext(new UserCompany(null, false));
                     }
                 });
+
+                ParseQuery<ParseObject> userCompanies = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+                ParseObject userCompany = userCompanies.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
+                        .getFirst();
+
+                userCompany.add(ParseFields.userCompaniesCompanies, company.getObjectId());
+                userCompany.saveEventually();
         });
     }
 

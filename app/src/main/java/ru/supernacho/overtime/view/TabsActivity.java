@@ -216,6 +216,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                 startActivity(new Intent(this, ChooseCompanyActivity.class));
                 return true;
             case R.id.action_reg_company:
+                startActivity(new Intent(this, CompanyRegistrationActivity.class));
                 return true;
             case R.id.action_settings:
                 return true;
