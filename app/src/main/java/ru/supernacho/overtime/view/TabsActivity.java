@@ -210,6 +210,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                 infoFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_INFO_DIALOG);
                 return true;
             case R.id.action_employee_management:
+                startActivity(new Intent(this, ManageEmployeeActivity.class));
                 return true;
             case R.id.action_choose_company:
                 startActivity(new Intent(this, ChooseCompanyActivity.class));

@@ -22,6 +22,7 @@ import ru.supernacho.overtime.presenter.CompanyRegistrationPresenter;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
 import ru.supernacho.overtime.presenter.EmployeesPresenter;
 import ru.supernacho.overtime.presenter.LoginPresenter;
+import ru.supernacho.overtime.presenter.ManageEmployeePresenter;
 import ru.supernacho.overtime.presenter.ManagerPresenter;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.presenter.TimerPresenter;
@@ -43,4 +44,5 @@ public interface AppComponent {
     void inject(CompanyRegistrationPresenter presenter);
     void inject(CompanyInfoPresenter presenter);
     void inject(ChooseCompanyPresenter presenter);
+    void inject(ManageEmployeePresenter presenter);
 }

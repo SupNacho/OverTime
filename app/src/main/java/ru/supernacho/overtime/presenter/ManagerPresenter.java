@@ -38,7 +38,7 @@ public class ManagerPresenter extends MvpPresenter<ManagerView> {
     }
 
 //    public void getEmploysList(){
-//       disposable = repository.getEmployees()
+//       disposable = repository.getEmployeesList()
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(uiScheduler)
 //                .subscribe(employeeStatus -> {

@@ -34,7 +34,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.CompanyRegistrationActivity" />
-        <activity android:name=".view.ChooseCompanyActivity"></activity>
+        <activity android:name=".view.ChooseCompanyActivity" />
+        <activity android:name=".view.ManageEmployeeActivity"></activity>
     </application>
 
 </manifest>
