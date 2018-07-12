@@ -1,11 +1,8 @@
-package ru.supernacho.overtime.utils;
+package ru.supernacho.overtime.utils.charts;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 public class DataSetValueFormatter implements IValueFormatter {
     @Override

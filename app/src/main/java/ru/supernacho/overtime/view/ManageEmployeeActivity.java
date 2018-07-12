@@ -1,9 +1,7 @@
 package ru.supernacho.overtime.view;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -20,6 +18,7 @@ import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.presenter.ManageEmployeePresenter;
+import ru.supernacho.overtime.utils.view.Alert;
 import ru.supernacho.overtime.view.adapters.ManageEmployeeRvAdapter;
 
 public class ManageEmployeeActivity extends MvpAppCompatActivity implements ManageEmployeeView{
@@ -56,16 +55,6 @@ public class ManageEmployeeActivity extends MvpAppCompatActivity implements Mana
         rvManageEmployee.setAdapter(adapter);
     }
 
-    private void alertFireEmployee(User employee){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Fire this employee?")
-                .setMessage("Are you sure want fire this employee from company?")
-                .setCancelable(true)
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
-                .setPositiveButton("Fire", (dialog, which) -> presenter.fireEmployee(employee))
-                .show();
-    }
-
     @ProvidePresenter
     ManageEmployeePresenter providePresenter() {
         ManageEmployeePresenter presenter = new ManageEmployeePresenter(AndroidSchedulers.mainThread());
@@ -85,7 +74,8 @@ public class ManageEmployeeActivity extends MvpAppCompatActivity implements Mana
 
     @Override
     public void initFireEmployee(User employee) {
-        alertFireEmployee(employee);
+        Alert.create("Fire employee?", "Are you sure want fire this employee?",
+                "Fire", "Cancel", this, employee, presenter);
     }
 
     @Override

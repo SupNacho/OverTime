@@ -16,7 +16,7 @@ import ru.supernacho.overtime.model.repository.ChooseCompanyRepository;
 import ru.supernacho.overtime.view.ChooseCompanyView;
 
 @InjectViewState
-public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
+public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> implements AlertPresenter {
     private Scheduler uiScheduler;
     private List<CompanyEntity> companies;
 
@@ -160,6 +160,39 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> {
 
                     }
                 });
+    }
+
+    @Override
+    public void positiveAction(Object object) {
+        if (object instanceof String){
+            String companyId = (String) object;
+            repository.exitFromCompany(companyId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(uiScheduler)
+                    .subscribe(new DisposableObserver<Boolean>() {
+                        @Override
+                        public void onNext(Boolean exited) {
+                            if (exited){
+                                getUserCompanies();
+                                getViewState().updateAdapters();
+                            } else {
+                                getViewState().exitError();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            dispose();
+                        }
+                    });
+        } else {
+            throw new RuntimeException("Object not instance of String");
+        }
     }
 
     public List<CompanyEntity> getCompanies() {

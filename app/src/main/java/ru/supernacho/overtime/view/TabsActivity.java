@@ -24,10 +24,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TabsPresenter;
+import ru.supernacho.overtime.utils.view.CompanyInfo;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
-import ru.supernacho.overtime.view.fragments.CompanyInfoFragment;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
@@ -95,8 +95,10 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     private void addManagerTab() {
         if (isAdmin) {
-            tabLayout.addTab(tabLayout.newTab().setText("Manager text"));
-            fragmentsPagerAdapter.addFragment(managerFragment);
+            if (tabLayout.getTabCount() < 3) {
+                tabLayout.addTab(tabLayout.newTab().setText("Manager"));
+                fragmentsPagerAdapter.addFragment(managerFragment);
+            }
         } else if(tabLayout.getTabCount() > 2){
             tabLayout.removeTabAt(2);
             fragmentsPagerAdapter.removeTabPage(2);
@@ -215,8 +217,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         int id = item.getItemId();
         switch (id){
             case R.id.action_info_company:
-                CompanyInfoFragment infoFragment = new CompanyInfoFragment();
-                infoFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_INFO_DIALOG);
+                CompanyInfo.viewCurrent(this);
                 return true;
             case R.id.action_employee_management:
                 startActivity(new Intent(this, ManageEmployeeActivity.class));

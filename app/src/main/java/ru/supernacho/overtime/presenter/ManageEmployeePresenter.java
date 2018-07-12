@@ -16,7 +16,7 @@ import ru.supernacho.overtime.model.repository.EmployeeRepository;
 import ru.supernacho.overtime.view.ManageEmployeeView;
 
 @InjectViewState
-public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> {
+public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> implements AlertPresenter{
     private Scheduler uiScheduler;
 
     @Inject
@@ -105,30 +105,36 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> {
         getViewState().initFireEmployee(employee);
     }
 
-    public void fireEmployee(User employee){
-        repository.fireEmployee(employee)
-                .subscribeOn(Schedulers.io())
-                .observeOn(uiScheduler)
-                .subscribe(new DisposableObserver<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            getViewState().fireSuccess(employee);
-                        } else {
-                            getViewState().fireFailed(employee);
+    @Override
+    public void positiveAction(Object object) {
+        if (object instanceof User) {
+            User employee = (User) object;
+            repository.fireEmployee(employee)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(uiScheduler)
+                    .subscribe(new DisposableObserver<Boolean>() {
+                        @Override
+                        public void onNext(Boolean aBoolean) {
+                            if (aBoolean) {
+                                getViewState().fireSuccess(employee);
+                            } else {
+                                getViewState().fireFailed(employee);
+                            }
+                            getViewState().update();
                         }
-                        getViewState().update();
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        dispose();
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+                            dispose();
+                        }
+                    });
+        } else {
+            throw new RuntimeException("object is not instance of User.class");
+        }
     }
 }

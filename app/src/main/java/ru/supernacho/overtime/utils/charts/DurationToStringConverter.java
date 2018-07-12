@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.utils;
+package ru.supernacho.overtime.utils.charts;
 
 import java.util.Locale;
 

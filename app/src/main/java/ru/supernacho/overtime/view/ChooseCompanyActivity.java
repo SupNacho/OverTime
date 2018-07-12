@@ -1,7 +1,6 @@
 package ru.supernacho.overtime.view;
 
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
+import ru.supernacho.overtime.utils.view.Alert;
 import ru.supernacho.overtime.view.adapters.CompanyChooseRvAdapter;
 
 public class ChooseCompanyActivity extends MvpAppCompatActivity implements ChooseCompanyView, View.OnKeyListener {
@@ -66,20 +66,6 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
         rvCompanies.setAdapter(adapter);
     }
 
-    private void alertExitDialog(String companyId) {
-        AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
-        exitDialog.setTitle("Exit company?")
-                .setMessage("Are your sure?")
-                .setCancelable(true)
-                .setPositiveButton("Exit", (dialog, which) -> {
-                    presenter.exitFromCompany(companyId);
-                })
-                .setNegativeButton("cancel", (dialog, which) -> {
-                    dialog.cancel();
-                })
-                .show();
-    }
-
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
         int i = keyCode;
@@ -98,7 +84,8 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
 
     @Override
     public void initExitFromCompany(String companyId) {
-        alertExitDialog(companyId);
+        Alert.create("Exit company?", "Are your sure want exit?", "Exit",
+                "Cancel", this, companyId, presenter);
     }
 
     @ProvidePresenter

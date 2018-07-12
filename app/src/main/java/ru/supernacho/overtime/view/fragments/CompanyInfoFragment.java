@@ -22,12 +22,14 @@ import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.presenter.CompanyInfoPresenter;
 import timber.log.Timber;
 
 public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements View.OnClickListener,
         CompanyInfoView {
 
+    private CompanyEntity company;
     private Unbinder unbinder;
     @BindView(R.id.tv_name_comp_info_fragment)
     TextView tvName;
@@ -61,7 +63,16 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
         tvPhone.setOnClickListener(this);
         tvPin.setOnClickListener(this);
         btnClose.setOnClickListener(this);
-        presenter.getCompanyInfo();
+        if (company == null) {
+            presenter.getCompanyInfo();
+        } else {
+            tvName.setText(company.getName());
+            tvAddress.setText(company.getAddress());
+            tvPhone.setText(company.getPhone());
+            tvEmail.setText(company.getEmail());
+            tvCeo.setText(company.getChief());
+            tvPin.setText(company.getPin());
+        }
         return builder.create();
     }
 
@@ -97,6 +108,10 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
             default:
                 Toast.makeText(getContext(), "No such view", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void setCompany(CompanyEntity company){
+        this.company = company;
     }
 
     @Override
