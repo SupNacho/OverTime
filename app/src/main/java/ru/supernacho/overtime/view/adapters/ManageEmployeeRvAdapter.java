@@ -60,7 +60,7 @@ public class ManageEmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.V
             swtAdmin.setOnClickListener(v -> presenter.grantAdmin(employeesList.get(getLayoutPosition())));
             ibFire.setOnClickListener(v -> {
                 Timber.d("Fired user: %s", employeesList.get(getLayoutPosition()).getFullName());
-                presenter.fireEmployee(employeesList.get(getLayoutPosition()));
+                presenter.initFireEmployee(employeesList.get(getLayoutPosition()));
             });
         }
     }

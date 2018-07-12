@@ -1,11 +1,8 @@
 package ru.supernacho.overtime.model.repository;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 
@@ -13,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 
 public class ChooseCompanyRepository {

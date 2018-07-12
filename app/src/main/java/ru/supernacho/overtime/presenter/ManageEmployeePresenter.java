@@ -101,7 +101,34 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> {
                 });
     }
 
-    public void fireEmployee(User employee){
+    public void initFireEmployee(User employee){
+        getViewState().initFireEmployee(employee);
+    }
 
+    public void fireEmployee(User employee){
+        repository.fireEmployee(employee)
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            getViewState().fireSuccess(employee);
+                        } else {
+                            getViewState().fireFailed(employee);
+                        }
+                        getViewState().update();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
+                });
     }
 }

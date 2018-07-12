@@ -79,37 +79,36 @@ public class EmployeeRepository {
         });
     }
 
-    public Observable<CompanyEntity> getCompany(){
-        return Observable.create( emit -> {
-            companyInfoRepository.getCompanyInfo()
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new DisposableObserver<CompanyEntity>() {
-                        @Override
-                        public void onNext(CompanyEntity companyEntity) {
-                            emit.onNext(companyEntity);
-                            currentCompany = companyEntity;
-                        }
+    public Observable<CompanyEntity> getCompany() {
+        return Observable.create(emit ->
+                companyInfoRepository.getCompanyInfo()
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(new DisposableObserver<CompanyEntity>() {
+                            @Override
+                            public void onNext(CompanyEntity companyEntity) {
+                                emit.onNext(companyEntity);
+                                currentCompany = companyEntity;
+                            }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            throw new RuntimeException(e);
-                        }
+                            @Override
+                            public void onError(Throwable e) {
+                                throw new RuntimeException(e);
+                            }
 
-                        @Override
-                        public void onComplete() {
-                            dispose();
-                        }
-                    });
-        });
+                            @Override
+                            public void onComplete() {
+                                dispose();
+                            }
+                        }));
     }
 
-    public Observable<Boolean> setAdminStatus(User user){
+    public Observable<Boolean> setAdminStatus(User user) {
         return Observable.create(emit -> {
             ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
             ParseObject company = companyQuery.whereEqualTo(ParseFields.companyId, currentCompany.getObjectId()).getFirst();
             if (user.isAdmin()) {
                 company.addUnique(ParseFields.companyAdmins, user.getUserId());
-                company.saveEventually( e -> {
+                company.saveEventually(e -> {
                     if (e == null) {
                         emit.onNext(true);
                     } else {
@@ -122,7 +121,7 @@ public class EmployeeRepository {
 
                 JSONArray admins = company.getJSONArray(ParseFields.companyAdmins);
                 for (int i = 0; i < admins.length(); i++) {
-                    if(admins.get(i).equals(user.getUserId())) admins.remove(i);
+                    if (admins.get(i).equals(user.getUserId())) admins.remove(i);
                 }
 
                 company.put(ParseFields.companyAdmins, admins);
@@ -134,6 +133,37 @@ public class EmployeeRepository {
                     }
                 });
             }
+        });
+    }
+
+    public Observable<Boolean> fireEmployee(User employee){
+        return Observable.create( emit -> {
+            ParseQuery<ParseObject> userCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+            ParseObject userCompany = userCompanyQuery
+                    .whereEqualTo(ParseFields.userCompaniesUserId, employee.getUserId()).getFirst();
+
+            JSONArray companies = userCompany.getJSONArray(ParseFields.userCompaniesCompanies);
+
+            ParseQuery<ParseObject> adminCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+            ParseObject adminCompanies = adminCompanyQuery
+                    .whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser()
+                            .getObjectId()).getFirst();
+
+            String companyId = adminCompanies.getString(ParseFields.userCompaniesActiveCompany);
+
+            for (int i = 0; i < companies.length(); i++) {
+                if (companies.get(i).equals(companyId)) companies.remove(i);
+            }
+
+            userCompany.put(ParseFields.userCompaniesCompanies, companies);
+            userCompany.saveEventually(e -> {
+                if (e == null) {
+                    emit.onNext(true);
+                    employees.remove(employee);
+                } else {
+                    emit.onNext(false);
+                }
+            });
         });
     }
 }
