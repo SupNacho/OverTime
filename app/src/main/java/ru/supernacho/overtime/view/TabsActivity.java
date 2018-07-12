@@ -61,7 +61,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         super.onCreate(savedInstanceState);
         softKeyboardLayout = new SoftKeyboardCoordinatorLayout(this);
         setContentView(softKeyboardLayout);
-        checkUserIsAdmin();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         init();
@@ -129,6 +128,12 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserIsAdmin();
     }
 
     @Override
