@@ -44,6 +44,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private boolean isAdmin;
     private String companyId;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
+    private MenuItem manageEmployeeMenuItem;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -139,6 +140,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
         addManagerTab();
+        manageEmployeeMenuItem.setVisible(isAdmin);
         Timber.d("ADMIN: %s", isAdmin);
     }
 
@@ -198,6 +200,8 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tabs, menu);
+        manageEmployeeMenuItem = menu.findItem(R.id.action_employee_management);
+        manageEmployeeMenuItem.setVisible(false);
         return true;
     }
 
