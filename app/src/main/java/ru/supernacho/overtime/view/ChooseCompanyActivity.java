@@ -68,7 +68,6 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent event) {
-        int i = keyCode;
         if (keyCode == KeyEvent.KEYCODE_ENTER  && event.getAction() == KeyEvent.ACTION_DOWN){
             if (view.getId() == R.id.et_join_pin_choose_comp) {
                 presenter.joinCompany(etPin.getText().toString());
@@ -84,7 +83,7 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
 
     @Override
     public void initExitFromCompany(String companyId) {
-        Alert.create("Exit company?", "Are your sure want exit?", "Exit",
+        Alert.create("Exit company?", "Are your sure want exit?", "YES",
                 "Cancel", this, companyId, presenter);
     }
 
