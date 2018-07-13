@@ -2,6 +2,9 @@ package ru.supernacho.overtime.view.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
@@ -61,7 +65,6 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
         tvAddress.setOnClickListener(this);
         tvEmail.setOnClickListener(this);
         tvPhone.setOnClickListener(this);
-        tvPin.setOnClickListener(this);
         btnClose.setOnClickListener(this);
         if (company == null) {
             presenter.getCompanyInfo();
@@ -77,7 +80,7 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
     }
 
     @ProvidePresenter
-    public CompanyInfoPresenter providePresenter(){
+    public CompanyInfoPresenter providePresenter() {
         CompanyInfoPresenter presenter = new CompanyInfoPresenter(AndroidSchedulers.mainThread());
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
@@ -85,22 +88,18 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
 
     @Override
     public void onClick(View v) {
-        // TODO: 19.06.2018 implement call thrid party apps for clicked info
         switch (v.getId()) {
             case R.id.tv_name_comp_info_fragment:
-                Timber.d("Company Name pressed");
+                webSearch(tvName.getText().toString());
                 break;
             case R.id.tv_address_comp_info_fragment:
-                Timber.d("Company Address pressed");
+                webSearch(tvAddress.getText().toString());
                 break;
             case R.id.tv_email_comp_info_fragment:
-                Timber.d("Company Email pressed");
+                emailToCompany(tvEmail.getText().toString());
                 break;
             case R.id.tv_phone_comp_info_fragment:
-                Timber.d("Company Phone pressed");
-                break;
-            case R.id.tv_pin_comp_info_fragment:
-                Timber.d("Company Pin pressed");
+                dialToCompany();
                 break;
             case R.id.btn_close_comp_info_fragment:
                 dismiss();
@@ -110,7 +109,29 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
         }
     }
 
-    public void setCompany(CompanyEntity company){
+    private void emailToCompany(String query) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, query);
+        if (emailIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null)
+            startActivity(emailIntent);
+    }
+
+    private void dialToCompany() {
+        Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+        dialIntent.setData(Uri.parse("tel:" + tvPhone.getText().toString()));
+        if (dialIntent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null)
+            startActivity(dialIntent);
+    }
+
+    private void webSearch(String query) {
+        Intent webSearch = new Intent(Intent.ACTION_WEB_SEARCH);
+        webSearch.putExtra(SearchManager.QUERY, query);
+        if (webSearch.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null)
+            startActivity(webSearch);
+    }
+
+    public void setCompany(CompanyEntity company) {
         this.company = company;
     }
 
@@ -148,5 +169,29 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
     public void onDestroy() {
         if (unbinder != null) unbinder.unbind();
         super.onDestroy();
+    }
+
+    @OnClick(R.id.iv_copy_company_info)
+    public void onCopyInfoClicked() {
+        String info = String.valueOf(tvName.getText()) + "\n" +
+                tvAddress.getText() + "\n" +
+                tvPhone.getText() + "\n" +
+                tvEmail.getText() + "\n" +
+                tvCeo.getText();
+        shareIntent(info, "Share CompanyInfo");
+    }
+
+    @OnClick(R.id.iv_pin_company_info)
+    public void onCopyPinClicked() {
+        Timber.d("PIN COPY CLICKED");
+        String info = String.valueOf(tvPin.getText());
+        shareIntent(info, "Share company access pin");
+    }
+
+    private void shareIntent(String info, String title) {
+        Intent copyInfo = new Intent(Intent.ACTION_SEND);
+        copyInfo.setType("text/plain");
+        copyInfo.putExtra(Intent.EXTRA_TEXT, info);
+        startActivity(Intent.createChooser(copyInfo, title));
     }
 }
