@@ -91,6 +91,7 @@ public class CompanyRegistrationActivity extends MvpAppCompatActivity implements
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ActivityResultExtra.COMPANY_ID, companyId);
         setResult(RESULT_OK, resultIntent);
+        Toast.makeText(this, "Registration success", Toast.LENGTH_SHORT).show();
         finish();
     }
 

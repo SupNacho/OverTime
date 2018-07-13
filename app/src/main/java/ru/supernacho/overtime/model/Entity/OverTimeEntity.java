@@ -5,10 +5,8 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import ru.supernacho.overtime.utils.DurationToStringConverter;
+import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 
 public class OverTimeEntity {
     private final Date startDate;

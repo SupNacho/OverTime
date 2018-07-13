@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.utils;
+package ru.supernacho.overtime.utils.charts;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;

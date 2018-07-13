@@ -24,10 +24,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.TabsPresenter;
+import ru.supernacho.overtime.utils.view.CompanyInfo;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
 import ru.supernacho.overtime.view.custom.KeyboardStateListener;
 import ru.supernacho.overtime.view.custom.SoftKeyboardCoordinatorLayout;
-import ru.supernacho.overtime.view.fragments.CompanyInfoFragment;
 import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
@@ -44,6 +44,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private boolean isAdmin;
     private String companyId;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
+    private MenuItem manageEmployeeMenuItem;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -60,13 +61,15 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         super.onCreate(savedInstanceState);
         softKeyboardLayout = new SoftKeyboardCoordinatorLayout(this);
         setContentView(softKeyboardLayout);
-        presenter.userIsAdmin();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         init();
 
     }
 
+    public void checkUserIsAdmin() {
+        presenter.userIsAdmin();
+    }
 
 
     @ProvidePresenter
@@ -92,8 +95,13 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     private void addManagerTab() {
         if (isAdmin) {
-            tabLayout.addTab(tabLayout.newTab().setText("Manager text"));
-            fragmentsPagerAdapter.addFragment(managerFragment);
+            if (tabLayout.getTabCount() < 3) {
+                tabLayout.addTab(tabLayout.newTab().setText("Manager"));
+                fragmentsPagerAdapter.addFragment(managerFragment);
+            }
+        } else if(tabLayout.getTabCount() > 2){
+            tabLayout.removeTabAt(2);
+            fragmentsPagerAdapter.removeTabPage(2);
         }
     }
 
@@ -125,6 +133,12 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkUserIsAdmin();
+    }
+
+    @Override
     public void setUserName(String userName) {
         toolbar.setTitle(userName);
     }
@@ -133,6 +147,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
         addManagerTab();
+        manageEmployeeMenuItem.setVisible(isAdmin);
         Timber.d("ADMIN: %s", isAdmin);
     }
 
@@ -156,7 +171,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void onBackPressed() {
-        if (Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
+        if (tabLayout.getTabAt(1) != null && Objects.requireNonNull(tabLayout.getTabAt(1)).isSelected()){
             for (Fragment fragment : logsFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.WORKER_CHART)) {
                     ((LogsFragment)logsFragment).startDateChooser();
@@ -164,7 +179,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                     super.onBackPressed();
                 }
             }
-        } else if (Objects.requireNonNull(tabLayout.getTabAt(2)).isSelected()){
+        } else if (tabLayout.getTabAt(2)!= null && Objects.requireNonNull(tabLayout.getTabAt(2)).isSelected()){
             for (Fragment fragment : managerFragment.getChildFragmentManager().getFragments()) {
                 if (Objects.requireNonNull(fragment.getTag()).equals(FragmentTag.EMPL_CHART)){
                     ((ManagerFragment)managerFragment).openDateFragment(userId);
@@ -192,6 +207,8 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tabs, menu);
+        manageEmployeeMenuItem = menu.findItem(R.id.action_employee_management);
+        manageEmployeeMenuItem.setVisible(false);
         return true;
     }
 
@@ -200,14 +217,16 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         int id = item.getItemId();
         switch (id){
             case R.id.action_info_company:
-                CompanyInfoFragment infoFragment = new CompanyInfoFragment();
-                infoFragment.show(getSupportFragmentManager(), FragmentTag.COMPANY_INFO_DIALOG);
+                CompanyInfo.viewCurrent(this);
                 return true;
             case R.id.action_employee_management:
+                startActivity(new Intent(this, ManageEmployeeActivity.class));
                 return true;
             case R.id.action_choose_company:
+                startActivity(new Intent(this, ChooseCompanyActivity.class));
                 return true;
             case R.id.action_reg_company:
+                startActivity(new Intent(this, CompanyRegistrationActivity.class));
                 return true;
             case R.id.action_settings:
                 return true;

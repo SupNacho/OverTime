@@ -12,7 +12,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.ChartRepository;
-import ru.supernacho.overtime.utils.DurationToStringConverter;
+import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 import ru.supernacho.overtime.view.fragments.ChartView;
 import timber.log.Timber;
 

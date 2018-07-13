@@ -5,6 +5,7 @@ public class User {
     private final String fullName;
     private final String userId;
     private String email;
+    private boolean isAdmin;
 
     public User(String userName, String fullName) {
         this.userId = null;
@@ -12,11 +13,12 @@ public class User {
         this.fullName = fullName;
     }
 
-    public User(String userId, String userName, String fullName, String email) {
+    public User(String userId, String userName, String fullName, String email, boolean isAdmin) {
         this.userId = userId;
         this.userName = userName;
         this.fullName = fullName;
         this.email = email;
+        this.isAdmin = isAdmin;
     }
 
     public String getUserId() {
@@ -37,5 +39,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 }

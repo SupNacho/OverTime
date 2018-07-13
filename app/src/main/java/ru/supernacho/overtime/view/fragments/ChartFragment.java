@@ -36,9 +36,9 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.presenter.ChartPresenter;
-import ru.supernacho.overtime.utils.XAxisValuesFormatter;
-import ru.supernacho.overtime.utils.DataSetValueFormatter;
-import ru.supernacho.overtime.utils.YAxisValueFormatter;
+import ru.supernacho.overtime.utils.charts.XAxisValuesFormatter;
+import ru.supernacho.overtime.utils.charts.DataSetValueFormatter;
+import ru.supernacho.overtime.utils.charts.YAxisValueFormatter;
 import timber.log.Timber;
 
 /**
