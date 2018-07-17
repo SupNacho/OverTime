@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatDialogFragment;
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.github.mikephil.charting.charts.BarChart;
@@ -30,15 +32,18 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.presenter.ChartPresenter;
 import ru.supernacho.overtime.utils.charts.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.charts.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.charts.YAxisValueFormatter;
+import ru.supernacho.overtime.utils.view.CompanyInfo;
 import timber.log.Timber;
 
 /**
@@ -46,7 +51,7 @@ import timber.log.Timber;
  * Use the {@link ChartFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChartFragment extends MvpAppCompatDialogFragment implements ChartView,
+public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         OnChartValueSelectedListener{
     private static final String ARG_PARAM1 = "month";
     private static final String ARG_PARAM2 = "year";
@@ -57,12 +62,15 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
     private String userId;
     private List<OverTimeEntity> overTimesList;
     private Unbinder unbinder;
+    private CompanyEntity company;
 
     @InjectPresenter
     ChartPresenter presenter;
 
     @BindView(R.id.bc_chart_fragment)
     BarChart barChart;
+    @BindView(R.id.tv_company_name_chart_fragment)
+    TextView tvCompanyName;
     @BindView(R.id.tv_comment_chart_fragment)
     TextView tvComment;
     @BindView(R.id.tv_month_summary_chart_fragment)
@@ -129,6 +137,11 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
         return presenter;
     }
 
+    @OnClick(R.id.ll_company_chart_fragment)
+    public void onClickCpmpany(){
+        if (getActivity() != null) CompanyInfo.viewChosen((AppCompatActivity) getActivity(), company);
+    }
+
     @Override
     public void updateChartView(List<OverTimeEntity> overTimeEntityList) {
         overTimesList = overTimeEntityList;
@@ -180,7 +193,10 @@ public class ChartFragment extends MvpAppCompatDialogFragment implements ChartVi
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        tvComment.setText(overTimesList.get((int) e.getX()).getComment());
+        OverTimeEntity overTime = overTimesList.get((int) e.getX());
+        this.company = overTime.getCompany();
+        tvComment.setText(overTime.getComment());
+        tvCompanyName.setText(overTime.getCompany().getName());
     }
 
     @Override
