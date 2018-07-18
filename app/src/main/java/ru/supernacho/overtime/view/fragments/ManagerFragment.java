@@ -106,7 +106,7 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
     public void startAllStatChartFragment(int month, int year) {
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fl_manager_frag_container, ChartFragment.newInstance(month, year, userId), FragmentTag.EMPL_CHART)
+                .replace(R.id.fl_manager_frag_container, AllEmployeesChartFragment.newInstance(month, year), FragmentTag.EMPL_CHART)
                 .commit();
     }
 
