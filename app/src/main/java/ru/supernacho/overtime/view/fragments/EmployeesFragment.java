@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
@@ -66,6 +67,11 @@ public class EmployeesFragment extends MvpAppCompatFragment implements Employees
         adapter = new EmployeeRvAdapter(presenter);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(presenter::getEmploysList);
+    }
+
+    @OnClick(R.id.btn_all_stat_employee_fragment)
+    public void onClickAllStat(){
+        ((ManagerFragment) Objects.requireNonNull(getParentFragment())).openAllStatDateFragment();
     }
 
     @Override

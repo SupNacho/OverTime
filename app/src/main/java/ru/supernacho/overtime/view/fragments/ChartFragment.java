@@ -138,7 +138,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
     }
 
     @OnClick(R.id.ll_company_chart_fragment)
-    public void onClickCpmpany(){
+    public void onClickCompany(){
         if (getActivity() != null) CompanyInfo.viewChosen((AppCompatActivity) getActivity(), company);
     }
 

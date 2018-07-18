@@ -2,6 +2,7 @@ package ru.supernacho.overtime.view.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,13 +24,16 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
+import ru.supernacho.overtime.utils.charts.ChartChooser;
 import ru.supernacho.overtime.view.adapters.DateLogRvAdapter;
 import timber.log.Timber;
 
 public class DateChooserFragment extends MvpAppCompatFragment implements DateChooserView {
 
     private static final String ARG_PARAM_1 = "userId";
+    private static final String ARG_PARAM_2 = "isAllEmployeesStat";
     private String userId;
+    private boolean isAllEmployeesStat;
     private Unbinder unbinder;
     private DateLogRvAdapter adapter;
 
@@ -50,19 +54,30 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         DateChooserFragment fragment = new DateChooserFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_1, userId);
+        args.putBoolean(ARG_PARAM_2, false);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static DateChooserFragment newInstance(boolean isAllStat){
+        DateChooserFragment fragment = new DateChooserFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM_1, null);
+        args.putBoolean(ARG_PARAM_2, isAllStat);
         fragment.setArguments(args);
         return fragment;
     }
 
     @ProvidePresenter
     public DateChooserPresenter providePresenter(){
-        String userId;
         if (getArguments() != null) {
             userId = getArguments().getString(ARG_PARAM_1);
+            isAllEmployeesStat = getArguments().getBoolean(ARG_PARAM_2);
         } else {
             userId = ParseFields.userZero;
         }
-        DateChooserPresenter presenter = new DateChooserPresenter(AndroidSchedulers.mainThread(), userId);
+        DateChooserPresenter presenter = new DateChooserPresenter(AndroidSchedulers.mainThread(),
+                userId);
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
     }
@@ -72,11 +87,12 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getString(ARG_PARAM_1);
+            isAllEmployeesStat = getArguments().getBoolean(ARG_PARAM_2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_date_chooser, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -95,7 +111,7 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
     }
 
     private void updateData(){
-        presenter.getDateData();
+        presenter.getDateData(isAllEmployeesStat);
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -106,17 +122,7 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
 
     @Override
     public void viewChart(int month, int year) {
-        Timber.d("Fragment is Log %s",getParentFragment() instanceof LogsFragment);
-        Timber.d("Fragment is Manager %s",getParentFragment() instanceof ManagerFragment);
-        if (getParentFragment() instanceof LogsFragment) {
-            ((LogsFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
-        } else if (getParentFragment() instanceof ManagerFragment) {
-            ((ManagerFragment) Objects.requireNonNull(getParentFragment())).startChartFragment(month, year);
-        }
-    }
-
-    public void backToParent(){
-        ((LogsFragment) Objects.requireNonNull(getParentFragment())).callDateChooser();
+        ChartChooser.startChart(getParentFragment(), month, year, isAllEmployeesStat);
     }
 
     @Override

@@ -48,4 +48,34 @@ public class LogRepository {
         });
 
     }
+
+    public Observable<Object[]> getAllEmployeesMonths() {
+        return Observable.create(emit -> {
+            ParseQuery<ParseObject> companyIdQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+            ParseObject company = companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
+                    .getFirst();
+            String companyId = company.getString(ParseFields.companyId);
+            ParseQuery<ParseObject> query = new ParseQuery<>(ParseClass.OVER_TIME);
+            if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
+                query
+                        .fromLocalDatastore()
+                        .whereEqualTo(ParseFields.forCompany, companyId)
+                        ;
+            } else {
+                query.whereEqualTo(ParseFields.forCompany, companyId);
+            }
+
+            query.findInBackground((objects, e) -> {
+                if (objects != null && e == null) {
+                    set.clear();
+                    list = objects;
+                    for (ParseObject parseObject : list) {
+                        set.add(new DateChooserEntry(parseObject.getInt(ParseFields.monthNum), parseObject.getInt(ParseFields.yearNum)));
+                    }
+                    emit.onNext(set.toArray());
+                }
+            });
+        });
+
+    }
 }
