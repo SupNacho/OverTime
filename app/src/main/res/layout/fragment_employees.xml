@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/cl_manager_fragment"
+    android:id="@+id/ll_manager_fragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"

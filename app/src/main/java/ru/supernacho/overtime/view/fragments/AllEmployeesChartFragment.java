@@ -9,10 +9,17 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
+import com.github.mikephil.charting.charts.PieChart;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.Entity.UserCompanyStat;
 import ru.supernacho.overtime.presenter.AllEmplPresenter;
 
 public class AllEmployeesChartFragment extends MvpAppCompatFragment implements AllEmplView {
@@ -21,6 +28,10 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
 
     private int month;
     private int year;
+    private Unbinder unbinder;
+
+    @BindView(R.id.pie_chart_all_empl_chart_fragment)
+    PieChart pieChart;
 
     @InjectPresenter
     AllEmplPresenter presenter;
@@ -57,14 +68,20 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_eployees_chart, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_eployees_chart, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        presenter.getEmployeesStat(month, year);
+        return view;
     }
-
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void updateChartView(List<UserCompanyStat> stats) {
+// TODO: 18.07.2018 piechart implementation
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (unbinder != null) unbinder.unbind();
+    }
 }

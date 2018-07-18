@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -32,8 +33,8 @@ public class EmployeesFragment extends MvpAppCompatFragment implements Employees
 
     private Unbinder unbinder;
 
-    @BindView(R.id.cl_manager_fragment)
-    ConstraintLayout constraintLayout;
+    @BindView(R.id.ll_manager_fragment)
+    LinearLayout constraintLayout;
     @BindView(R.id.srl_manager_fragment)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.rv_manager_fragment_emp_chooser)

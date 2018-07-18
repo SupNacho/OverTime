@@ -1,5 +1,7 @@
 package ru.supernacho.overtime.model.repository;
 
+import android.support.annotation.NonNull;
+
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -51,10 +53,7 @@ public class LogRepository {
 
     public Observable<Object[]> getAllEmployeesMonths() {
         return Observable.create(emit -> {
-            ParseQuery<ParseObject> companyIdQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            ParseObject company = companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
-                    .getFirst();
-            String companyId = company.getString(ParseFields.companyId);
+            String companyId = getCurrentCompany().getString(ParseFields.userCompaniesActiveCompany);
             ParseQuery<ParseObject> query = new ParseQuery<>(ParseClass.OVER_TIME);
             if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
                 query
@@ -77,5 +76,12 @@ public class LogRepository {
             });
         });
 
+    }
+
+    @NonNull
+    private ParseObject getCurrentCompany() throws com.parse.ParseException {
+        ParseQuery<ParseObject> companyIdQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+        return companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
+                .getFirst();
     }
 }
