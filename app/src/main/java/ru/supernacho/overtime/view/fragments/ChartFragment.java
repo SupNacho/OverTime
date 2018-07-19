@@ -202,6 +202,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
     @Override
     public void onNothingSelected() {
         tvComment.setText("Select overtime to see comments about this work");
+        tvCompanyName.setText("No over time selected");
     }
 
 
