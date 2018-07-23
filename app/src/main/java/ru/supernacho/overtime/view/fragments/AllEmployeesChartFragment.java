@@ -1,6 +1,8 @@
 package ru.supernacho.overtime.view.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
@@ -55,7 +58,6 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     TextView tvEmplName;
     @BindView(R.id.tv_summary_all_empl_chart_fragment)
     TextView tvSummaryDuration;
-    @BindView()
 
     @InjectPresenter
     AllEmplPresenter presenter;
@@ -136,6 +138,15 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     }
 
     @Override
+    public void shareFullStat(String fullStat) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Full Statistics for all employees");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, fullStat);
+        startActivity(Intent.createChooser(shareIntent, "Share full statistics"));
+    }
+
+    @Override
     public void onValueSelected(Entry e, Highlight h) {
         UserCompanyStat userCompanyStat = stats.get((int) e.getY());
         tvEmplName.setText(userCompanyStat.getUser().getFullName());
@@ -146,6 +157,11 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     public void onNothingSelected() {
         tvEmplName.setText("");
         tvSummaryDuration.setText("");
+    }
+
+    @OnClick(R.id.fab_all_employee_fragment)
+    public void onClickShare(){
+        presenter.getStatsForShare();
     }
 
     @Override

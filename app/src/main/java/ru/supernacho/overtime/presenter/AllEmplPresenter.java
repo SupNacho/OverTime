@@ -47,4 +47,26 @@ public class AllEmplPresenter extends MvpPresenter<AllEmplView> {
                     }
                 });
     }
+
+    public void getStatsForShare(){
+        repository.getFullStatForShare()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        getViewState().shareFullStat(s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
+                });
+    }
 }

@@ -10,14 +10,17 @@ import com.parse.ParseUser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.Observable;
+import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompanyStat;
+import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 
 public class AllEmplRepository {
     private List<UserCompanyStat> stats = new ArrayList<>();
@@ -74,7 +77,7 @@ public class AllEmplRepository {
             e1.printStackTrace();
         }
 
-        return new User(Objects.requireNonNull(user).getString(ParseFields.userId),
+        return new User(Objects.requireNonNull(user).getObjectId(),
                 user.getString(ParseFields.userName),
                 user.getString(ParseFields.fullName),
                 user.getString(ParseFields.userEmail),
@@ -88,7 +91,55 @@ public class AllEmplRepository {
                 .getFirst();
     }
 
-    public List<UserCompanyStat> getStatsList() {
-        return stats;
+    public Observable<String> getFullStatForShare(){
+        return Observable.create( emit -> {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (UserCompanyStat stat : stats) {
+                formSummaryStrings(stringBuilder, stat);
+                ParseQuery<ParseObject> employeeOverTimes = ParseQuery.getQuery(ParseClass.OVER_TIME);
+                List<ParseObject> overTimes = null;
+                try {
+                    overTimes = employeeOverTimes.whereEqualTo(ParseFields.createdBy, stat.getUser().getUserId())
+                            .whereEqualTo(ParseFields.forCompany,
+                                    getCurrentCompany().getString(ParseFields.userCompaniesActiveCompany))
+                            .find();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (overTimes != null) {
+                    formDetailStrings(stringBuilder, overTimes);
+                }
+            }
+            emit.onNext(stringBuilder.toString());
+        });
+    }
+
+    private void formSummaryStrings(StringBuilder stringBuilder, UserCompanyStat stat) {
+        stringBuilder
+                .append("Employee: ").append(stat.getUser().getFullName()).append("\n")
+                .append("  Total overtime: ").append(DurationToStringConverter.convert(stat.getTimeSummary()))
+                .append("\n");
+    }
+
+    private void formDetailStrings(StringBuilder stringBuilder, List<ParseObject> overTimes) {
+        for (ParseObject overTime : overTimes) {
+            Date start = overTime.getDate(ParseFields.startDate);
+            Date stop = overTime.getDate(ParseFields.stopDate);
+            String timeZoneID = overTime.getString(ParseFields.timeZoneID);
+            String otComment = overTime.getString(ParseFields.comment);
+            OverTimeEntity overTimeEntity = new OverTimeEntity(start, stop, timeZoneID,
+                    stop.getTime() - start.getTime(), otComment, null);
+            stringBuilder
+                    .append("\n")
+                    .append("  Start time: ").append(overTimeEntity.getStartDateTimeLabel())
+                    .append("\n").append("  Finish time: ").append(overTimeEntity.getStopDateTimeLabel())
+                    .append("\n").append("  Duration: ").append(overTimeEntity.getDurationString())
+                    .append("\n").append("  Comment for this overtime: ").append("\n")
+                    .append(overTimeEntity.getComment())
+                    .append("\n");
+        }
+        stringBuilder.append("===================================").append("\n\n");
     }
 }

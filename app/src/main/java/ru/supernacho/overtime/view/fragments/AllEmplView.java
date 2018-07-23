@@ -11,4 +11,5 @@ import ru.supernacho.overtime.model.Entity.UserCompanyStat;
 @StateStrategyType(value = SingleStateStrategy.class)
 public interface AllEmplView extends MvpView {
     void updateChartView(List<UserCompanyStat> stats);
+    void shareFullStat(String fullStat);
 }
