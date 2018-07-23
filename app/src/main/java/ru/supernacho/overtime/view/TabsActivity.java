@@ -186,9 +186,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                 } else if (fragment.getTag().equals(FragmentTag.EMP_DATE_CHOOSER)){
                     ((ManagerFragment)managerFragment).callEmployeesChooser();
                 } else if (fragment.getTag().equals(FragmentTag.ALL_EMPLOYEES_STAT)){
-                    // TODO: 19.07.2018 fix back button for pie chart 
-//                    ((ManagerFragment)managerFragment).callEmployeesChooser();
-                    ((ManagerFragment)managerFragment).openDateFragment(userId);
+                    ((ManagerFragment)managerFragment).openAllStatDateFragment();
                 }
                 else {
                     super.onBackPressed();
