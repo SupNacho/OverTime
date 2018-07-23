@@ -119,7 +119,7 @@ public class AllEmplRepository {
     private void formSummaryStrings(StringBuilder stringBuilder, UserCompanyStat stat) {
         stringBuilder
                 .append("Employee: ").append(stat.getUser().getFullName()).append("\n")
-                .append("  Total overtime: ").append(DurationToStringConverter.convert(stat.getTimeSummary()))
+                .append("Total overtime: ").append(DurationToStringConverter.convert(stat.getTimeSummary()))
                 .append("\n");
     }
 
@@ -133,10 +133,10 @@ public class AllEmplRepository {
                     stop.getTime() - start.getTime(), otComment, null);
             stringBuilder
                     .append("\n")
-                    .append("  Start time: ").append(overTimeEntity.getStartDateTimeLabel())
-                    .append("\n").append("  Finish time: ").append(overTimeEntity.getStopDateTimeLabel())
-                    .append("\n").append("  Duration: ").append(overTimeEntity.getDurationString())
-                    .append("\n").append("  Comment for this overtime: ").append("\n")
+                    .append("    Start time: ").append(overTimeEntity.getStartDateTimeLabel())
+                    .append("\n").append("    Finish time: ").append(overTimeEntity.getStopDateTimeLabel())
+                    .append("\n").append("    Duration: ").append(overTimeEntity.getDurationString())
+                    .append("\n").append("    Comment for this overtime: ").append("\n")
                     .append(overTimeEntity.getComment())
                     .append("\n");
         }

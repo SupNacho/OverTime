@@ -49,7 +49,6 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     private Unbinder unbinder;
     private List<UserCompanyStat> stats;
     private List<PieEntry> entryList = new ArrayList<>();
-    private List<String> labels = new ArrayList<>();
     private List<Integer> colors = new ArrayList<>();
 
     @BindView(R.id.pie_chart_all_empl_chart_fragment)
@@ -121,16 +120,17 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
         this.stats = stats;
         stats.add(0, new UserCompanyStat(
                 new User("","","","",false), 0));
-        labels.clear();
         entryList.clear();
         for (UserCompanyStat stat : stats) {
-            labels.add(stat.getUser().getFullName());
-            entryList.add(new PieEntry(stats.indexOf(stat), stat.getTimeSummary()));
+            entryList.add(new PieEntry(stat.getTimeSummary(), stat.getUser().getFullName()));
         }
         PieDataSet dataSet = new PieDataSet(entryList, "Summary overtime by employee");
         dataSet.setColors(colors);
-        dataSet.setValueFormatter(new PieChartValueFormatter(stats));
+        dataSet.setValueFormatter(new PieChartValueFormatter());
+        dataSet.setValueTextColor(R.color.colorPrimaryDark);
+        dataSet.setSliceSpace(10.0f);
         PieData pieData = new PieData(dataSet);
+        pieData.setValueTextColor(R.color.colorPrimaryDark);
         pieChart.setData(pieData);
         pieChart.setOnChartValueSelectedListener(this);
         pieChart.getDescription().setEnabled(false);
@@ -148,7 +148,7 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        UserCompanyStat userCompanyStat = stats.get((int) e.getY());
+        UserCompanyStat userCompanyStat = stats.get((int) h.getX());
         tvEmplName.setText(userCompanyStat.getUser().getFullName());
         tvSummaryDuration.setText(DurationToStringConverter.convert(userCompanyStat.getTimeSummary()));
     }
