@@ -1,5 +1,7 @@
 package ru.supernacho.overtime.model.repository;
 
+import android.support.annotation.NonNull;
+
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -47,5 +49,39 @@ public class LogRepository {
             });
         });
 
+    }
+
+    public Observable<Object[]> getAllEmployeesMonths() {
+        return Observable.create(emit -> {
+            String companyId = getCurrentCompany().getString(ParseFields.userCompaniesActiveCompany);
+            ParseQuery<ParseObject> query = new ParseQuery<>(ParseClass.OVER_TIME);
+            if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
+                query
+                        .fromLocalDatastore()
+                        .whereEqualTo(ParseFields.forCompany, companyId)
+                        ;
+            } else {
+                query.whereEqualTo(ParseFields.forCompany, companyId);
+            }
+
+            query.findInBackground((objects, e) -> {
+                if (objects != null && e == null) {
+                    set.clear();
+                    list = objects;
+                    for (ParseObject parseObject : list) {
+                        set.add(new DateChooserEntry(parseObject.getInt(ParseFields.monthNum), parseObject.getInt(ParseFields.yearNum)));
+                    }
+                    emit.onNext(set.toArray());
+                }
+            });
+        });
+
+    }
+
+    @NonNull
+    private ParseObject getCurrentCompany() throws com.parse.ParseException {
+        ParseQuery<ParseObject> companyIdQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
+        return companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
+                .getFirst();
     }
 }

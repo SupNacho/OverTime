@@ -78,6 +78,13 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
                 .commit();
     }
 
+    public void openAllStatDateFragment(){
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_manager_frag_container, DateChooserFragment.newInstance(true), FragmentTag.EMP_DATE_CHOOSER)
+                .commit();
+    }
+
     @Override
     public void openDateFragment(String userId) {
         this.userId = userId;
@@ -93,6 +100,13 @@ public class ManagerFragment extends MvpAppCompatFragment implements ManagerView
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.fl_manager_frag_container, ChartFragment.newInstance(month, year, userId), FragmentTag.EMPL_CHART)
+                .commit();
+    }
+
+    public void startAllStatChartFragment(int month, int year) {
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_manager_frag_container, AllEmployeesChartFragment.newInstance(month, year), FragmentTag.ALL_EMPLOYEES_STAT)
                 .commit();
     }
 

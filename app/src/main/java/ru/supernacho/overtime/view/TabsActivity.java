@@ -185,6 +185,8 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
                     ((ManagerFragment)managerFragment).openDateFragment(userId);
                 } else if (fragment.getTag().equals(FragmentTag.EMP_DATE_CHOOSER)){
                     ((ManagerFragment)managerFragment).callEmployeesChooser();
+                } else if (fragment.getTag().equals(FragmentTag.ALL_EMPLOYEES_STAT)){
+                    ((ManagerFragment)managerFragment).openAllStatDateFragment();
                 }
                 else {
                     super.onBackPressed();

@@ -48,4 +48,27 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (!getUserName().equals(user.getUserName())) return false;
+        if (!getFullName().equals(user.getFullName())) return false;
+        if (getUserId() != null ? !getUserId().equals(user.getUserId()) : user.getUserId() != null)
+            return false;
+        return getEmail() != null ? getEmail().equals(user.getEmail()) : user.getEmail() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getUserName().hashCode();
+        result = 31 * result + getFullName().hashCode();
+        result = 31 * result + (getUserId() != null ? getUserId().hashCode() : 0);
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        return result;
+    }
 }

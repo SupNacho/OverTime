@@ -17,12 +17,15 @@ public class OverTimeEntity {
     private final String startDateLabel;
     private final String startDateTimeLabel;
     private final String stopDateTimeLabel;
+    private final CompanyEntity company;
 
-    public OverTimeEntity(Date startDate, Date stopDate, String timeZoneID, long duration, String comment) {
+    public OverTimeEntity(Date startDate, Date stopDate, String timeZoneID, long duration,
+                          String comment, CompanyEntity company) {
         this.startDate = startDate;
         this.stopDate = stopDate;
         this.duration = duration;
         this.comment = comment;
+        this.company = company;
         DateTime sdt = new DateTime(startDate);
         DateTime fdt = new DateTime(stopDate);
         sdt.withZone(DateTimeZone.forID(timeZoneID));
@@ -67,5 +70,9 @@ public class OverTimeEntity {
 
     public String getStopDateTimeLabel() {
         return stopDateTimeLabel;
+    }
+
+    public CompanyEntity getCompany() {
+        return company;
     }
 }
