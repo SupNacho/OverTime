@@ -11,6 +11,10 @@ import ru.supernacho.overtime.model.Entity.UserCompanyStat;
 public class PieChartValueFormatter implements IValueFormatter {
     @Override
     public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-        return DurationToStringConverter.convert((long) value);
+        if (value > 0) {
+            return DurationToStringConverter.convert((long) value);
+        } else {
+            return "";
+        }
     }
 }

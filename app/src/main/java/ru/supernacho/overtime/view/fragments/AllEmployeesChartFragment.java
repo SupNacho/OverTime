@@ -1,6 +1,7 @@
 package ru.supernacho.overtime.view.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,7 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     private List<UserCompanyStat> stats;
     private List<PieEntry> entryList = new ArrayList<>();
     private List<Integer> colors = new ArrayList<>();
+    private List<Integer> valueColors = new ArrayList<>();
 
     @BindView(R.id.pie_chart_all_empl_chart_fragment)
     PieChart pieChart;
@@ -103,6 +105,9 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
         for (int c : ColorTemplate.PASTEL_COLORS)
             colors.add(c);
         colors.add(ColorTemplate.getHoloBlue());
+
+        valueColors.add(R.color.colorAccent);
+        valueColors.add(R.color.colorAccent);
     }
 
     @Override
@@ -127,10 +132,12 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
         PieDataSet dataSet = new PieDataSet(entryList, "Summary overtime by employee");
         dataSet.setColors(colors);
         dataSet.setValueFormatter(new PieChartValueFormatter());
-        dataSet.setValueTextColor(R.color.colorPrimaryDark);
         dataSet.setSliceSpace(10.0f);
         PieData pieData = new PieData(dataSet);
-        pieData.setValueTextColor(R.color.colorPrimaryDark);
+        pieData.setValueTextColor(Color.GRAY);
+        pieData.setValueTextSize(14.0f);
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setEntryLabelTextSize(14.0f);
         pieChart.setData(pieData);
         pieChart.setOnChartValueSelectedListener(this);
         pieChart.getDescription().setEnabled(false);
