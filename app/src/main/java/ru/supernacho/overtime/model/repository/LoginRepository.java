@@ -23,7 +23,9 @@ public class LoginRepository {
         pUser.signUpInBackground(e -> {
             if (e == null) {
                 repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
-
+                ParseObject userCompanies = new ParseObject(ParseClass.USER_COMPANIES);
+                userCompanies.put(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
+                userCompanies.saveEventually();
             } else {
                 switch (e.getCode()) {
                     case 202:

@@ -23,6 +23,11 @@ public class ChooseCompanyRepository {
             ParseQuery<ParseObject> userCompaniesQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
             userCompaniesQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
             ParseObject userCompanies = userCompaniesQuery.getFirst();
+            if (userCompanies == null){
+                ParseObject newUserCompanies = new ParseObject(ParseClass.USER_COMPANIES);
+                newUserCompanies.put(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
+                newUserCompanies.save();
+            }
 
             String activeCompanyId = userCompanies.getString(ParseFields.userCompaniesActiveCompany);
             ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
