@@ -41,11 +41,13 @@ public class CompanyRepository {
                     }
                 });
 
+            // TODO: 25.07.2018 replace with UCRepo getCurrentCompany
                 ParseQuery<ParseObject> userCompanies = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
                 ParseObject userCompany = userCompanies.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
                         .getFirst();
 
-                userCompany.add(ParseFields.userCompaniesCompanies, company.getObjectId());
+            // TODO: 25.07.2018 replace with UCRepo addCompanyToUser
+                userCompany.addUnique(ParseFields.userCompaniesCompanies, company.getObjectId());
                 userCompany.saveEventually();
         });
     }
@@ -61,5 +63,22 @@ public class CompanyRepository {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean isAdmin(String companyId){
+        ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
+        List<ParseObject> results = null;
+        try {
+            results = companyQuery.whereEqualTo(ParseFields.companyId, companyId)
+                    .whereEqualTo(ParseFields.companyAdmins, ParseUser.getCurrentUser().getObjectId())
+                    .find();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (results.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
