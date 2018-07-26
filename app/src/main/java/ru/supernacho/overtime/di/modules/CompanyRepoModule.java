@@ -5,12 +5,13 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.supernacho.overtime.model.repository.CompanyRepository;
+import ru.supernacho.overtime.model.repository.UserCompanyRepository;
 
 @Singleton
-@Module
+@Module(includes = {UserCompaniesRepoModule.class})
 public class CompanyRepoModule {
     @Provides
-    CompanyRepository companyRepository(){
-        return new CompanyRepository();
+    CompanyRepository companyRepository(UserCompanyRepository userCompanyRepository){
+        return new CompanyRepository(userCompanyRepository);
     }
 }
