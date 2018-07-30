@@ -35,7 +35,8 @@ public class SoftKeyboardCoordinatorLayout extends CoordinatorLayout {
         activity = (Activity) context;
         rect = new Rect();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.activity_tabs, this);
+//        inflater.inflate(R.layout.activity_tabs, this);
+        inflater.inflate(R.layout.activity_tabs_with_drawer, this);
     }
 
     public void setKeyboardStateListener(KeyboardStateListener listener){

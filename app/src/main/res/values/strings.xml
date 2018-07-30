@@ -47,6 +47,12 @@
     <string name="month_nov">November</string>
     <string name="month_dec">December</string>
 
+    <!-- Strings for activities -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="user_role_common">Employee</string>
+    <string name="user_role_admin">Administrator</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Timer fragment</string>
     <string name="hello_blank_fragment_two">Logs fragment</string>

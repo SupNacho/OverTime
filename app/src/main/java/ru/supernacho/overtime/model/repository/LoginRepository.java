@@ -4,6 +4,7 @@ import com.parse.ParseUser;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.utils.NetworkStatus;
@@ -90,6 +91,10 @@ public class LoginRepository {
 
     public Observable<UserCompany> userIsAdmin() {
         return companyRepository.userIsAdmin();
+    }
+
+    public Observable<CompanyEntity> getCurrentCompany(){
+        return companyRepository.getCurrentCompany();
     }
 
     public PublishSubject<RepoEvents> getRepoEventBus() {
