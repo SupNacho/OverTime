@@ -16,7 +16,7 @@
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="Company registration"/>
+        android:text="@string/company_registration_label"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_company_name"
@@ -27,7 +27,7 @@
             android:id="@+id/et_company_name_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company name" />
+            android:hint="@string/company_reg_name_hint" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -39,7 +39,7 @@
             android:id="@+id/et_company_address_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company address" />
+            android:hint="@string/company_reg_address_hint" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -51,7 +51,7 @@
             android:id="@+id/et_company_phone_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company phone" />
+            android:hint="@string/company_reg_phone_hint" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -63,7 +63,7 @@
             android:id="@+id/et_company_email_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company email" />
+            android:hint="@string/company_reg_email_hint" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -75,7 +75,7 @@
             android:id="@+id/et_company_chief_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Company chief" />
+            android:hint="@string/company_reg_chief_hint" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_weight="5"
-            android:text="Register Company" />
+            android:text="@string/register_company_btn" />
 
         <Button
             android:id="@+id/btn_cancel_company_registration"
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_weight="5"
-            android:text="cancel" />
+            android:text="@string/company_reg_cancel_btn" />
     </LinearLayout>
 
 </LinearLayout>

@@ -12,7 +12,7 @@
         android:id="@+id/btn_all_stat_employee_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="show all employees stat"/>
+        android:text="@string/show_all_employees_stat_btn"/>
     <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/srl_manager_fragment"
     android:layout_width="match_parent"

@@ -34,7 +34,7 @@
                 android:id="@+id/tv_company_label_chart_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="For company: "/>
+                android:text="@string/chart_for_company_label"/>
             <TextView
                 android:id="@+id/tv_company_name_chart_fragment"
                 android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                 <TextView
                     android:id="@+id/tv_comment_chart_fragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="15" />
             </LinearLayout>
         </ScrollView>

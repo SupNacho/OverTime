@@ -14,6 +14,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:padding="20dp"
+        android:contentDescription="@string/choose_comp_leave_company_btn_desc"
         android:src="@drawable/ic_exit_company"
         />
 

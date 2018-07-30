@@ -2,9 +2,9 @@
     <string name="app_name">Overtime</string>
 
     <!-- Parse resources -->
-    <string name="app_id">58dc3222c1ced7a4a8cdcc6d3027ed662245cec8</string>
-    <string name="client_id">38e592ed7ede7e8c567bb64eb431198da9428a3f</string>
-    <string name="server_address">http://52.47.174.21:80/parse/</string>
+    <string name="app_id" translatable="false">58dc3222c1ced7a4a8cdcc6d3027ed662245cec8</string>
+    <string name="client_id" translatable="false">38e592ed7ede7e8c567bb64eb431198da9428a3f</string>
+    <string name="server_address" translatable="false">http://52.47.174.21:80/parse/</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -21,10 +21,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_tabs">TabsActivity</string>
+    <string name="title_activity_tabs" translatable="false">TabsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
 
     <!-- Strings related to text report -->
     <string name="text_rep_new_rec">Overtime:</string>
@@ -53,13 +53,55 @@
     <string name="user_role_common">Employee</string>
     <string name="user_role_admin">Administrator</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Timer fragment</string>
-    <string name="hello_blank_fragment_two">Logs fragment</string>
-    <string name="hello_blank_fragment_three">Manager fragment</string>
     <string name="month_summary_overtime_label">Month summary overtime:</string>
     <string name="overtime_comment_label">Overtime comment:</string>
     <string name="til_enter_job_comment">Enter job comment</string>
     <string name="login_hint_full_name">Full name</string>
     <string name="login_hint_user_login">User login</string>
+    <string name="choose_active_company_label">Choose active company or join new</string>
+    <string name="join_company_using_pin_hint">Join company using pin code</string>
+    <string name="btn_choose_company_join">JOIN</string>
+    <string name="company_registration_label">Company registration</string>
+    <string name="company_reg_name_hint">Company name</string>
+    <string name="company_reg_address_hint">Company address</string>
+    <string name="company_reg_phone_hint">Company phone</string>
+    <string name="company_reg_email_hint">Company email</string>
+    <string name="company_reg_chief_hint">Company chief</string>
+    <string name="register_company_btn">Register Company</string>
+    <string name="company_reg_cancel_btn">cancel</string>
+    <string name="login_confirm_password_hint">Confirm password</string>
+    <string name="login_register_new_company_btn">Register new company</string>
+    <string name="login_confirm_btn">Confirm</string>
+    <string name="login_cancel_btn">Cancel</string>
+    <string name="login_register_user_or_comp_btn">Register user or company</string>
+    <string name="manage_employees_label">Manage employees</string>
+    <string name="manage_empl_company_label">Company:</string>
+    <string name="manage_empl_employees_label">Employees:</string>
+    <string name="manage_empl_fire_label">Fire</string>
+    <string name="manage_empl_full_name_label">Full name</string>
+    <string name="manage_empl_admin_label">Admin</string>
+    <string name="tabs_timer_label">Timer</string>
+    <string name="tabs_logs_label">Logs</string>
+    <string name="choose_comp_leave_company_btn_desc">Leave company</string>
+    <string name="company_info_label">Company info</string>
+    <string name="comp_info_address_label">Address</string>
+    <string name="company_contacts_label">Contacts</string>
+    <string name="comp_info_phone_label">Phone</string>
+    <string name="comp_info_ceo_label">CEO</string>
+    <string name="comp_info_pin_label">PIN</string>
+    <string name="comp_info_copy_or_share_desc">Copy or Share</string>
+    <string name="comp_info_close_btn">close</string>
+    <string name="all_empl_chart_employee_info_label">Employee info:</string>
+    <string name="all_empl_chart_summary_time_label">Summary time:</string>
+    <string name="chart_for_company_label">For company:</string>
+    <string name="show_all_employees_stat_btn">show all employees stat</string>
+    <string name="timer_start_time_label">Start time:</string>
+    <string name="timer_00_00_00_" translatable="false">00:00:00</string>
+    <string name="timer_add_btn">Add</string>
+    <string name="timer_start_overtime_btn">Start overtime</string>
+    <string name="manage_empl_fire_employee_desc">Fire employee</string>
+    <string name="nav_drawer_manage_employee">Manage employee</string>
+    <string name="nav_drawer_choose_company">Choose company</string>
+    <string name="nav_drawer_register_company">Register company</string>
+    <string name="nav_drawer_about_active_company">About active company</string>
 </resources>

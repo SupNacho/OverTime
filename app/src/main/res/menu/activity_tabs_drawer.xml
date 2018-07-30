@@ -8,22 +8,22 @@
             android:id="@+id/nav_manage_employee"
             android:icon="@drawable/ic_manage_empl_gray_24dp"
             android:visible="false"
-            android:title="Manage employee" />
+            android:title="@string/nav_drawer_manage_employee" />
         <item
             android:id="@+id/nav_choose_company"
             android:icon="@drawable/ic_choose_company_white_24dp"
-            android:title="Choose company" />
+            android:title="@string/nav_drawer_choose_company" />
         <item
             android:id="@+id/nav_register_new_company"
             android:icon="@drawable/ic_add_company_white_24dp"
-            android:title="Register company" />
+            android:title="@string/nav_drawer_register_company" />
         <item
             android:id="@+id/nav_about_company"
             android:icon="@drawable/ic_company_info_white_24dp"
-            android:title="About active company" />
+            android:title="@string/nav_drawer_about_active_company" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout_white_24dp"
-            android:title="Log out" />
+            android:title="@string/action_logout" />
     </group>
 </menu>
