@@ -3,8 +3,6 @@ package ru.supernacho.overtime.view.fragments;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +12,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -129,7 +125,7 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
         for (UserCompanyStat stat : stats) {
             entryList.add(new PieEntry(stat.getTimeSummary(), stat.getUser().getFullName()));
         }
-        PieDataSet dataSet = new PieDataSet(entryList, "Summary overtime by employee");
+        PieDataSet dataSet = new PieDataSet(entryList, null);
         dataSet.setColors(colors);
         dataSet.setValueFormatter(new PieChartValueFormatter());
         dataSet.setSliceSpace(10.0f);
@@ -148,9 +144,9 @@ public class AllEmployeesChartFragment extends MvpAppCompatFragment implements A
     public void shareFullStat(String fullStat) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Full Statistics for all employees");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.subj_extra_all_employee_stat));
         shareIntent.putExtra(Intent.EXTRA_TEXT, fullStat);
-        startActivity(Intent.createChooser(shareIntent, "Share full statistics"));
+        startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.chooser_title_all_employee_stat)));
     }
 
     @Override

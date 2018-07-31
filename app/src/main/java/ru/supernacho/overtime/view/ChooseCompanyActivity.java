@@ -83,8 +83,11 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
 
     @Override
     public void initExitFromCompany(String companyId) {
-        Alert.create("Exit company?", "Are your sure want exit?", "YES",
-                "Cancel", this, companyId, presenter);
+        Alert.create(getResources().getString(R.string.alert_leave_company_header),
+                getResources().getString(R.string.alert_leave_company_message),
+                getResources().getString(R.string.alert_btn_positive),
+                getResources().getString(R.string.alert_btn_negative),
+                this, companyId, presenter);
     }
 
     @ProvidePresenter
@@ -117,36 +120,36 @@ public class ChooseCompanyActivity extends MvpAppCompatActivity implements Choos
 
     @Override
     public void activationSuccess() {
-        Snackbar.make(etPin, "Activation Success", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_activation_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void activationFail() {
-        Snackbar.make(etPin, "Activation fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_activation_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void deactivationSuccess() {
-        Snackbar.make(etPin, "Deactivation Success", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_deactivation_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void deactivationFail() {
-        Snackbar.make(etPin, "Deactivation fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_deactivation_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void joinFail() {
-        Snackbar.make(etPin, "Join company fail, probably there some trouble with connection", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_join_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void joinSuccess() {
-        Snackbar.make(etPin, "Join company success", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_join_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void exitError() {
-        Snackbar.make(etPin, "Exit error", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(etPin, getResources().getString(R.string.snack_bar_exit_err), Snackbar.LENGTH_SHORT).show();
     }
 }

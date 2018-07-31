@@ -21,8 +21,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
 
-import org.w3c.dom.Text;
-
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -41,7 +39,6 @@ import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
 import ru.supernacho.overtime.view.listener.NavigationDrawerListener;
-import timber.log.Timber;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -126,7 +123,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private void addManagerTab() {
         if (isAdmin) {
             if (tabLayout.getTabCount() < 3) {
-                tabLayout.addTab(tabLayout.newTab().setText("Manager"));
+                tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tabs_manager_label)));
                 fragmentsPagerAdapter.addFragment(managerFragment);
             }
         } else if(tabLayout.getTabCount() > 2){
@@ -189,7 +186,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         addManagerTab();
         navigationView.getMenu().findItem(R.id.nav_manage_employee).setVisible(isAdmin);
         setRoleDescription(isAdmin);
-        Timber.d("ADMIN: %s", isAdmin);
     }
 
     private void setRoleDescription(boolean isAdmin) {
@@ -205,7 +201,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void logoutDone() {
-        Snackbar.make(toolbar, "Logout done", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(toolbar, getResources().getString(R.string.snack_bar_logout_success), Snackbar.LENGTH_SHORT).show();
         Intent logoutIntent = new Intent(this, LoginActivity.class);
         startActivity(logoutIntent);
         this.finish();
@@ -213,7 +209,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void logoutFailed() {
-        Snackbar.make(toolbar, "Logout failed? 8-0", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(toolbar, getResources().getString(R.string.snack_bar_logout_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

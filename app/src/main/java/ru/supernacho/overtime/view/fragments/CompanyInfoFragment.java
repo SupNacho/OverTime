@@ -28,7 +28,6 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.presenter.CompanyInfoPresenter;
-import timber.log.Timber;
 
 public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements View.OnClickListener,
         CompanyInfoView {
@@ -105,7 +104,8 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
                 dismiss();
                 break;
             default:
-                Toast.makeText(getContext(), "No such view", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_view_not_found),
+                        Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -178,14 +178,13 @@ public class CompanyInfoFragment extends MvpAppCompatDialogFragment implements V
                 tvPhone.getText() + "\n" +
                 tvEmail.getText() + "\n" +
                 tvCeo.getText();
-        shareIntent(info, "Share CompanyInfo");
+        shareIntent(info, getResources().getString(R.string.share_company_info));
     }
 
     @OnClick(R.id.iv_pin_company_info)
     public void onCopyPinClicked() {
-        Timber.d("PIN COPY CLICKED");
         String info = String.valueOf(tvPin.getText());
-        shareIntent(info, "Share company access pin");
+        shareIntent(info, getResources().getString(R.string.share_pin));
     }
 
     private void shareIntent(String info, String title) {

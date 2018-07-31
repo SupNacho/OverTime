@@ -141,6 +141,8 @@ public class OverTimeStatRepository {
 
     public Observable<List<OverTimeEntity>> getOverTimesByUserId(int month, int year, String userId){
        return Observable.create( emit -> {
+           Date zeroTime = new Date();
+           zeroTime.setTime(0);
             ParseQuery<ParseObject> query = ParseQuery.getQuery(ParseClass.OVER_TIME);
             if (userId != null) {
                 this.userId = userId;
@@ -153,12 +155,14 @@ public class OverTimeStatRepository {
                         .fromLocalDatastore()
                         .whereEqualTo(ParseFields.createdBy, this.userId)
                         .whereEqualTo(ParseFields.monthNum, month)
-                        .whereEqualTo(ParseFields.yearNum, year);
+                        .whereEqualTo(ParseFields.yearNum, year)
+                        .whereNotEqualTo(ParseFields.stopDate, zeroTime);
             } else {
                 query
                         .whereEqualTo(ParseFields.createdBy, this.userId)
                         .whereEqualTo(ParseFields.monthNum, month)
-                        .whereEqualTo(ParseFields.yearNum, year);
+                        .whereEqualTo(ParseFields.yearNum, year)
+                        .whereNotEqualTo(ParseFields.stopDate, zeroTime);
             }
 
             query.findInBackground((objects, e) -> {

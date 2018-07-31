@@ -12,8 +12,6 @@ import java.util.List;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.presenter.EmployeesPresenter;
-import ru.supernacho.overtime.presenter.ManagerPresenter;
-import timber.log.Timber;
 
 public class EmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -47,15 +45,11 @@ public class EmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     class EmployeeView extends RecyclerView.ViewHolder{
         TextView tvFullName;
         TextView tvEmail;
-        public EmployeeView(View itemView) {
+        EmployeeView(View itemView) {
             super(itemView);
             tvFullName = itemView.findViewById(R.id.tv_fullname_employees_view);
             tvEmail = itemView.findViewById(R.id.tv_email_employees_view);
-            itemView.setOnClickListener(v -> {
-                presenter.chooseEmployee(employs.get(getLayoutPosition()).getUserId());
-                Timber.d("User: id %s, name %s", employs.get(getLayoutPosition()).getUserId(),
-                        employs.get(getLayoutPosition()).getFullName());
-            });
+            itemView.setOnClickListener(v -> presenter.chooseEmployee(employs.get(getLayoutPosition()).getUserId()));
         }
     }
 }

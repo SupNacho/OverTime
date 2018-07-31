@@ -35,7 +35,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.CompanyRegistrationActivity" />
         <activity android:name=".view.ChooseCompanyActivity" />
-        <activity android:name=".view.ManageEmployeeActivity"></activity>
+        <activity android:name=".view.ManageEmployeeActivity"/>
     </application>
 
 </manifest>

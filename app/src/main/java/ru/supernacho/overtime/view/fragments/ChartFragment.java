@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.arellomobile.mvp.MvpAppCompatDialogFragment;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
@@ -28,7 +27,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +42,6 @@ import ru.supernacho.overtime.utils.charts.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.charts.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.charts.YAxisValueFormatter;
 import ru.supernacho.overtime.utils.view.CompanyInfo;
-import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -126,7 +123,6 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
                 getResources().getString(R.string.text_rep_end_date),
                 getResources().getString(R.string.text_rep_duration),
                 getResources().getString(R.string.text_rep_comment)));
-        Timber.d("Time zone: %s", TimeZone.getDefault().getDisplayName());
         return view;
     }
 
@@ -151,7 +147,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
             labels.add(overTimeEntity.getStartDateLabel());
             yVals.add(new BarEntry(overTimeEntityList.indexOf(overTimeEntity), overTimeEntity.getDuration()));
         }
-        BarDataSet dataSet = new BarDataSet(yVals, "Hours per day");
+        BarDataSet dataSet = new BarDataSet(yVals, getResources().getString(R.string.chart_label));
         dataSet.setValueFormatter(new DataSetValueFormatter());
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         dataSet.setDrawValues(true);
@@ -181,9 +177,9 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
     public void shareReport(String report){
         Intent shareIntent = new Intent((Intent.ACTION_SEND));
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Subj OVerTimes");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.subj_extra_personal_stat));
         shareIntent.putExtra(Intent.EXTRA_TEXT, report);
-        startActivity(Intent.createChooser(shareIntent, "Share shmare"));
+        startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.chooser_title_personal_stat)));
     }
 
     @Override
@@ -201,8 +197,8 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
 
     @Override
     public void onNothingSelected() {
-        tvComment.setText("Select overtime to see comments about this work");
-        tvCompanyName.setText("No over time selected");
+        tvComment.setText(getResources().getString(R.string.overtime_chart_hint));
+        tvCompanyName.setText(getResources().getString(R.string.overtime_chart_no_selected));
     }
 
 

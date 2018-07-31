@@ -47,6 +47,43 @@
     <string name="month_nov">November</string>
     <string name="month_dec">December</string>
 
+    <!-- Strings for in code use -->
+    <string name="alert_leave_company_header">Exit company?</string>
+    <string name="alert_fire_employee_header">Fire employee?</string>
+    <string name="alert_leave_company_message">Are your sure want exit?</string>
+    <string name="alert_fire_employee_message">Are you sure want fire this employee?</string>
+    <string name="alert_btn_positive">YES</string>
+    <string name="alert_btn_negative">Cancel</string>
+    <string name="snack_bar_activation_success">Activation Success</string>
+    <string name="snack_bar_activation_fail">Activation fail, probably there some trouble with connection</string>
+    <string name="snack_bar_deactivation_success">Deactivation Success</string>
+    <string name="snack_bar_deactivation_fail">Deactivation fail, probably there some trouble with connection</string>
+    <string name="snack_bar_join_fail">Join company fail, probably there some trouble with connection</string>
+    <string name="snack_bar_join_success">Join company success</string>
+    <string name="snack_bar_exit_err">Exit error</string>
+    <string name="snack_bar_company_reg_success">Company registered successfully!</string>
+    <string name="snack_bar_fail_username_used">Failed username already in use</string>
+    <string name="snack_bar_fail_email_used">Failed email already registered</string>
+    <string name="snack_bar_fire_success"> successfully fired</string>
+    <string name="snack_bar_fire_fail"> fire is failed</string>
+    <string name="snack_bar_set_admin_fail">Grant Admin status failed!</string>
+    <string name="snack_bar_set_admin_success">Grant Admin status success</string>
+    <string name="snack_bar_logout_success">Logout done</string>
+    <string name="snack_bar_logout_fail">Logout fail, no connection</string>
+    <string name="toast_no_such_btn">No such button</string>
+    <string name="toast_reg_success">Registration success</string>
+    <string name="toast_reg_fail">Registration failed</string>
+    <string name="toast_result_fail">Company registration failed</string>
+    <string name="toast_month_not_found">Month not found</string>
+    <string name="toast_view_not_found">No such view</string>
+    <string name="subj_extra_all_employee_stat">Full Statistics for all employees</string>
+    <string name="subj_extra_personal_stat">My overtimes</string>
+    <string name="chooser_title_all_employee_stat">Share full statistics</string>
+    <string name="chooser_title_personal_stat">Share personal statistics</string>
+    <string name="chart_label">Hours per day</string>
+    <string name="share_company_info">Share CompanyInfo</string>
+    <string name="share_pin">Share company access pin</string>
+
     <!-- Strings for activities -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -82,6 +119,7 @@
     <string name="manage_empl_admin_label">Admin</string>
     <string name="tabs_timer_label">Timer</string>
     <string name="tabs_logs_label">Logs</string>
+    <string name="tabs_manager_label">Manage</string>
     <string name="choose_comp_leave_company_btn_desc">Leave company</string>
     <string name="company_info_label">Company info</string>
     <string name="comp_info_address_label">Address</string>
@@ -98,10 +136,13 @@
     <string name="timer_start_time_label">Start time:</string>
     <string name="timer_00_00_00_" translatable="false">00:00:00</string>
     <string name="timer_add_btn">Add</string>
-    <string name="timer_start_overtime_btn">Start overtime</string>
+    <string name="timer_start_overtime_btn">Start</string>
+    <string name="timer_stop_overtime_btn">FinishНачать</string>
     <string name="manage_empl_fire_employee_desc">Fire employee</string>
     <string name="nav_drawer_manage_employee">Manage employee</string>
     <string name="nav_drawer_choose_company">Choose company</string>
     <string name="nav_drawer_register_company">Register company</string>
     <string name="nav_drawer_about_active_company">About active company</string>
+    <string name="overtime_chart_hint">Select overtime to see comments about this work</string>
+    <string name="overtime_chart_no_selected">No overtime selected</string>
 </resources>
