@@ -19,7 +19,6 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -38,10 +37,12 @@ import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.presenter.ChartPresenter;
+import ru.supernacho.overtime.utils.ColorLib;
 import ru.supernacho.overtime.utils.charts.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.charts.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.charts.YAxisValueFormatter;
 import ru.supernacho.overtime.utils.view.CompanyInfo;
+import ru.supernacho.overtime.view.custom.ColoredBarDataSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -147,7 +148,8 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
             labels.add(overTimeEntity.getStartDateLabel());
             yVals.add(new BarEntry(overTimeEntityList.indexOf(overTimeEntity), overTimeEntity.getDuration()));
         }
-        BarDataSet dataSet = new BarDataSet(yVals, getResources().getString(R.string.chart_label));
+        ColoredBarDataSet dataSet = new ColoredBarDataSet(yVals, overTimesList, getResources().getString(R.string.chart_label));
+        dataSet.setColors(ColorLib.getColors());
         dataSet.setValueFormatter(new DataSetValueFormatter());
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         dataSet.setDrawValues(true);

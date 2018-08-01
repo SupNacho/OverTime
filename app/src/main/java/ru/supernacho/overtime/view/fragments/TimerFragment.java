@@ -177,11 +177,11 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         this.isStarted = isStarted;
         if (isStarted) {
             btnAddComment.setVisibility(View.VISIBLE);
-            btnTimerControl.setText(getResources().getString(R.string.timer_start_overtime_btn));
+            btnTimerControl.setText(getResources().getString(R.string.timer_stop_overtime_btn));
             progressBar.setIndeterminate(true);
         } else {
             btnAddComment.setVisibility(View.GONE);
-            btnTimerControl.setText(getResources().getString(R.string.timer_stop_overtime_btn));
+            btnTimerControl.setText(getResources().getString(R.string.timer_start_overtime_btn));
             progressBar.setIndeterminate(false);
         }
     }
