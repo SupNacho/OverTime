@@ -26,8 +26,10 @@ public class ColoredBarDataSet extends BarDataSet {
     @Override
     public int getColor(int index) {
         for (String cName : companyNames) {
-            String name = overTimeEntityList.get(index).getCompany().getName();
-            if (cName.equals(name)) return mColors.get(companyNames.indexOf(cName));
+            if (index < overTimeEntityList.size()) {
+                String name = overTimeEntityList.get(index).getCompany().getName();
+                if (cName.equals(name)) return mColors.get(companyNames.indexOf(cName));
+            }
         }
         return super.getColor();
     }

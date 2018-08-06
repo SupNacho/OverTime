@@ -46,7 +46,7 @@ public class OverTimeStatRepository {
         this.usersMap = new HashMap<>();
         this.overTimesList = new ArrayList<>();
         this.set = new HashSet<>();
-}
+    }
 
     public Observable<Object[]> getMonthsByUserId(String userId) {
         return Observable.create(emit -> {
@@ -91,7 +91,7 @@ public class OverTimeStatRepository {
         });
     }
 
-    public Observable<List<UserCompanyStat>> getStats (int month, int year){
+    public Observable<List<UserCompanyStat>> getStats(int month, int year) {
         usersMap.clear();
         stats.clear();
         return Observable.create(emit -> {
@@ -101,14 +101,14 @@ public class OverTimeStatRepository {
                     .whereEqualTo(ParseFields.yearNum, year)
                     .whereEqualTo(ParseFields.forCompany, userCompanyRepository.getActiveCompanyId())
                     .findInBackground((objects, e) -> {
-                        if (e == null && objects != null){
+                        if (e == null && objects != null) {
                             for (ParseObject overTime : objects) {
 
                                 User userEntity = getUser(overTime);
                                 addToMap(overTime, userEntity);
                             }
 
-                            for (Map.Entry<User, Long> entry : usersMap.entrySet()){
+                            for (Map.Entry<User, Long> entry : usersMap.entrySet()) {
                                 stats.add(new UserCompanyStat(entry.getKey(), entry.getValue()));
                             }
 
@@ -118,8 +118,8 @@ public class OverTimeStatRepository {
         });
     }
 
-    public Observable<String> getFullStatForShare(){
-        return Observable.create( emit -> {
+    public Observable<String> getFullStatForShare() {
+        return Observable.create(emit -> {
             StringBuilder stringBuilder = new StringBuilder();
 
             for (UserCompanyStat stat : stats) {
@@ -139,10 +139,10 @@ public class OverTimeStatRepository {
         });
     }
 
-    public Observable<List<OverTimeEntity>> getOverTimesByUserId(int month, int year, String userId){
-       return Observable.create( emit -> {
-           Date zeroTime = new Date();
-           zeroTime.setTime(0);
+    public Observable<List<OverTimeEntity>> getOverTimesByUserId(int month, int year, String userId, String forCompany) {
+        return Observable.create(emit -> {
+            Date zeroTime = new Date();
+            zeroTime.setTime(0);
             ParseQuery<ParseObject> query = ParseQuery.getQuery(ParseClass.OVER_TIME);
             if (userId != null) {
                 this.userId = userId;
@@ -150,24 +150,30 @@ public class OverTimeStatRepository {
                 this.userId = ParseUser.getCurrentUser().getObjectId();
             }
 
-            if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE){
+//            if (NetworkStatus.getStatus() == NetworkStatus.Status.OFFLINE) {
+//                query
+//                        .fromLocalDatastore()
+//                        .whereEqualTo(ParseFields.createdBy, this.userId)
+//                        .whereEqualTo(ParseFields.monthNum, month)
+//                        .whereEqualTo(ParseFields.yearNum, year)
+//                        .whereNotEqualTo(ParseFields.stopDate, zeroTime);
+//                if (forCompany != null) {
+//                    query.whereEqualTo(ParseFields.forCompany, forCompany);
+//                }
+//            } else {
                 query
-                        .fromLocalDatastore()
                         .whereEqualTo(ParseFields.createdBy, this.userId)
                         .whereEqualTo(ParseFields.monthNum, month)
                         .whereEqualTo(ParseFields.yearNum, year)
                         .whereNotEqualTo(ParseFields.stopDate, zeroTime);
-            } else {
-                query
-                        .whereEqualTo(ParseFields.createdBy, this.userId)
-                        .whereEqualTo(ParseFields.monthNum, month)
-                        .whereEqualTo(ParseFields.yearNum, year)
-                        .whereNotEqualTo(ParseFields.stopDate, zeroTime);
-            }
+                if (forCompany != null) {
+                    query.whereEqualTo(ParseFields.forCompany, forCompany);
+                }
+//            }
 
             query.findInBackground((objects, e) -> {
                 overTimesList.clear();
-                if (objects != null && e == null){
+                if (objects != null && e == null) {
                     for (ParseObject object : objects) {
                         Date start = object.getDate(ParseFields.startDate);
                         Date stop = object.getDate(ParseFields.stopDate);
@@ -195,7 +201,7 @@ public class OverTimeStatRepository {
     private void addToMap(@NotNull ParseObject overTime, User userEntity) {
         long duration = overTime.getDate(ParseFields.stopDate).getTime()
                 - overTime.getDate(ParseFields.startDate).getTime();
-        if (usersMap.containsKey(userEntity)){
+        if (usersMap.containsKey(userEntity)) {
             usersMap.put(userEntity, usersMap.get(userEntity)
                     + duration);
         } else {

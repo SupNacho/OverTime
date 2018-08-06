@@ -125,4 +125,5 @@
     <string name="toast_month_not_found">Месяц с таким номером не найден</string>
     <string name="toast_view_not_found">Нет такого представления</string>
     <string name="timer_stop_overtime_btn">Закончить</string>
+    <string name="sort_comp_label_chart_fragment">Статистика по компании: </string>
 </resources>

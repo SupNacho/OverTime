@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -24,8 +26,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,23 +47,24 @@ import ru.supernacho.overtime.utils.charts.XAxisValuesFormatter;
 import ru.supernacho.overtime.utils.charts.DataSetValueFormatter;
 import ru.supernacho.overtime.utils.charts.YAxisValueFormatter;
 import ru.supernacho.overtime.utils.view.CompanyInfo;
+import ru.supernacho.overtime.view.TabsActivity;
+import ru.supernacho.overtime.view.adapters.SortSpinnerAdapter;
 import ru.supernacho.overtime.view.custom.ColoredBarDataSet;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ChartFragment extends MvpAppCompatFragment implements ChartView,
-        OnChartValueSelectedListener{
+        OnChartValueSelectedListener {
     private static final String ARG_PARAM1 = "month";
     private static final String ARG_PARAM2 = "year";
     private static final String ARG_PARAM3 = "userId";
+    private static final String ARG_PARAM4 = "isManagerView";
 
     private int month;
     private int year;
+    private boolean isManagerView;
     private String userId;
-    private List<OverTimeEntity> overTimesList;
+    private List<OverTimeEntity> sortedOverTimesList;
+    private List<CompanyEntity> companiesList;
     private Unbinder unbinder;
     private CompanyEntity company;
 
@@ -75,6 +81,10 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
     TextView tvSummary;
     @BindView(R.id.fab_chart_fragment)
     FloatingActionButton fab;
+    @BindView(R.id.sp_sort_by_comp_chart_fragment)
+    Spinner spSortByCompany;
+    @BindView(R.id.tv_sort_label_chart_fragment)
+    TextView tvSortLabel;
 
     private List<BarEntry> yVals = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
@@ -92,12 +102,14 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         fragment.setArguments(args);
         return fragment;
     }
+
     public static ChartFragment newInstance(int month, int year, String userId) {
         ChartFragment fragment = new ChartFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, month);
         args.putInt(ARG_PARAM2, year);
         args.putString(ARG_PARAM3, userId);
+        args.putBoolean(ARG_PARAM4, true);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,6 +121,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
             month = getArguments().getInt(ARG_PARAM1);
             year = getArguments().getInt(ARG_PARAM2);
             userId = getArguments().getString(ARG_PARAM3);
+            isManagerView = getArguments().getBoolean(ARG_PARAM4);
         }
     }
 
@@ -117,38 +130,108 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         unbinder = ButterKnife.bind(this, view);
-        presenter.getOverTimes(month, year, userId);
+        String forCompany = null;
+        if (isManagerView) forCompany = ((TabsActivity) Objects.requireNonNull(getActivity())).getCompanyId();
+        presenter.getOverTimes(month, year, userId, forCompany);
         fab.setOnClickListener(v -> presenter.sendReport(
                 getResources().getString(R.string.text_rep_new_rec),
                 getResources().getString(R.string.text_rep_start_date),
                 getResources().getString(R.string.text_rep_end_date),
                 getResources().getString(R.string.text_rep_duration),
                 getResources().getString(R.string.text_rep_comment)));
+        initSortSpinner();
         return view;
     }
 
+    private void initSortSpinner() {
+        companiesList = new ArrayList<>();
+        companiesList.add(new CompanyEntity(null, "All companies", false));
+        SpinnerAdapter spinnerAdapter = new SortSpinnerAdapter(Objects.requireNonNull(getContext()),
+                android.R.layout.simple_spinner_item, companiesList);
+        spSortByCompany.setAdapter(spinnerAdapter);
+        spSortByCompany.setSelection(0);
+        spSortByCompany.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                presenter.getOverTimes(month, year, userId, companiesList.get(position).getObjectId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                presenter.getOverTimes(month, year, userId, null);
+            }
+        });
+        if (isManagerView) {
+            tvSortLabel.setVisibility(View.GONE);
+            spSortByCompany.setVisibility(View.GONE);
+        }
+    }
+
     @ProvidePresenter
-    public ChartPresenter providePresenter(){
+    public ChartPresenter providePresenter() {
         ChartPresenter presenter = new ChartPresenter(AndroidSchedulers.mainThread());
         App.getInstance().getAppComponent().inject(presenter);
         return presenter;
     }
 
     @OnClick(R.id.ll_company_chart_fragment)
-    public void onClickCompany(){
-        if (getActivity() != null) CompanyInfo.viewChosen((AppCompatActivity) getActivity(), company);
+    public void onClickCompany() {
+        if (getActivity() != null)
+            CompanyInfo.viewChosen((AppCompatActivity) getActivity(), company);
+    }
+
+    @Override
+    public void updateCompanyList(List<OverTimeEntity> overTimeEntityList) {
+        for (OverTimeEntity overTimeEntity : overTimeEntityList) {
+            if (!companiesList.contains(overTimeEntity.getCompany())) companiesList.add(overTimeEntity.getCompany());
+        }
     }
 
     @Override
     public void updateChartView(List<OverTimeEntity> overTimeEntityList) {
-        overTimesList = overTimeEntityList;
+        barChart.clear();
+        sortedOverTimesList = overTimeEntityList;
         labels.clear();
         yVals.clear();
         for (OverTimeEntity overTimeEntity : overTimeEntityList) {
-            labels.add(overTimeEntity.getStartDateLabel());
-            yVals.add(new BarEntry(overTimeEntityList.indexOf(overTimeEntity), overTimeEntity.getDuration()));
+            formCollections(overTimeEntityList, overTimeEntity);
         }
-        ColoredBarDataSet dataSet = new ColoredBarDataSet(yVals, overTimesList, getResources().getString(R.string.chart_label));
+        BarData barData = initBarData();
+        initAxis();
+        setupBarChart(barData);
+        barChart.notifyDataSetChanged();
+        barChart.invalidate();
+    }
+
+    private void formCollections(@NotNull List<OverTimeEntity> overTimeEntityList, @NotNull OverTimeEntity overTimeEntity) {
+        labels.add(overTimeEntity.getStartDateLabel());
+        yVals.add(new BarEntry(overTimeEntityList.indexOf(overTimeEntity), overTimeEntity.getDuration()));
+    }
+
+    private void setupBarChart(BarData barData) {
+        barChart.setMaxVisibleValueCount(31); //Max days in month
+        barChart.setData(barData);
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.setVisibleXRangeMinimum(1);
+        barChart.setVisibleXRangeMaximum(4);
+        barChart.setOnChartValueSelectedListener(this);
+        barChart.animateXY(100, 500);
+    }
+
+    private void initAxis() {
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        yAxisLeft.setValueFormatter(new YAxisValueFormatter());
+        XAxis xAxisBarChart = barChart.getXAxis();
+        xAxisBarChart.setLabelCount(labels.size() > 3 ? 4 : labels.size());
+        xAxisBarChart.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisBarChart.setValueFormatter(new XAxisValuesFormatter(labels));
+    }
+
+    @NonNull
+    private BarData initBarData() {
+        ColoredBarDataSet dataSet = new ColoredBarDataSet(yVals, sortedOverTimesList, getResources().getString(R.string.chart_label));
         dataSet.setColors(ColorLib.getColors());
         dataSet.setValueFormatter(new DataSetValueFormatter());
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -158,25 +241,11 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         barData.setValueTextSize(15f);
         barData.setValueTextColor(R.color.colorAccent);
         barData.setBarWidth(0.6f);
-        barChart.setMaxVisibleValueCount(31); //Max days in month
-        YAxis yAxisLeft = barChart.getAxisLeft();
-        yAxisLeft.setValueFormatter(new YAxisValueFormatter());
-        XAxis xAxisBarChart = barChart.getXAxis();
-        xAxisBarChart.setLabelCount(labels.size() > 3 ? 4 : labels.size());
-        xAxisBarChart.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxisBarChart.setValueFormatter(new XAxisValuesFormatter(labels));
-        barChart.setData(barData);
-        barChart.getDescription().setEnabled(false);
-        barChart.getAxisRight().setEnabled(false);
-        barChart.setVisibleXRangeMinimum(1);
-        barChart.setVisibleXRangeMaximum(4);
-        barChart.setOnChartValueSelectedListener(this);
-        barChart.animateXY(1000,3000);
-        barChart.invalidate();
+        return barData;
     }
 
     @Override
-    public void shareReport(String report){
+    public void shareReport(String report) {
         Intent shareIntent = new Intent((Intent.ACTION_SEND));
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.subj_extra_personal_stat));
@@ -191,7 +260,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        OverTimeEntity overTime = overTimesList.get((int) e.getX());
+        OverTimeEntity overTime = sortedOverTimesList.get((int) e.getX());
         this.company = overTime.getCompany();
         tvComment.setText(overTime.getComment());
         tvCompanyName.setText(overTime.getCompany().getName());
@@ -202,7 +271,6 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         tvComment.setText(getResources().getString(R.string.overtime_chart_hint));
         tvCompanyName.setText(getResources().getString(R.string.overtime_chart_no_selected));
     }
-
 
 
     @Override

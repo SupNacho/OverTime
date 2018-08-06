@@ -14,6 +14,7 @@ public class XAxisValuesFormatter implements IAxisValueFormatter {
 
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
-        return list.get((int)value);
+        if ((int)value < list.size()) return list.get((int)value);
+        return null;
     }
 }

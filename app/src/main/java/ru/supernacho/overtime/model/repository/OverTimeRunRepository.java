@@ -53,7 +53,7 @@ public class OverTimeRunRepository {
     }
 
     public void startOverTime(String comment, String companyId){
-        ParseObject overtime = new ParseObject("OverTime");
+        ParseObject overtime = new ParseObject(ParseClass.OVER_TIME);
         Date currentDate = new Date();
         String timeStamp = new SimpleDateFormat( "dd-MM-yy HH:mm", Locale.US).format(currentDate);
         String yearStamp = new SimpleDateFormat( "yyyy",Locale.US).format(currentDate);
@@ -119,7 +119,6 @@ public class OverTimeRunRepository {
         return Observable.create( emit -> {
             final Long[] startDate = new Long[1];
             ParseQuery<ParseObject> runningTime = ParseQuery.getQuery(ParseClass.OVER_TIME);
-            runningTime.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
             runningTime
                     .whereNotEqualTo(ParseFields.startDate, null)
                     .whereEqualTo(ParseFields.createdBy, ParseUser.getCurrentUser().getObjectId())

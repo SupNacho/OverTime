@@ -12,7 +12,7 @@ public class ChartRepository {
         this.overTimeStatRepository = overTimeStatRepository;
     }
 
-    public Observable<List<OverTimeEntity>> getOverTimes(int month, int year, String userId){
-        return overTimeStatRepository.getOverTimesByUserId(month, year, userId);
+    public Observable<List<OverTimeEntity>> getOverTimes(int month, int year, String userId, String forCompany){
+        return overTimeStatRepository.getOverTimesByUserId(month, year, userId, forCompany);
     }
 }
