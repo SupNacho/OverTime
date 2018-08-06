@@ -10,6 +10,7 @@ import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 
 @StateStrategyType( value = AddToEndStrategy.class)
 public interface ChartView extends MvpView {
+    void updateCompanyList(List<OverTimeEntity> overTimeEntityList);
     void updateChartView(List<OverTimeEntity> overTimeEntityList);
     void shareReport(String report);
     void viewSummary(String summary);

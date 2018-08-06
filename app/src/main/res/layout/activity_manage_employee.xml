@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,14 +14,14 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:text="Manage employees"/>
+        android:text="@string/manage_employees_label"/>
     <TextView
         android:id="@+id/tv_label_manage_employee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:text="Company:"/>
+        android:text="@string/manage_empl_company_label"/>
     <TextView
         android:id="@+id/tv_company_manage_employee"
         android:layout_width="wrap_content"
@@ -36,7 +35,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:text="Employees:"/>
+        android:text="@string/manage_empl_employees_label"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,19 +45,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Fire"/>
+            android:text="@string/manage_empl_fire_label"/>
         <TextView
             android:id="@+id/tv_name_label_manage_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            android:text="Full name"/>
+            android:text="@string/manage_empl_full_name_label"/>
         <TextView
             android:id="@+id/tv_admin_label_manage_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Admin"/>
+            android:text="@string/manage_empl_admin_label"/>
     </LinearLayout>
 <android.support.v7.widget.RecyclerView
     android:id="@+id/rv_manage_employee"

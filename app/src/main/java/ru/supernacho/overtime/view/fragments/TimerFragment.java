@@ -140,7 +140,7 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
             case R.id.cl_timer_fragment:
                 break;
             default:
-                Toast.makeText(getContext(), "No such button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.toast_no_such_btn), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -177,11 +177,11 @@ public class TimerFragment extends MvpAppCompatFragment implements TimerView, Vi
         this.isStarted = isStarted;
         if (isStarted) {
             btnAddComment.setVisibility(View.VISIBLE);
-            btnTimerControl.setText("Finish overtime");
+            btnTimerControl.setText(getResources().getString(R.string.timer_stop_overtime_btn));
             progressBar.setIndeterminate(true);
         } else {
             btnAddComment.setVisibility(View.GONE);
-            btnTimerControl.setText("Start overtime");
+            btnTimerControl.setText(getResources().getString(R.string.timer_start_overtime_btn));
             progressBar.setIndeterminate(false);
         }
     }

@@ -17,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.CompanyRegistrationPresenter;
-import timber.log.Timber;
 
 public class CompanyRegistrationActivity extends MvpAppCompatActivity implements CompanyRegistrationView {
 
@@ -80,24 +79,23 @@ public class CompanyRegistrationActivity extends MvpAppCompatActivity implements
                         etCompanyChief.getText().toString());
                 break;
             default:
-                Toast.makeText(this, "No such button", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.toast_no_such_btn), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
     @Override
     public void registrationSuccess(String companyId) {
-        Timber.d("Register Successfully");
         Intent resultIntent = new Intent();
         resultIntent.putExtra(ActivityResultExtra.COMPANY_ID, companyId);
         setResult(RESULT_OK, resultIntent);
-        Toast.makeText(this, "Registration success", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.toast_reg_success), Toast.LENGTH_SHORT).show();
         finish();
     }
 
     @Override
     public void registrationFail() {
-        Timber.d("Register FAILED");
+        Toast.makeText(this, getResources().getString(R.string.toast_reg_fail), Toast.LENGTH_SHORT).show();
     }
 
     @Override

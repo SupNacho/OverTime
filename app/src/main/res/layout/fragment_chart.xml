@@ -19,6 +19,21 @@
         android:padding="20dp"
         tools:targetApi="o">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_sort_label_chart_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_comp_label_chart_fragment"/>
+            <Spinner
+                android:id="@+id/sp_sort_by_comp_chart_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/bc_chart_fragment"
             android:layout_width="match_parent"
@@ -34,7 +49,7 @@
                 android:id="@+id/tv_company_label_chart_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="For company: "/>
+                android:text="@string/chart_for_company_label"/>
             <TextView
                 android:id="@+id/tv_company_name_chart_fragment"
                 android:layout_width="wrap_content"
@@ -91,7 +106,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="70dp"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email" />
 </android.support.design.widget.CoordinatorLayout>

@@ -26,7 +26,6 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
     private Scheduler uiScheduler;
     private Observable<Long> overTimeCounter;
     private DisposableObserver<Long> counterObserver;
-    private Disposable restoreDisposable;
     private boolean isStarted;
     private int seconds;
 
@@ -52,7 +51,6 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (restoreDisposable != null) restoreDisposable.dispose();
     }
 
     public void startOverTime(String comment, String companyId) {
@@ -85,22 +83,32 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         overTimeCounter
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
-                .doOnDispose(() -> Timber.d("CounterDisposed"))
                 .subscribe(counterObserver);
     }
 
     private void restoreOverTime() {
-
-        Timber.d("restore overTime");
-        restoreDisposable = repository.restoreTimerState()
+        repository.restoreTimerState()
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
-                .subscribe(aLong -> {
-                    long currTime = new Date().getTime();
-                    seconds = (int) ((currTime - aLong) / 1000);
-                    String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US)
-                            .format(aLong);
-                    getViewState().setStartDate(startDate);
+                .subscribe(new DisposableObserver<Long>() {
+                    @Override
+                    public void onNext(Long aLong) {
+                        long currTime = new Date().getTime();
+                        seconds = (int) ((currTime - aLong) / 1000);
+                        String startDate = new SimpleDateFormat("HH:mm:ss", Locale.US)
+                                .format(aLong);
+                        getViewState().setStartDate(startDate);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
                 });
 
         counterObserver = new DisposableObserver<Long>() {
@@ -128,7 +136,6 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         overTimeCounter
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
-                .doOnDispose(() -> Timber.d("CounterDisposed"))
                 .subscribe(counterObserver);
     }
 
@@ -154,4 +161,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
         getViewState().setTimerState(isStarted);
     }
 
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
 }

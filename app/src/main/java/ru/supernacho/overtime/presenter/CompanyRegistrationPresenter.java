@@ -31,6 +31,7 @@ public class CompanyRegistrationPresenter extends MvpPresenter<CompanyRegistrati
             @Override
             public void onNext(UserCompany company) {
                 if (company != null) {
+                    repository.addCompanyToUser(company.getCompanyId());
                     getViewState().registrationSuccess(company.getCompanyId());
                 } else {
                     getViewState().registrationFail();

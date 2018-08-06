@@ -14,7 +14,6 @@ import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.ChartRepository;
 import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 import ru.supernacho.overtime.view.fragments.ChartView;
-import timber.log.Timber;
 
 @InjectViewState
 public class ChartPresenter extends MvpPresenter<ChartView> {
@@ -35,14 +34,15 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
         super.onFirstViewAttach();
     }
 
-    public void getOverTimes(int month, int year, String userId){
-        repository.getOverTimes(month, year, userId)
+    public void getOverTimes(int month, int year, String userId, String forCompany){
+        repository.getOverTimes(month, year, userId, forCompany)
                 .subscribeOn(Schedulers.io())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<List<OverTimeEntity>>() {
                     @Override
                     public void onNext(List<OverTimeEntity> overTimeEntities) {
                         entities = overTimeEntities;
+                        if (forCompany == null) getViewState().updateCompanyList(overTimeEntities);
                         getViewState().updateChartView(overTimeEntities);
                         long overTimeSummary = 0L;
                         for (OverTimeEntity entity : entities) {
@@ -77,7 +77,6 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
                     .append("\n").append(commentLabel).append("\n").append(entity.getComment())
                     .append("\n\n");
         }
-        Timber.d("Report: %s", stringBuilder.toString());
         getViewState().shareReport(stringBuilder.toString());
     }
 

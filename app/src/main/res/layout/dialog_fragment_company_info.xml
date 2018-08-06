@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Company info"
+            android:text="@string/company_info_label"
             android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Address"
+            android:text="@string/comp_info_address_label"
             android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Company info"
+            android:text="@string/company_contacts_label"
             android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Phone"
+            android:text="@string/comp_info_phone_label"
             android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="CEO"
+            android:text="@string/comp_info_ceo_label"
             android:textAlignment="center"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="PIN"
+            android:text="@string/comp_info_pin_label"
             android:textAlignment="center"
             android:textSize="36sp"
             android:textStyle="bold" />
@@ -137,6 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:contentDescription="@string/comp_info_copy_or_share_desc"
         android:src="@drawable/ic_content_copy"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -146,6 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:contentDescription="@string/comp_info_copy_or_share_desc"
         android:src="@drawable/ic_content_copy"
         app:layout_constraintBottom_toBottomOf="@id/ll_dialog_fragment_info"
         app:layout_constraintRight_toRightOf="parent" />
@@ -156,7 +158,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="close"
+        android:text="@string/comp_info_close_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

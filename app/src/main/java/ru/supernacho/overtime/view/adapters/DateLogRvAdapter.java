@@ -15,7 +15,6 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.DateChooserEntry;
 import ru.supernacho.overtime.presenter.DateChooserPresenter;
-import timber.log.Timber;
 
 public class DateLogRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private DateChooserPresenter presenter;
@@ -77,7 +76,8 @@ public class DateLogRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             case 12: ((MonthView)holder).month.setText(context.getResources().getString(R.string.month_dec));
                 break;
                 default:
-                    Toast.makeText(context, "Month not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.toast_month_not_found),
+                            Toast.LENGTH_SHORT).show();
         }
         ((MonthView)holder).year.setText(String.valueOf(dateEntry.getYear()));
     }
@@ -96,10 +96,8 @@ public class DateLogRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             month = itemView.findViewById(R.id.tv_date_chooser_month);
             year = itemView.findViewById(R.id.tv_date_chooser_year);
-            itemView.setOnClickListener(e-> {
-                presenter.viewChart(datesList.get(getLayoutPosition()).getMonth(), datesList.get(getLayoutPosition()).getYear());
-                Timber.d("Position: %d", getLayoutPosition());
-            });
+            itemView.setOnClickListener(e-> presenter.viewChart(datesList.get(getLayoutPosition()).getMonth(),
+                    datesList.get(getLayoutPosition()).getYear()));
         }
     }
 }

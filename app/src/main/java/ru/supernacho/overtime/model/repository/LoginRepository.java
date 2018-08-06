@@ -1,17 +1,23 @@
 package ru.supernacho.overtime.model.repository;
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.utils.NetworkStatus;
 
 public class LoginRepository {
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
+    private UserCompanyRepository userCompanyRepository;
+    private CompanyRepository companyRepository;
+
+    public LoginRepository(UserCompanyRepository userCompanyRepository, CompanyRepository companyRepository) {
+        this.userCompanyRepository = userCompanyRepository;
+        this.companyRepository = companyRepository;
+    }
 
     public void registerUser(User user, String password) {
         ParseUser pUser = new ParseUser();
@@ -23,7 +29,7 @@ public class LoginRepository {
         pUser.signUpInBackground(e -> {
             if (e == null) {
                 repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
-
+                userCompanyRepository.createUserCompaniesEntity();
             } else {
                 switch (e.getCode()) {
                     case 202:
@@ -54,31 +60,17 @@ public class LoginRepository {
     }
 
     public Observable<Boolean> addCompanyToUser(String companyId) {
-        return Observable.create(e -> {
-            ParseObject companies = new ParseObject(ParseClass.USER_COMPANIES);
-            companies.put(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
-            companies.put(ParseFields.userCompaniesActiveCompany, companyId);
-            companies.addUnique(ParseFields.userCompaniesCompanies, companyId);
-            companies.saveEventually(e1 -> {
-                if (e1 == null) {
-                    e.onNext(true);
-                } else {
-                    e.onNext(false);
-                }
-            });
-        });
+        return userCompanyRepository.addCompanyToUser(companyId);
     }
 
     public Observable<Boolean> logout() {
-        return Observable.create(emit -> {
-            ParseUser.logOutInBackground(e -> {
-                if (e == null) {
-                    emit.onNext(true);
-                } else {
-                    emit.onNext(false);
-                }
-            });
-        });
+        return Observable.create(emit -> ParseUser.logOutInBackground(e -> {
+            if (e == null) {
+                emit.onNext(true);
+            } else {
+                emit.onNext(false);
+            }
+        }));
     }
 
     public void checkLoginStatus() {
@@ -98,29 +90,11 @@ public class LoginRepository {
     }
 
     public Observable<UserCompany> userIsAdmin() {
-        return Observable.create(emit -> {
-            ParseQuery<ParseObject> userCompaniesQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            userCompaniesQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId())
-                    .findInBackground((objects, e) -> {
-                        if (objects != null && objects.size() > 0) {
-                            String companyId = null;
-                            for (ParseObject object : objects) {
-                                companyId = object.getString(ParseFields.userCompaniesActiveCompany);
-                            }
-                            ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
-                            String finalCompanyId = companyId;
-                            companyQuery.whereEqualTo(ParseFields.companyId, companyId)
-                                    .whereEqualTo(ParseFields.companyAdmins, ParseUser.getCurrentUser().getObjectId())
-                                    .findInBackground((objects1, e1) -> {
-                                        if (objects1 != null && objects1.size() > 0) {
-                                            emit.onNext(new UserCompany(finalCompanyId, true));
-                                        } else {
-                                            emit.onNext(new UserCompany(finalCompanyId, false));
-                                        }
-                                    });
-                        }
-                    });
-        });
+        return companyRepository.userIsAdmin();
+    }
+
+    public Observable<CompanyEntity> getCurrentCompany(){
+        return companyRepository.getCurrentCompany();
     }
 
     public PublishSubject<RepoEvents> getRepoEventBus() {

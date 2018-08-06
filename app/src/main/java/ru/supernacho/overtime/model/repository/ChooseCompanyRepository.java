@@ -1,8 +1,6 @@
 package ru.supernacho.overtime.model.repository;
 
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.json.JSONArray;
 
@@ -14,24 +12,30 @@ import ru.supernacho.overtime.model.Entity.CompanyEntity;
 
 public class ChooseCompanyRepository {
 
-    private List<CompanyEntity> companies = new ArrayList<>();
+    private List<CompanyEntity> companies;
+    private UserCompanyRepository userCompanyRepository;
+    private CompanyRepository companyRepository;
+
+    public ChooseCompanyRepository(UserCompanyRepository userCompanyRepository, CompanyRepository companyRepository) {
+        this.userCompanyRepository = userCompanyRepository;
+        this.companyRepository = companyRepository;
+        companies = new ArrayList<>();
+    }
 
     public Observable<List<CompanyEntity>> getCompanies(){
         return Observable.create( emit ->{
 
             companies.clear();
-            ParseQuery<ParseObject> userCompaniesQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            userCompaniesQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
-            ParseObject userCompanies = userCompaniesQuery.getFirst();
+            ParseObject userCompanies = userCompanyRepository.getCurrentUserCompanies();
+            if (userCompanies == null){
+                userCompanyRepository.createUserCompaniesEntity();
+            }
 
-            String activeCompanyId = userCompanies.getString(ParseFields.userCompaniesActiveCompany);
-            ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
-
-            JSONArray jsonArray = userCompanies.getJSONArray(ParseFields.userCompaniesCompanies);
+            String activeCompanyId = userCompanyRepository.getActiveCompanyId();
+            JSONArray jsonArray = userCompanyRepository.getUserCompaniesArray();
             if (jsonArray != null && jsonArray.length() > 0){
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    ParseObject company = companyQuery.whereEqualTo(ParseFields.companyId, jsonArray.getString(i))
-                            .getFirst();
+                    ParseObject company = companyRepository.getCompanyById(jsonArray.getString(i));
                     companies.add(new CompanyEntity(company.getObjectId(), company.getString(ParseFields.companyName),
                             company.getObjectId().equals(activeCompanyId)));
                 }
@@ -42,76 +46,19 @@ public class ChooseCompanyRepository {
     }
 
     public Observable<Boolean> setActiveCompany(String companyId){
-        return Observable.create( emit -> {
-            ParseQuery<ParseObject> userCompaniesQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            userCompaniesQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
-
-            ParseObject userCompanies = userCompaniesQuery.getFirst();
-            userCompanies.put(ParseFields.userCompaniesActiveCompany, companyId);
-            userCompanies.saveEventually(e -> {
-                if (e == null){
-                    emit.onNext(true);
-                } else {
-                    emit.onNext(false);
-                }
-            });
-        });
+        return userCompanyRepository.setActiveCompany(companyId);
     }
 
     public Observable<Boolean> deactivateCompany(){
-        return Observable.create( emit -> {
-            ParseQuery<ParseObject> userCompaniesQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            userCompaniesQuery.whereEqualTo(ParseFields.userCompaniesUserId, ParseUser.getCurrentUser().getObjectId());
-
-            ParseObject userCompanies = userCompaniesQuery.getFirst();
-            userCompanies.put(ParseFields.userCompaniesActiveCompany, "");
-            userCompanies.saveEventually(e -> {
-                if (e == null){
-                    emit.onNext(true);
-                } else {
-                    emit.onNext(false);
-                }
-            });
-        });
+        return userCompanyRepository.deactivateCompany();
     }
 
     public Observable<Boolean> joinCompany(String pin){
-        return Observable.create( emit -> {
-           ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
-           ParseObject company = companyQuery.whereEqualTo(ParseFields.companyEmpPin, pin).getFirst();
-
-           ParseQuery<ParseObject> userCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-           ParseObject userCompanies = userCompanyQuery.whereEqualTo(ParseFields.userCompaniesUserId,
-                   ParseUser.getCurrentUser().getObjectId())
-                   .getFirst();
-           userCompanies.addUnique(ParseFields.userCompaniesCompanies, company.getObjectId());
-           userCompanies.saveEventually(e -> {
-               if (e == null){
-                   emit.onNext(true);
-               } else {
-                   emit.onNext(false);
-               }
-           });
-        });
+        ParseObject company = companyRepository.getCompanyByPin(pin);
+        return userCompanyRepository.addCompanyToUser(company);
     }
 
     public Observable<Boolean> exitFromCompany(String companyId){
-        return Observable.create( emitter -> {
-            ParseQuery<ParseObject> userCompanyQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
-            ParseObject userCompanies = userCompanyQuery.whereEqualTo(ParseFields.userCompaniesUserId,
-                    ParseUser.getCurrentUser().getObjectId()).getFirst();
-            JSONArray companies = userCompanies.getJSONArray(ParseFields.userCompaniesCompanies);
-            for (int i = 0; i < companies.length(); i++) {
-                if (companies.get(i).equals(companyId)) companies.remove(i);
-            }
-            userCompanies.put(ParseFields.userCompaniesCompanies, companies);
-            userCompanies.saveEventually( e -> {
-                if (e == null){
-                    emitter.onNext(true);
-                } else {
-                    emitter.onNext(false);
-                }
-            });
-        });
+        return userCompanyRepository.exitFromCompany(companyId);
     }
 }

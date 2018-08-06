@@ -85,4 +85,19 @@ public class CompanyEntity {
     public String getObjectId() {
         return objectId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CompanyEntity)) return false;
+
+        CompanyEntity that = (CompanyEntity) o;
+
+        return getObjectId().equals(that.getObjectId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getObjectId().hashCode();
+    }
 }

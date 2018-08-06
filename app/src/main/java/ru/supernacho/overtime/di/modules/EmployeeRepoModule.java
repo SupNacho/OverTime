@@ -4,14 +4,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.CompanyInfoRepository;
+import ru.supernacho.overtime.model.repository.CompanyRepository;
 import ru.supernacho.overtime.model.repository.EmployeeRepository;
+import ru.supernacho.overtime.model.repository.UserCompanyRepository;
 
 @Singleton
-@Module(includes = {CompanyInfoRepoModule.class})
+@Module(includes = {UserCompaniesRepoModule.class, CompanyRepoModule.class})
 public class EmployeeRepoModule {
     @Provides
-    EmployeeRepository employeeRepository(CompanyInfoRepository companyInfoRepository){
-        return new EmployeeRepository(companyInfoRepository);
+    EmployeeRepository employeeRepository(UserCompanyRepository userCompanyRepository,
+                                          CompanyRepository companyRepository){
+        return new EmployeeRepository(userCompanyRepository, companyRepository);
     }
 }

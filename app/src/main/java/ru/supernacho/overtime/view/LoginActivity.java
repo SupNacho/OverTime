@@ -37,7 +37,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.LoginPresenter;
-import timber.log.Timber;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -135,7 +134,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                 showHideRegistrationUI();
                 break;
             case R.id.linear_layout:
-                Timber.d("LL clicked");
                 hideSoftKeyboard();
                 break;
 
@@ -188,14 +186,16 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         if (requestCode == ActivityRequestCodes.REGISTRATION_REQUEST && data != null) {
             switch (resultCode) {
                 case RESULT_OK:
-                    Snackbar.make(linearLayout, "Company registered successfully!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(linearLayout, getResources().getString(R.string.snack_bar_company_reg_success),
+                            Snackbar.LENGTH_SHORT).show();
                     presenter.addUserToCompanies(data.getStringExtra(ActivityResultExtra.COMPANY_ID));
                     presenter.checkLoginStatus();
                     break;
                 case RESULT_CANCELED:
                     break;
                 default:
-                    Timber.d("Wrong result");
+                    Snackbar.make(linearLayout, getResources().getString(R.string.toast_result_fail),
+                            Snackbar.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -205,17 +205,19 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
 
     @Override
     public void registrationFailed() {
-        Snackbar.make(editTextUserName, "Registration FAILED", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(editTextUserName, getResources().getString(R.string.toast_reg_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void registrationFailedUserName() {
-        Snackbar.make(editTextUserName, "FAILED username already in use", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(editTextUserName, getResources().getString(R.string.snack_bar_fail_username_used),
+                Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void registrationFailedEmail() {
-        Snackbar.make(editTextUserName, "FAILED email already registered", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(editTextUserName, getResources().getString(R.string.snack_bar_fail_email_used),
+                Snackbar.LENGTH_SHORT).show();
     }
 
     private void showHideRegistrationUI() {
@@ -263,9 +265,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
         return false;
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -391,32 +391,25 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             hideSoftKeyboard();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            loginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        loginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     private void hideSoftKeyboard() {

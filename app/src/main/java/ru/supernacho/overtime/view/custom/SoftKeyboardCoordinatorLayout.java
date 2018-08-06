@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
 import ru.supernacho.overtime.R;
-import timber.log.Timber;
 
 public class SoftKeyboardCoordinatorLayout extends CoordinatorLayout {
     private boolean isKeyboardShown;
@@ -35,7 +34,10 @@ public class SoftKeyboardCoordinatorLayout extends CoordinatorLayout {
         activity = (Activity) context;
         rect = new Rect();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.activity_tabs, this);
+//        inflater.inflate(R.layout.activity_tabs, this);
+        if (inflater != null) {
+            inflater.inflate(R.layout.activity_tabs_with_drawer, this);
+        }
     }
 
     public void setKeyboardStateListener(KeyboardStateListener listener){
@@ -52,7 +54,6 @@ public class SoftKeyboardCoordinatorLayout extends CoordinatorLayout {
         if (actualHeight < proposeHeight){
             if (!isKeyboardShown) {
                 isKeyboardShown = true;
-                Timber.d("Keyboard shown");
                 if (listener != null){
                     listener.onKeyboardShown();
                 }
@@ -60,7 +61,6 @@ public class SoftKeyboardCoordinatorLayout extends CoordinatorLayout {
         } else {
             if (isKeyboardShown) {
                 isKeyboardShown = false;
-                Timber.d("Keyboard hiden");
                 if (listener != null){
                     listener.onKeyboardHidden();
                 }

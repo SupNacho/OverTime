@@ -11,11 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.OnClick;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.presenter.ManageEmployeePresenter;
-import timber.log.Timber;
 
 public class ManageEmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -52,16 +50,13 @@ public class ManageEmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.V
         private TextView tvName;
         private SwitchCompat swtAdmin;
 
-        public Employee(View itemView) {
+        Employee(View itemView) {
             super(itemView);
             ibFire = itemView.findViewById(R.id.ibtn_fire_employee_comp_manage_view);
             swtAdmin = itemView.findViewById(R.id.swt_admin_employee_manage_view);
             tvName = itemView.findViewById(R.id.tv_name_employee_manage_view);
             swtAdmin.setOnClickListener(v -> presenter.grantAdmin(employeesList.get(getLayoutPosition())));
-            ibFire.setOnClickListener(v -> {
-                Timber.d("Fired user: %s", employeesList.get(getLayoutPosition()).getFullName());
-                presenter.initFireEmployee(employeesList.get(getLayoutPosition()));
-            });
+            ibFire.setOnClickListener(v -> presenter.initFireEmployee(employeesList.get(getLayoutPosition())));
         }
     }
 }

@@ -1,16 +1,21 @@
 package ru.supernacho.overtime.view;
 
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -23,6 +28,7 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.utils.view.CompanyInfo;
 import ru.supernacho.overtime.view.adapters.FragmentAdapter;
@@ -32,7 +38,7 @@ import ru.supernacho.overtime.view.fragments.FragmentTag;
 import ru.supernacho.overtime.view.fragments.LogsFragment;
 import ru.supernacho.overtime.view.fragments.ManagerFragment;
 import ru.supernacho.overtime.view.fragments.TimerFragment;
-import timber.log.Timber;
+import ru.supernacho.overtime.view.listener.NavigationDrawerListener;
 
 public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
@@ -43,11 +49,19 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private String userId;
     private boolean isAdmin;
     private String companyId;
+    private CompanyEntity company;
     private SoftKeyboardCoordinatorLayout softKeyboardLayout;
-    private MenuItem manageEmployeeMenuItem;
 
-    @BindView(R.id.toolbar)
+    private TextView tvUserName;
+    private TextView tvCompanyName;
+    private TextView tvUserRole;
+
+    @BindView(R.id.toolbar_app_bar)
     Toolbar toolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
     @BindView(R.id.vp_container)
     ViewPager viewPager;
     @BindView(R.id.tabs)
@@ -63,8 +77,21 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
         setContentView(softKeyboardLayout);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        initNavDrawer();
         init();
 
+    }
+
+    private void initNavDrawer() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
+                drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(new NavigationDrawerListener(presenter, drawerLayout));
+        View navHeader = navigationView.getHeaderView(0);
+        tvUserName = navHeader.findViewById(R.id.tv_username_nav_header);
+        tvCompanyName = navHeader.findViewById(R.id.tv_company_name_nav_header);
+        tvUserRole = navHeader.findViewById(R.id.tv_role_nav_header);
     }
 
     public void checkUserIsAdmin() {
@@ -96,7 +123,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     private void addManagerTab() {
         if (isAdmin) {
             if (tabLayout.getTabCount() < 3) {
-                tabLayout.addTab(tabLayout.newTab().setText("Manager"));
+                tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tabs_manager_label)));
                 fragmentsPagerAdapter.addFragment(managerFragment);
             }
         } else if(tabLayout.getTabCount() > 2){
@@ -136,19 +163,35 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     protected void onResume() {
         super.onResume();
         checkUserIsAdmin();
+        presenter.getCurrentCompany();
     }
 
     @Override
     public void setUserName(String userName) {
-        toolbar.setTitle(userName);
+        tvUserName.setText(userName);
+        tvCompanyName.setText("");
+    }
+
+    @Override
+    public void setCompany(CompanyEntity company) {
+        this.company = company;
+        String companyName = company.getName();
+        tvCompanyName.setText(companyName);
+        toolbar.setTitle(companyName);
     }
 
     @Override
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
         addManagerTab();
-        manageEmployeeMenuItem.setVisible(isAdmin);
-        Timber.d("ADMIN: %s", isAdmin);
+        navigationView.getMenu().findItem(R.id.nav_manage_employee).setVisible(isAdmin);
+        setRoleDescription(isAdmin);
+    }
+
+    private void setRoleDescription(boolean isAdmin) {
+        String role = getResources().getString(R.string.user_role_common);
+        if (isAdmin) role = getResources().getString(R.string.user_role_admin);
+        tvUserRole.setText(role);
     }
 
     @Override
@@ -158,7 +201,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void logoutDone() {
-        Snackbar.make(toolbar, "Logout done", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(toolbar, getResources().getString(R.string.snack_bar_logout_success), Snackbar.LENGTH_SHORT).show();
         Intent logoutIntent = new Intent(this, LoginActivity.class);
         startActivity(logoutIntent);
         this.finish();
@@ -166,7 +209,7 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
 
     @Override
     public void logoutFailed() {
-        Snackbar.make(toolbar, "Logout failed? 8-0", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(toolbar, getResources().getString(R.string.snack_bar_logout_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -209,8 +252,6 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tabs, menu);
-        manageEmployeeMenuItem = menu.findItem(R.id.action_employee_management);
-        manageEmployeeMenuItem.setVisible(false);
         return true;
     }
 
@@ -218,25 +259,31 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.action_info_company:
-                CompanyInfo.viewCurrent(this);
-                return true;
-            case R.id.action_employee_management:
-                startActivity(new Intent(this, ManageEmployeeActivity.class));
-                return true;
-            case R.id.action_choose_company:
-                startActivity(new Intent(this, ChooseCompanyActivity.class));
-                return true;
-            case R.id.action_reg_company:
-                startActivity(new Intent(this, CompanyRegistrationActivity.class));
-                return true;
-            case R.id.action_settings:
-                return true;
             case R.id.action_logout:
                 presenter.logout();
                 return true;
                 default:
                     return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void startEmployeeManager() {
+        startActivity(new Intent(this, ManageEmployeeActivity.class));
+    }
+
+    @Override
+    public void startCompanyChooser() {
+        startActivity(new Intent(this, ChooseCompanyActivity.class));
+    }
+
+    @Override
+    public void startCompanyRegistration() {
+        startActivity(new Intent(this, CompanyRegistrationActivity.class));
+    }
+
+    @Override
+    public void openCompanyInfo() {
+        CompanyInfo.viewCurrent(this);
     }
 }

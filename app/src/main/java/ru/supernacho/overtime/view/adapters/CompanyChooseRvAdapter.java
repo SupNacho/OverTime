@@ -14,7 +14,6 @@ import java.util.List;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.presenter.ChooseCompanyPresenter;
-import timber.log.Timber;
 
 public class CompanyChooseRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ChooseCompanyPresenter presenter;
@@ -59,7 +58,6 @@ public class CompanyChooseRvAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             swtActive.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 CompanyEntity chosenCompany = companies.get(getLayoutPosition());
                 if (isChecked && !chosenCompany.isActive()){
-                    Timber.d("Company Activated: %s", companies.get(getLayoutPosition()).getName());
                     for (CompanyEntity company : companies) {
                         if (company.isActive() && !company.equals(chosenCompany)) company.setActive(false);
                     }
@@ -67,7 +65,6 @@ public class CompanyChooseRvAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     presenter.setActiveCompany(companies.get(getLayoutPosition()).getObjectId());
                     notifyDataSetChanged();
                 } else if (!isChecked && chosenCompany.isActive()) {
-                    Timber.d("Company Deactivated: %s", companies.get(getLayoutPosition()).getName());
                     presenter.deactivateCompany();
                     chosenCompany.setActive(false);
                     notifyDataSetChanged();

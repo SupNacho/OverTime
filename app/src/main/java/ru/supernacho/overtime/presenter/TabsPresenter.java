@@ -9,6 +9,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
+import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.model.repository.LoginRepository;
 import ru.supernacho.overtime.view.TabsView;
@@ -92,6 +93,44 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
 
                     }
                 });
+    }
+
+    public void getCurrentCompany(){
+        repository.getCurrentCompany()
+                .subscribeOn(Schedulers.io())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<CompanyEntity>() {
+                    @Override
+                    public void onNext(CompanyEntity companyEntity) {
+                        getViewState().setCompany(companyEntity);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void startEmployeeManager(){
+        getViewState().startEmployeeManager();
+    }
+
+    public void startCompanyChooser(){
+        getViewState().startCompanyChooser();
+    }
+
+    public void startCompanyRegistration(){
+        getViewState().startCompanyRegistration();
+    }
+
+    public void openCompanyInfo(){
+        getViewState().openCompanyInfo();
     }
 
     public void logout(){

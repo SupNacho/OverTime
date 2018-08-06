@@ -74,22 +74,27 @@ public class ManageEmployeeActivity extends MvpAppCompatActivity implements Mana
 
     @Override
     public void initFireEmployee(User employee) {
-        Alert.create("Fire employee?", "Are you sure want fire this employee?",
-                "Fire", "Cancel", this, employee, presenter);
+        Alert.create(getResources().getString(R.string.alert_fire_employee_header),
+                getResources().getString(R.string.alert_fire_employee_message),
+                getResources().getString(R.string.alert_btn_positive),
+                getResources().getString(R.string.alert_btn_negative), this, employee, presenter);
     }
 
     @Override
     public void fireSuccess(User employee) {
-        Snackbar.make(tvCompanyManageEmployee, employee.getFullName() + " successfully fired", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tvCompanyManageEmployee, employee.getFullName() +
+                getResources().getString(R.string.snack_bar_fire_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void fireFailed(User employee) {
-        Snackbar.make(tvCompanyManageEmployee, "Fire " + employee.getFullName() + " is failed", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tvCompanyManageEmployee, employee.getFullName() +
+                getResources().getString(R.string.snack_bar_fire_fail), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void grantAdminFailed() {
-        Snackbar.make(tvCompanyManageEmployee, "Grant Admin status failed!", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(tvCompanyManageEmployee, getResources().getString(R.string.snack_bar_set_admin_fail),
+                Snackbar.LENGTH_SHORT).show();
     }
 }

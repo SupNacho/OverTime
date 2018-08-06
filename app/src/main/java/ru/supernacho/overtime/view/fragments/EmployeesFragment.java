@@ -3,7 +3,6 @@ package ru.supernacho.overtime.view.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.presenter.EmployeesPresenter;
-import ru.supernacho.overtime.presenter.ManagerPresenter;
 import ru.supernacho.overtime.view.adapters.EmployeeRvAdapter;
 
 public class EmployeesFragment extends MvpAppCompatFragment implements EmployeesView {
