@@ -145,7 +145,9 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
 
     private void initSortSpinner() {
         companiesList = new ArrayList<>();
-        companiesList.add(new CompanyEntity(null, "All companies", false));
+        companiesList.add(new CompanyEntity(null,
+                Objects.requireNonNull(getActivity()).getResources().getString(R.string.all_companies),
+                false));
         SpinnerAdapter spinnerAdapter = new SortSpinnerAdapter(Objects.requireNonNull(getContext()),
                 android.R.layout.simple_spinner_item, companiesList);
         spSortByCompany.setAdapter(spinnerAdapter);

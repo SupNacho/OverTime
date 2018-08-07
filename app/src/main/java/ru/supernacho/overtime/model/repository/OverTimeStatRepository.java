@@ -1,5 +1,6 @@
 package ru.supernacho.overtime.model.repository;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.parse.ParseException;
@@ -20,6 +21,8 @@ import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
+import ru.supernacho.overtime.App;
+import ru.supernacho.overtime.R;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.DateChooserEntry;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
@@ -229,13 +232,15 @@ public class OverTimeStatRepository {
     }
 
     private void formSummaryStrings(StringBuilder stringBuilder, UserCompanyStat stat) {
+        Context context = App.getInstance().getApplicationContext();
         stringBuilder
-                .append("Employee: ").append(stat.getUser().getFullName()).append("\n")
-                .append("Total overtime: ").append(DurationToStringConverter.convert(stat.getTimeSummary()))
+                .append(context.getResources().getString(R.string.employee)).append(stat.getUser().getFullName()).append("\n")
+                .append(context.getResources().getString(R.string.total_overtime)).append(DurationToStringConverter.convert(stat.getTimeSummary()))
                 .append("\n");
     }
 
     private void formDetailStrings(StringBuilder stringBuilder, List<ParseObject> overTimes) {
+        Context context = App.getInstance().getApplicationContext();
         for (ParseObject overTime : overTimes) {
             Date start = overTime.getDate(ParseFields.startDate);
             Date stop = overTime.getDate(ParseFields.stopDate);
@@ -245,13 +250,13 @@ public class OverTimeStatRepository {
                     stop.getTime() - start.getTime(), otComment, null);
             stringBuilder
                     .append("\n")
-                    .append("    Start time: ").append(overTimeEntity.getStartDateTimeLabel())
-                    .append("\n").append("    Finish time: ").append(overTimeEntity.getStopDateTimeLabel())
-                    .append("\n").append("    Duration: ").append(overTimeEntity.getDurationString())
-                    .append("\n").append("    Comment for this overtime: ").append("\n")
+                    .append(context.getResources().getString(R.string.employee_start_time)).append(overTimeEntity.getStartDateTimeLabel())
+                    .append("\n").append(context.getResources().getString(R.string.employee_stop_time)).append(overTimeEntity.getStopDateTimeLabel())
+                    .append("\n").append(context.getResources().getString(R.string.employee_duration)).append(overTimeEntity.getDurationString())
+                    .append("\n").append(context.getResources().getString(R.string.employee_over_time_comment)).append("\n")
                     .append(overTimeEntity.getComment())
                     .append("\n");
         }
-        stringBuilder.append("===================================").append("\n\n");
+        stringBuilder.append(context.getResources().getString(R.string.employee_over_time_delimiter)).append("\n\n");
     }
 }

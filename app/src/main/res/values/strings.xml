@@ -21,7 +21,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_tabs" translatable="false">TabsActivity</string>
+    <string name="title_activity_tabs" translatable="false">No connection, only save overtime</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
     <string name="section_format" translatable="false">Hello World from section: %1$d</string>
@@ -89,6 +89,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="user_role_common">Employee</string>
     <string name="user_role_admin">Administrator</string>
+    <string name="employee">Employee: </string>
+    <string name="total_overtime">Total overtime: </string>
+    <string name="employee_start_time">    Start time: </string>
+    <string name="employee_stop_time">    Finish time: </string>
+    <string name="employee_duration">    Duration: </string>
+    <string name="employee_over_time_comment">    Comment for this overtime: </string>
+    <string name="employee_over_time_delimiter">===================================</string>
 
     <string name="month_summary_overtime_label">Month summary overtime:</string>
     <string name="overtime_comment_label">Overtime comment:</string>
@@ -145,5 +152,6 @@
     <string name="nav_drawer_about_active_company">About active company</string>
     <string name="overtime_chart_hint">Select overtime to see comments about this work</string>
     <string name="overtime_chart_no_selected">No overtime selected</string>
-    <string name="sort_comp_label_chart_fragment">View stat for company: </string>
+    <string name="sort_comp_label_chart_fragment">Filter: </string>
+    <string name="all_companies">All companies</string>
 </resources>
