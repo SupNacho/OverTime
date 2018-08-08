@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 
 import android.os.Build;
@@ -41,8 +39,6 @@ import ru.supernacho.overtime.presenter.LoginPresenter;
 import static android.Manifest.permission.READ_CONTACTS;
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView, View.OnKeyListener {
-
-    private static final int REQUEST_READ_CONTACTS = 0;
 
     // UI references.
     @BindView(R.id.linear_layout)
@@ -96,7 +92,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     private void init() {
         passwordView.setOnKeyListener(this);
         editTextConfirmPassword.setOnKeyListener(this);
-        populateAutoComplete();
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin();
@@ -240,39 +235,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             llCompanyRegLayout.setVisibility(View.GONE);
             btnRegister.setVisibility(View.VISIBLE);
             btnSignIn.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(linearLayout, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, v -> requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS));
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
         }
     }
 
