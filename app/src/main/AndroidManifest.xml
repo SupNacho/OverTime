@@ -32,7 +32,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.CompanyRegistrationActivity" />
         <activity android:name=".view.ChooseCompanyActivity" />
-        <activity android:name=".view.ManageEmployeeActivity"/>
+        <activity android:name=".view.ManageEmployeeActivity" />
+        <activity android:name=".view.RestorePasswordActivity"></activity>
     </application>
 
 </manifest>
