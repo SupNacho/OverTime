@@ -4,7 +4,7 @@
     <!-- Parse resources -->
     <string name="app_id" translatable="false">58dc3222c1ced7a4a8cdcc6d3027ed662245cec8</string>
     <string name="client_id" translatable="false">38e592ed7ede7e8c567bb64eb431198da9428a3f</string>
-    <string name="server_address" translatable="false">http://52.47.174.21:80/parse/</string>
+    <string name="server_address" translatable="false">http://52.47.196.160:80/parse/</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -154,4 +154,5 @@
     <string name="overtime_chart_no_selected">No overtime selected</string>
     <string name="sort_comp_label_chart_fragment">Filter: </string>
     <string name="all_companies">All companies</string>
+    <string name="forgot_password">Forgot password?</string>
 </resources>

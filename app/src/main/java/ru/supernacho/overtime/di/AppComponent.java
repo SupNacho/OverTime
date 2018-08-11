@@ -12,6 +12,7 @@ import ru.supernacho.overtime.di.modules.CompanyRepoModule;
 import ru.supernacho.overtime.di.modules.EmployeeRepoModule;
 import ru.supernacho.overtime.di.modules.LogRepoModule;
 import ru.supernacho.overtime.di.modules.LoginRepoModule;
+import ru.supernacho.overtime.di.modules.RestoreRepoModule;
 import ru.supernacho.overtime.di.modules.TimerRepoModule;
 import ru.supernacho.overtime.presenter.AllEmplPresenter;
 import ru.supernacho.overtime.presenter.ChartPresenter;
@@ -23,6 +24,7 @@ import ru.supernacho.overtime.presenter.EmployeesPresenter;
 import ru.supernacho.overtime.presenter.LoginPresenter;
 import ru.supernacho.overtime.presenter.ManageEmployeePresenter;
 import ru.supernacho.overtime.presenter.ManagerPresenter;
+import ru.supernacho.overtime.presenter.RestorePresenter;
 import ru.supernacho.overtime.presenter.TabsPresenter;
 import ru.supernacho.overtime.presenter.TimerPresenter;
 import ru.supernacho.overtime.view.LoginActivity;
@@ -30,7 +32,7 @@ import ru.supernacho.overtime.view.LoginActivity;
 @Singleton
 @Component(modules = {AppModule.class, LoginRepoModule.class, TimerRepoModule.class, LogRepoModule.class,
         ChartRepoModule.class, EmployeeRepoModule.class, CompanyRepoModule.class, CompanyInfoRepoModule.class,
-        ChooseCompanyRepoModule.class, AllEmplRepoModule.class})
+        ChooseCompanyRepoModule.class, AllEmplRepoModule.class, RestoreRepoModule.class})
 public interface AppComponent {
     void inject(LoginActivity activity);
     void inject(LoginPresenter presenter);
@@ -45,4 +47,5 @@ public interface AppComponent {
     void inject(ChooseCompanyPresenter presenter);
     void inject(ManageEmployeePresenter presenter);
     void inject(AllEmplPresenter presenter);
+    void inject(RestorePresenter presenter);
 }

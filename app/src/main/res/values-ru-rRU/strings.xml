@@ -127,4 +127,5 @@
     <string name="timer_stop_overtime_btn">Закончить</string>
     <string name="sort_comp_label_chart_fragment">Фильтр: </string>
     <string name="all_companies">Все компании</string>
+    <string name="forgot_password">Забыли пароль?</string>
 </resources>
