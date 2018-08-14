@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
+import ru.supernacho.overtime.model.repository.ParseClass;
+import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.utils.NetworkStatus;
 
 public class OverTimeRunRepository {

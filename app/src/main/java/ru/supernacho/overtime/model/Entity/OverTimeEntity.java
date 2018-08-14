@@ -9,15 +9,18 @@ import java.util.Date;
 import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 
 public class OverTimeEntity {
-    private final Date startDate;
-    private final Date stopDate;
-    private final long duration;
-    private final String comment;
-    private final String durationString;
-    private final String startDateLabel;
-    private final String startDateTimeLabel;
-    private final String stopDateTimeLabel;
-    private final CompanyEntity company;
+    private Date startDate;
+    private Date stopDate;
+    private long duration;
+    private String comment;
+    private String durationString;
+    private String startDateLabel;
+    private String startDateTimeLabel;
+    private String stopDateTimeLabel;
+    private CompanyEntity company;
+
+    public OverTimeEntity() {
+    }
 
     public OverTimeEntity(Date startDate, Date stopDate, String timeZoneID, long duration,
                           String comment, CompanyEntity company) {
@@ -74,5 +77,41 @@ public class OverTimeEntity {
 
     public CompanyEntity getCompany() {
         return company;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setStopDate(Date stopDate) {
+        this.stopDate = stopDate;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setDurationString(String durationString) {
+        this.durationString = durationString;
+    }
+
+    public void setStartDateLabel(String startDateLabel) {
+        this.startDateLabel = startDateLabel;
+    }
+
+    public void setStartDateTimeLabel(String startDateTimeLabel) {
+        this.startDateTimeLabel = startDateTimeLabel;
+    }
+
+    public void setStopDateTimeLabel(String stopDateTimeLabel) {
+        this.stopDateTimeLabel = stopDateTimeLabel;
+    }
+
+    public void setCompany(CompanyEntity company) {
+        this.company = company;
     }
 }

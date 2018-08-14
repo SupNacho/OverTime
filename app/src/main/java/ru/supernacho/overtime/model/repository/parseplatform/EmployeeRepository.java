@@ -1,5 +1,6 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -13,6 +14,11 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
+import ru.supernacho.overtime.model.Entity.UserCompaniesEntity;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
+import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
+import ru.supernacho.overtime.model.repository.ParseClass;
+import ru.supernacho.overtime.model.repository.ParseFields;
 
 public class EmployeeRepository {
     private List<User> employees;

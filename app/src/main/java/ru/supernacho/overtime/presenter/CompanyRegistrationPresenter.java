@@ -9,7 +9,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.UserCompany;
-import ru.supernacho.overtime.model.repository.CompanyRepository;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
 import ru.supernacho.overtime.view.CompanyRegistrationView;
 
 @InjectViewState
@@ -18,7 +18,7 @@ public class CompanyRegistrationPresenter extends MvpPresenter<CompanyRegistrati
     private DisposableObserver<UserCompany> disposableObserver;
 
     @Inject
-    CompanyRepository repository;
+    ICompanyRepository repository;
 
     public CompanyRegistrationPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;

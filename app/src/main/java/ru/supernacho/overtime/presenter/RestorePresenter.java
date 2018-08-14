@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import ru.supernacho.overtime.model.repository.RestoreRepository;
+import ru.supernacho.overtime.model.repository.IRestoreRepository;
 import ru.supernacho.overtime.view.RestoreView;
 
 @InjectViewState
@@ -16,7 +16,7 @@ public class RestorePresenter extends MvpPresenter<RestoreView> {
     private Scheduler uiScheduler;
 
     @Inject
-    RestoreRepository repository;
+    IRestoreRepository repository;
 
     public RestorePresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;

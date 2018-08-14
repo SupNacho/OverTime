@@ -4,14 +4,15 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import ru.supernacho.overtime.model.repository.IAllEmplRepository;
+import ru.supernacho.overtime.model.repository.IOverTimeStatRepository;
 import ru.supernacho.overtime.model.repository.AllEmplRepository;
-import ru.supernacho.overtime.model.repository.OverTimeStatRepository;
 
 @Singleton
 @Module(includes = {OverTimeRepoModule.class})
 public class AllEmplRepoModule {
     @Provides
-    AllEmplRepository allEmplRepository(OverTimeStatRepository overTimeStatRepository){
+    IAllEmplRepository allEmplRepository(IOverTimeStatRepository overTimeStatRepository){
         return new AllEmplRepository(overTimeStatRepository);
     }
 }

@@ -14,7 +14,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.DateChooserEntry;
-import ru.supernacho.overtime.model.repository.LogRepository;
+import ru.supernacho.overtime.model.repository.ILogRepository;
 import ru.supernacho.overtime.view.fragments.DateChooserView;
 
 @InjectViewState
@@ -25,7 +25,7 @@ public class DateChooserPresenter extends MvpPresenter<DateChooserView> {
     private String userId;
 
     @Inject
-    LogRepository repository;
+    ILogRepository repository;
 
 
     public DateChooserPresenter(Scheduler uiScheduler, String userId) {

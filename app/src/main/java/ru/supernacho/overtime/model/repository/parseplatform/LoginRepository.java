@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
 import com.parse.ParseUser;
 
@@ -7,9 +7,12 @@ import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
+import ru.supernacho.overtime.model.repository.ILoginRepository;
+import ru.supernacho.overtime.model.repository.ParseFields;
+import ru.supernacho.overtime.model.repository.RepoEvents;
 import ru.supernacho.overtime.utils.NetworkStatus;
 
-public class LoginRepository {
+public class LoginRepository implements ILoginRepository{
     private PublishSubject<RepoEvents> repoEventBus = PublishSubject.create();
     private UserCompanyRepository userCompanyRepository;
     private CompanyRepository companyRepository;

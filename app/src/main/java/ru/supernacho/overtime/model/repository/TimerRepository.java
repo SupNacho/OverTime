@@ -2,27 +2,31 @@ package ru.supernacho.overtime.model.repository;
 
 import io.reactivex.Observable;
 
-public class TimerRepository {
-    private OverTimeRunRepository overTimeRunRepository;
+public class TimerRepository implements ITimerRepository {
+    private IOverTimeRunRepository overTimeRunRepository;
 
-    public TimerRepository(OverTimeRunRepository overTimeRunRepository) {
+    public TimerRepository(IOverTimeRunRepository overTimeRunRepository) {
         this.overTimeRunRepository = overTimeRunRepository;
     }
 
+    @Override
     public void startOverTime(String comment, String companyId) {
-        overTimeRunRepository.startOverTime(comment,companyId);
+        overTimeRunRepository.startOverTime(comment, companyId);
     }
 
-    public void addComment(String comment){
+    @Override
+    public void addComment(String comment) {
         overTimeRunRepository.addComment(comment);
     }
 
+    @Override
     public void stopOverTime(String comment) {
         overTimeRunRepository.stopOverTime(comment);
 
     }
 
-    public Observable<Long> restoreTimerState(){
+    @Override
+    public Observable<Long> restoreTimerState() {
         return overTimeRunRepository.restoreTimerState();
     }
 }

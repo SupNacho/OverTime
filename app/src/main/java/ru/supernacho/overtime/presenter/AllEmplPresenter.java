@@ -11,16 +11,15 @@ import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.UserCompanyStat;
-import ru.supernacho.overtime.model.repository.AllEmplRepository;
+import ru.supernacho.overtime.model.repository.IAllEmplRepository;
 import ru.supernacho.overtime.view.fragments.AllEmplView;
 
 @InjectViewState
 public class AllEmplPresenter extends MvpPresenter<AllEmplView> {
     private Scheduler uiScheduler;
-    private List<UserCompanyStat> stats;
 
     @Inject
-    AllEmplRepository repository;
+    IAllEmplRepository repository;
 
     public AllEmplPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;

@@ -4,16 +4,20 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.CompanyRepository;
-import ru.supernacho.overtime.model.repository.OverTimeStatRepository;
-import ru.supernacho.overtime.model.repository.UserCompanyRepository;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
+import ru.supernacho.overtime.model.repository.IOverTimeStatRepository;
+import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
+import ru.supernacho.overtime.model.repository.firebase.core.FbOverTimeStatRepository;
+import ru.supernacho.overtime.model.repository.parseplatform.CompanyRepository;
+import ru.supernacho.overtime.model.repository.parseplatform.OverTimeStatRepository;
+import ru.supernacho.overtime.model.repository.parseplatform.UserCompanyRepository;
 
 @Singleton
 @Module(includes = {UserCompaniesRepoModule.class, CompanyRepoModule.class})
 public class OverTimeRepoModule {
     @Provides
-    OverTimeStatRepository overTimeRepository(UserCompanyRepository userCompanyRepository,
-                                              CompanyRepository companyRepository){
-        return new OverTimeStatRepository(userCompanyRepository, companyRepository);
+    IOverTimeStatRepository overTimeRepository(IUserCompanyRepository userCompanyRepository,
+                                               ICompanyRepository companyRepository){
+        return new FbOverTimeStatRepository(userCompanyRepository, companyRepository);
     }
 }

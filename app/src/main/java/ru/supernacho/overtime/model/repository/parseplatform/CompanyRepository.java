@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -14,6 +14,9 @@ import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
+import ru.supernacho.overtime.model.repository.ParseClass;
+import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.utils.PinGenerator;
 
 public class CompanyRepository {

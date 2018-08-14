@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -9,6 +9,8 @@ import org.json.JSONArray;
 
 import io.reactivex.Observable;
 import ru.supernacho.overtime.model.Entity.User;
+import ru.supernacho.overtime.model.repository.ParseClass;
+import ru.supernacho.overtime.model.repository.ParseFields;
 
 
 public class UserCompanyRepository {

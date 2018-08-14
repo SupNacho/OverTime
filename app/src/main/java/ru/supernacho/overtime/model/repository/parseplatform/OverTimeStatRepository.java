@@ -1,4 +1,4 @@
-package ru.supernacho.overtime.model.repository;
+package ru.supernacho.overtime.model.repository.parseplatform;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -28,6 +28,8 @@ import ru.supernacho.overtime.model.Entity.DateChooserEntry;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompanyStat;
+import ru.supernacho.overtime.model.repository.ParseClass;
+import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.utils.NetworkStatus;
 import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 

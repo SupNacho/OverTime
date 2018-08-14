@@ -5,15 +5,17 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.supernacho.overtime.model.repository.ChooseCompanyRepository;
-import ru.supernacho.overtime.model.repository.CompanyRepository;
-import ru.supernacho.overtime.model.repository.UserCompanyRepository;
+import ru.supernacho.overtime.model.repository.IChooseCompanyRepository;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
+import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
+import ru.supernacho.overtime.model.repository.firebase.FbChooseCompanyRepository;
 
 @Singleton
 @Module(includes = {UserCompaniesRepoModule.class, CompanyRepoModule.class})
 public class ChooseCompanyRepoModule {
     @Provides
-    ChooseCompanyRepository chooseCompanyRepository(UserCompanyRepository userCompanyRepository,
-                                                    CompanyRepository companyRepository){
+    IChooseCompanyRepository chooseCompanyRepository(IUserCompanyRepository userCompanyRepository,
+                                                     ICompanyRepository companyRepository){
         return new ChooseCompanyRepository(userCompanyRepository, companyRepository);
     }
 }

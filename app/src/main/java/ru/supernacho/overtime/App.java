@@ -2,6 +2,8 @@ package ru.supernacho.overtime;
 
 import android.app.Application;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.parse.Parse;
 import com.parse.ParseACL;
 
@@ -30,18 +32,24 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
+//
+//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
+//                .applicationId(getResources().getString(R.string.app_id))
+//                .clientKey(getResources().getString(R.string.client_id))
+//                .server(getResources().getString(R.string.server_address))
+//                .build());
 
-        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-                .applicationId(getResources().getString(R.string.app_id))
-                .clientKey(getResources().getString(R.string.client_id))
-                .server(getResources().getString(R.string.server_address))
-                .enableLocalDataStore()
-                .build());
+        FirebaseFirestore
+                .getInstance()
+                .setFirestoreSettings(new FirebaseFirestoreSettings.Builder()
+                        .setPersistenceEnabled(true).build());
 
-        ParseACL defaultACL = new ParseACL();
-        defaultACL.setPublicReadAccess(true);
-        defaultACL.setPublicWriteAccess(true);
-        ParseACL.setDefaultACL(defaultACL, true);
+        Timber.d("Fire store instance %s", FirebaseFirestore.getInstance().toString());
+//
+//        ParseACL defaultACL = new ParseACL();
+//        defaultACL.setPublicReadAccess(true);
+//        defaultACL.setPublicWriteAccess(true);
+//        ParseACL.setDefaultACL(defaultACL, true);
     }
 
     public static App getInstance() {

@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.OverTimeRunRepository;
+import ru.supernacho.overtime.model.repository.IOverTimeRunRepository;
 import ru.supernacho.overtime.model.repository.TimerRepository;
 
 @Singleton
@@ -12,7 +12,7 @@ import ru.supernacho.overtime.model.repository.TimerRepository;
 public class TimerRepoModule {
 
     @Provides
-    TimerRepository timerRepository(OverTimeRunRepository overTimeRunRepository){
+    TimerRepository timerRepository(IOverTimeRunRepository overTimeRunRepository){
         return new TimerRepository(overTimeRunRepository);
     }
 }
