@@ -33,6 +33,7 @@ public class FbLoginRepository implements ILoginRepository {
         this.companyRepository = companyRepository;
         this.repoEventBus = PublishSubject.create();
         this.auth = FirebaseAuth.getInstance();
+        this.fbUser = auth.getCurrentUser();
     }
 
     @Override

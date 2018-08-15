@@ -9,7 +9,9 @@ import com.parse.ParseACL;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import io.reactivex.Scheduler;
 import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.di.AppComponent;
 import ru.supernacho.overtime.di.DaggerAppComponent;
 import ru.supernacho.overtime.di.modules.AppModule;
@@ -18,11 +20,13 @@ import timber.log.Timber;
 public class App extends Application {
     private static App instance;
     private AppComponent appComponent;
+    private static Scheduler fireStoreScheduller;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        fireStoreScheduller = Schedulers.single();
         Timber.plant(new Timber.DebugTree());
 
         JodaTimeAndroid.init(this);
@@ -54,6 +58,10 @@ public class App extends Application {
 
     public static App getInstance() {
         return instance;
+    }
+
+    public static Scheduler getFbThread(){
+        return fireStoreScheduller;
     }
 
     public AppComponent getAppComponent() {

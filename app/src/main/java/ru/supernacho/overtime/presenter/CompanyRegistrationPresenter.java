@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.model.repository.ICompanyRepository;
 import ru.supernacho.overtime.view.CompanyRegistrationView;
@@ -52,7 +53,7 @@ public class CompanyRegistrationPresenter extends MvpPresenter<CompanyRegistrati
 
     public void registerCompany(String name, String address, String email, String phone, String chief){
         repository.registerCompany(name,address,email,phone,chief)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(disposableObserver);
     }

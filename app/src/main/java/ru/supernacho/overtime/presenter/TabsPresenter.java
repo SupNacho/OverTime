@@ -52,7 +52,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
         };
 
         repository.getUserData()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<String>() {
                     @Override
@@ -74,7 +74,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
 
     public void userIsAdmin(){
         repository.userIsAdmin()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<UserCompany>() {
                     @Override
@@ -97,7 +97,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
 
     public void getCurrentCompany(){
         repository.getCurrentCompany()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<CompanyEntity>() {
                     @Override

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.repository.CompanyInfoRepository;
 import ru.supernacho.overtime.model.repository.ICompanyInfoRepository;
@@ -26,7 +27,7 @@ public class CompanyInfoPresenter extends MvpPresenter<CompanyInfoView> {
 
     public void getCompanyInfo(){
         repository.getCompanyInfo()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<CompanyEntity>() {
                     @Override

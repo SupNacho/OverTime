@@ -21,11 +21,9 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
-import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.IOverTimeRunRepository;
 import ru.supernacho.overtime.model.repository.ParseClass;
 import ru.supernacho.overtime.model.repository.ParseFields;
-import timber.log.Timber;
 
 public class FbOverTimeRunRepository implements IOverTimeRunRepository {
 
@@ -41,47 +39,22 @@ public class FbOverTimeRunRepository implements IOverTimeRunRepository {
         this.sb = new StringBuilder();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         this.fireStore = FirebaseFirestore.getInstance();
-        Timber.d("Fire store instance %s", FirebaseFirestore.getInstance().toString());
-        Timber.d("Fire store instance %s", fireStore.toString());
     }
 
     @Override
     public void addComment(String comment) {
-//        Date zeroTime = new Date();
-//        zeroTime.setTime(0L);
-//        CollectionReference overTimeCollRef = fireStore.collection(ParseClass.OVER_TIME);
-
-        Query overTimeQuery = getOverTimeQuery(ParseFields.startDate);
-//        Query overTimeQuery = overTimeCollRef.whereEqualTo(ParseFields.createdBy, firebaseUser.getUid())
-//                .whereEqualTo(ParseFields.stopDate, zeroTime)
-//                .orderBy(ParseFields.startDate, Query.Direction.DESCENDING)
-//                .limit(1);
-        overTimeQuery.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (queryDocumentSnapshots.getDocuments().get(0) != null) {
-                String overTimeId = queryDocumentSnapshots.getDocuments().get(0).getId();
-                DocumentSnapshot overTimeEntity = queryDocumentSnapshots.getDocuments().get(0);
-                if (overTimeEntity != null) {
-                    Map<String, Object> overTimeUpdate = new HashMap<>();
-                    overTimeUpdate.put(ParseFields.comment, overTimeEntity.getString(ParseFields.comment));
-                    overTimeUpdate.put(ParseFields.createdBy, overTimeEntity.getString(ParseFields.createdBy));
-                    overTimeUpdate.put(ParseFields.forCompany, overTimeEntity.getString(ParseFields.forCompany));
-                    overTimeUpdate.put(ParseFields.timeZoneID, overTimeEntity.getString(ParseFields.timeZoneID));
-                    overTimeUpdate.put(ParseFields.monthNum, overTimeEntity.getLong(ParseFields.monthNum));
-                    overTimeUpdate.put(ParseFields.yearNum, overTimeEntity.getLong(ParseFields.yearNum));
-                    overTimeUpdate.put(ParseFields.startDate, overTimeEntity.getDate(ParseFields.startDate));
-                    overTimeUpdate.put(ParseFields.stopDate, overTimeEntity.getDate(ParseFields.stopDate));
-                    formComment(comment, overTimeEntity, overTimeUpdate);
-                    DocumentReference overTimeDocRef = fireStore.document(ParseClass.OVER_TIME + "/" + overTimeId);
-                    overTimeDocRef.set(overTimeUpdate);
-                }
+        Query query = getOverTimeQuery();
+        query.get().addOnSuccessListener(querySnapshot -> {
+            if (!querySnapshot.isEmpty()) {
+                DocumentSnapshot overTimeSnapShot = querySnapshot.getDocuments().get(0);
+                DocumentReference docUpdate = fireStore.document(ParseClass.OVER_TIME + "/" + overTimeSnapShot.getId());
+                formComment(comment, overTimeSnapShot);
+                docUpdate.update(ParseFields.comment, sb.toString());
             }
-        })
-        .addOnFailureListener(e -> {
-            Timber.d("+++ Fail query %s", e.getMessage());
         });
     }
 
-    private void formComment(@NotNull String comment, @NotNull DocumentSnapshot overTimeEntity, Map<String, Object> newOverTime) {
+    private void formComment(@NotNull String comment, @NotNull DocumentSnapshot overTimeEntity) {
         String oldComment = overTimeEntity.getString(ParseFields.comment);
         if (!comment.equals(oldComment) && !comment.equals("")) {
             String timeStamp = new SimpleDateFormat("dd-MM-yy HH:mm", Locale.US).format(new Date());
@@ -92,7 +65,6 @@ public class FbOverTimeRunRepository implements IOverTimeRunRepository {
                     .append(timeStamp)
                     .append(" ")
                     .append(comment);
-            newOverTime.put(ParseFields.comment, sb.toString());
         }
     }
 
@@ -119,56 +91,37 @@ public class FbOverTimeRunRepository implements IOverTimeRunRepository {
 
     @Override
     public void stopOverTime(String comment) {
-        Query overTimeQuery = getOverTimeQuery(ParseFields.createdAt);
-        overTimeQuery.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (queryDocumentSnapshots.getDocuments().get(0) != null) {
-                String overTimeId = queryDocumentSnapshots.getDocuments().get(0).getId();
-                DocumentSnapshot overTimeEntity = queryDocumentSnapshots.getDocuments().get(0);
-                if (overTimeEntity != null) {
-                    Map<String, Object> overTimeUpdate = new HashMap<>();
-                    overTimeUpdate.put(ParseFields.comment, overTimeEntity.getString(ParseFields.comment));
-                    overTimeUpdate.put(ParseFields.createdBy, overTimeEntity.getString(ParseFields.createdBy));
-                    overTimeUpdate.put(ParseFields.forCompany, overTimeEntity.getString(ParseFields.forCompany));
-                    overTimeUpdate.put(ParseFields.timeZoneID, overTimeEntity.getString(ParseFields.timeZoneID));
-                    overTimeUpdate.put(ParseFields.monthNum, overTimeEntity.getLong(ParseFields.monthNum));
-                    overTimeUpdate.put(ParseFields.yearNum, overTimeEntity.getLong(ParseFields.yearNum));
-                    overTimeUpdate.put(ParseFields.startDate, overTimeEntity.getDate(ParseFields.startDate));
-                    overTimeUpdate.put(ParseFields.stopDate, new Date());
-                    formComment(comment, overTimeEntity, overTimeUpdate);
-                    DocumentReference overTimeDocRef = fireStore.document(ParseClass.OVER_TIME + "/" + overTimeId);
-                    overTimeDocRef.set(overTimeUpdate).addOnSuccessListener(aVoid -> {
-                        Timber.d("UPDATED");
-                    })
-                    .addOnFailureListener( e -> {
-                        Timber.d("FAIL %s", e.getMessage());
-                    });
-                }
-//                if (overTimeEntity != null) {
-//                    formComment(comment, overTimeEntity);
-//                    fireStore.collection(ParseClass.OVER_TIME)
-//                            .document(overTimeId).set(overTimeEntity);
-//                }
+
+        Query query = getOverTimeQuery();
+        query.get().addOnSuccessListener(querySnapshot -> {
+            if (!querySnapshot.isEmpty()) {
+                DocumentSnapshot overTimeSnapShot = querySnapshot.getDocuments().get(0);
+                DocumentReference docUpdate = fireStore.document(ParseClass.OVER_TIME + "/" + overTimeSnapShot.getId());
+                formComment(comment, overTimeSnapShot);
+                docUpdate.update(ParseFields.comment, sb.toString(), ParseFields.stopDate, new Date());
             }
         });
-    }
-
-    @NonNull
-    private Query getOverTimeQuery(String orderField) {
-        Date zeroTime = new Date();
-        zeroTime.setTime(0L);
-        CollectionReference overTimeCollRef = fireStore.collection(ParseClass.OVER_TIME);
-        return overTimeCollRef.whereEqualTo(ParseFields.createdBy, firebaseUser.getUid())
-                .whereEqualTo(ParseFields.stopDate, zeroTime)
-                .orderBy(orderField, Query.Direction.DESCENDING)
-                .limit(1);
     }
 
     @Override
     public Observable<Long> restoreTimerState() {
         return Observable.create(emit -> {
-            Query overTimeQuery = getOverTimeQuery(ParseFields.createdAt);
-            overTimeQuery.get().addOnSuccessListener(queryDocumentSnapshots ->
-                    emit.onNext(Objects.requireNonNull(queryDocumentSnapshots.getDocuments().get(0).getDate(ParseFields.startDate)).getTime()));
+            Query query = getOverTimeQuery();
+            query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    emit.onNext(Objects.requireNonNull(queryDocumentSnapshots.getDocuments().get(0)
+                            .getDate(ParseFields.startDate)).getTime());
+                }
+            });
         });
+    }
+
+    @NonNull
+    private Query getOverTimeQuery() {
+        CollectionReference collectionReference = fireStore.collection(ParseClass.OVER_TIME);
+        return collectionReference.whereEqualTo(ParseFields.createdBy, firebaseUser.getUid())
+                .whereEqualTo(ParseFields.stopDate, zeroTime)
+                .orderBy(ParseFields.startDate, Query.Direction.DESCENDING)
+                .limit(1);
     }
 }

@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.IEmployeeRepository;
 import ru.supernacho.overtime.view.fragments.EmployeesView;
@@ -39,7 +40,7 @@ public class EmployeesPresenter extends MvpPresenter<EmployeesView> {
 
     public void getEmploysList(){
        disposable = repository.getEmployees()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(employeeStatus -> {
                     if (employeeStatus) {

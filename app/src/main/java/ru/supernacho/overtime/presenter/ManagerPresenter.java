@@ -9,9 +9,11 @@ import javax.inject.Inject;
 
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.IEmployeeRepository;
 import ru.supernacho.overtime.view.fragments.ManagerView;
+import timber.log.Timber;
 
 @InjectViewState
 public class ManagerPresenter extends MvpPresenter<ManagerView> {

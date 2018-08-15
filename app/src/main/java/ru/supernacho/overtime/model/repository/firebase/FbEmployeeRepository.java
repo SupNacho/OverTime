@@ -13,6 +13,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompaniesEntity;
@@ -77,7 +78,7 @@ public class FbEmployeeRepository implements IEmployeeRepository{
     public Observable<CompanyEntity> getCompany() {
         return Observable.create(emit ->
                 companyRepository.getCurrentCompany()
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(App.getFbThread())
                         .subscribe(new DisposableObserver<CompanyEntity>() {
                             @Override
                             public void onNext(CompanyEntity companyEntity) {
@@ -116,7 +117,7 @@ public class FbEmployeeRepository implements IEmployeeRepository{
                 employees.remove(employee);
                 employee.setAdmin(false);
                 companyRepository.setAdminStatus(employee, currentCompany)
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(App.getFbThread())
                         .subscribe();
             })
                     .addOnFailureListener(e -> emit.onNext(false));

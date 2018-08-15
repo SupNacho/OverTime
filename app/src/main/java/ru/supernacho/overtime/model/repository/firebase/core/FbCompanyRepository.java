@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
@@ -166,7 +167,7 @@ public class FbCompanyRepository implements ICompanyRepository {
     @Override
     public void addCompanyToUser(String companyId) {
         userCompanyRepository.addCompanyToUser(companyId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .subscribe();
     }
 

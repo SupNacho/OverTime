@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.ILoginRepository;
 import ru.supernacho.overtime.model.repository.parseplatform.LoginRepository;
@@ -77,14 +78,15 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
             }
         };
-        repository.getRepoEventBus().subscribeOn(Schedulers.io())
+        repository.getRepoEventBus()
+                .subscribeOn(Schedulers.io())
                 .subscribe(repoEventObserver);
         checkLoginStatus();
     }
 
     public void addUserToCompanies(String companyId){
         repository.addCompanyToUser(companyId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override

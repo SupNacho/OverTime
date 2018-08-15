@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.UserCompanyStat;
 import ru.supernacho.overtime.model.repository.IAllEmplRepository;
 import ru.supernacho.overtime.view.fragments.AllEmplView;
@@ -27,7 +28,7 @@ public class AllEmplPresenter extends MvpPresenter<AllEmplView> {
 
     public void getEmployeesStat(int month, int year){
         repository.getStats(month, year)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<List<UserCompanyStat>>() {
                     @Override
@@ -49,7 +50,7 @@ public class AllEmplPresenter extends MvpPresenter<AllEmplView> {
 
     public void getStatsForShare(){
         repository.getFullStatForShare()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<String>() {
                     @Override

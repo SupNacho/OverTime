@@ -14,6 +14,7 @@ import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.repository.TimerRepository;
 import ru.supernacho.overtime.view.fragments.TimerView;
 import timber.log.Timber;
@@ -85,7 +86,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
 
     private void restoreOverTime() {
         repository.restoreTimerState()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Long>() {
                     @Override
@@ -131,7 +132,7 @@ public class TimerPresenter extends MvpPresenter<TimerView> {
             }
         };
         overTimeCounter
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(counterObserver);
     }
