@@ -27,7 +27,6 @@ import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
 import ru.supernacho.overtime.model.repository.ParseClass;
 import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.utils.PinGenerator;
-import timber.log.Timber;
 
 public class FbCompanyRepository implements ICompanyRepository {
     private IUserCompanyRepository userCompanyRepository;
@@ -63,8 +62,8 @@ public class FbCompanyRepository implements ICompanyRepository {
                         eventBus.onNext(new UserCompany(documentReference.getId(), true));
                         eventBus.onComplete();
                         userCompanyRepository.addCompanyToUser(companyId[0])
-                        .subscribeOn(App.getFbThread())
-                        .subscribe();
+                                .subscribeOn(App.getFbThread())
+                                .subscribe();
                     })
                     .addOnFailureListener(e -> {
                         eventBus.onNext(new UserCompany(null, false));
@@ -110,7 +109,8 @@ public class FbCompanyRepository implements ICompanyRepository {
         CollectionReference companyCollRef = fireStore.collection(ParseClass.COMPANY);
         try {
             QuerySnapshot querySnapshot = Tasks.await(companyCollRef.whereEqualTo(ParseFields.companyPin, pin).get());
-            if (!querySnapshot.isEmpty()) company = querySnapshot.getDocuments().get(0).toObject(CompanyEntity.class);
+            if (!querySnapshot.isEmpty())
+                company = querySnapshot.getDocuments().get(0).toObject(CompanyEntity.class);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -128,19 +128,25 @@ public class FbCompanyRepository implements ICompanyRepository {
     @Override
     public CompanyEntity getCompanyByOverTime(DocumentSnapshot overTime) {
         CollectionReference companyCollRef = fireStore.collection(ParseClass.COMPANY);
-        Query companyQuery = companyCollRef.whereEqualTo(ParseFields.companyId, overTime.get(ParseFields.forCompany));
-        CompanyEntity companyEntity;
-        DocumentSnapshot company = companyQuery.get().getResult().getDocuments().get(0);
-        if (company != null) {
-            companyEntity = new CompanyEntity(company.getId(),
-                    company.getString(ParseFields.companyName),
-                    company.getString(ParseFields.companyAddress),
-                    company.getString(ParseFields.companyPhone),
-                    company.getString(ParseFields.companyEmail),
-                    company.getString(ParseFields.companyChief),
-                    company.getString(ParseFields.companyPin));
-        } else {
-            companyEntity = new CompanyEntity("", "No connection", false);
+        CompanyEntity companyEntity = new CompanyEntity("", "No company", false);
+        QuerySnapshot companyQuerySnapshot = null;
+        try {
+            companyQuerySnapshot = Tasks.await(companyCollRef.whereEqualTo(ParseFields.companyId,
+                    overTime.get(ParseFields.forCompany)).get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (companyQuerySnapshot != null && !companyQuerySnapshot.isEmpty()) {
+            DocumentSnapshot company = companyQuerySnapshot.getDocuments().get(0);
+            if (company != null) {
+                companyEntity = new CompanyEntity(company.getId(),
+                        company.getString(ParseFields.companyName),
+                        company.getString(ParseFields.companyAddress),
+                        company.getString(ParseFields.companyPhone),
+                        company.getString(ParseFields.companyEmail),
+                        company.getString(ParseFields.companyChief),
+                        company.getString(ParseFields.companyPin));
+            }
         }
         return companyEntity;
     }
@@ -149,12 +155,12 @@ public class FbCompanyRepository implements ICompanyRepository {
     public CompanyEntity getCompanyAdmins(DocumentSnapshot employee, String companyId) {
         CompanyEntity company = new CompanyEntity("", "No company", false);
         CollectionReference companyCollRef = fireStore.collection(ParseClass.COMPANY);
-        Query companyQuery = companyCollRef.whereEqualTo(FieldPath.documentId(), companyId)
-                .whereArrayContains(ParseFields.companyAdmins, employee.getId()).limit(1);
         QuerySnapshot companySnapshot;
         try {
-            companySnapshot = Tasks.await(companyQuery.get());
-            if (!companySnapshot.isEmpty()) company = companySnapshot.getDocuments().get(0).toObject(CompanyEntity.class);
+            companySnapshot = Tasks.await(companyCollRef.whereEqualTo(FieldPath.documentId(), companyId)
+                    .whereArrayContains(ParseFields.companyAdmins, employee.getId()).limit(1).get());
+            if (!companySnapshot.isEmpty())
+                company = companySnapshot.getDocuments().get(0).toObject(CompanyEntity.class);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

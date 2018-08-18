@@ -5,7 +5,7 @@ public class User {
     private String userName;
     private String fullName;
     private String objectId;
-    private String userEmail;
+    public String userEmail;
     private boolean isAdmin;
 
     public User() {
@@ -75,18 +75,14 @@ public class User {
 
         User user = (User) o;
 
-        if (!getUserName().equals(user.getUserName())) return false;
-        if (!getFullName().equals(user.getFullName())) return false;
-        return (getObjectId() != null ? getObjectId().equals(user.getObjectId()) : user.getObjectId() == null)
-                && (getEmail() != null ? getEmail().equals(user.getEmail()) : user.getEmail() == null);
+        if (!getObjectId().equals(user.getObjectId())) return false;
+        return userEmail.equals(user.userEmail);
     }
 
     @Override
     public int hashCode() {
-        int result = getUserName().hashCode();
-        result = 31 * result + getFullName().hashCode();
-        result = 31 * result + (getObjectId() != null ? getObjectId().hashCode() : 0);
-        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        int result = getObjectId().hashCode();
+        result = 31 * result + userEmail.hashCode();
         return result;
     }
 }

@@ -3,6 +3,7 @@ package ru.supernacho.overtime.model.repository.firebase.core;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -10,7 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.parse.ParseUser;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -79,7 +81,7 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
         CollectionReference overTimeCollRef = fireStore.collection(ParseClass.OVER_TIME);
         Query overTimeQuery = overTimeCollRef.whereEqualTo(fieldName, fieldContent);
         overTimeQuery.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (!queryDocumentSnapshots.isEmpty()){
+            if (!queryDocumentSnapshots.isEmpty()) {
                 set.clear();
                 list = queryDocumentSnapshots.getDocuments();
                 for (DocumentSnapshot documentSnapshot : list) {
@@ -105,23 +107,19 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
         stats.clear();
         return Observable.create(emit -> {
             CollectionReference overTimeCollRef = fireStore.collection(ParseClass.OVER_TIME);
-            Query overTimeQuery =
-                    overTimeCollRef.whereEqualTo(ParseFields.monthNum, month)
+            QuerySnapshot querySnapshot = Tasks.await(overTimeCollRef.whereEqualTo(ParseFields.monthNum, month)
                     .whereEqualTo(ParseFields.yearNum, year)
-                    .whereEqualTo(ParseFields.forCompany, userCompanyRepository.getActiveCompanyId());
-            overTimeQuery.get().addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()){
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        User userEntity = getUser(documentSnapshot);
-                        addToMap(documentSnapshot, userEntity);
-                    }
-
-                    for (Map.Entry<User, Long> entry : usersMap.entrySet()){
-                        stats.add(new UserCompanyStat(entry.getKey(), entry.getValue()));
-                    }
-                    emit.onNext(stats);
+                    .whereEqualTo(ParseFields.forCompany, userCompanyRepository.getActiveCompanyId()).get());
+            if (!querySnapshot.isEmpty()) {
+                for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                    User userEntity = getUser(documentSnapshot);
+                    addToMap(documentSnapshot, userEntity);
                 }
-            });
+                for (Map.Entry<User, Long> entry : usersMap.entrySet()) {
+                    stats.add(new UserCompanyStat(entry.getKey(), entry.getValue()));
+                }
+                emit.onNext(stats);
+            }
         });
     }
 
@@ -147,36 +145,40 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
             if (userId != null) {
                 this.userId = userId;
             } else {
-                this.userId = ParseUser.getCurrentUser().getObjectId();
+                this.userId = firebaseUser.getUid();
             }
-            collectionReference
-                    .whereEqualTo(ParseFields.createdBy, this.userId)
-                    .whereEqualTo(ParseFields.monthNum, month)
-                    .whereEqualTo(ParseFields.yearNum, year)
-                    .whereGreaterThan(ParseFields.stopDate, zeroTime);
+            QuerySnapshot overTimesSnapshot;
             if (forCompany != null) {
-                collectionReference.whereEqualTo(ParseFields.forCompany, forCompany);
+                overTimesSnapshot = Tasks.await(collectionReference
+                        .whereEqualTo(ParseFields.createdBy, this.userId)
+                        .whereEqualTo(ParseFields.monthNum, month)
+                        .whereEqualTo(ParseFields.yearNum, year)
+                        .whereEqualTo(ParseFields.forCompany, forCompany)
+                        .whereGreaterThan(ParseFields.stopDate, zeroTime).get());
+            } else {
+                overTimesSnapshot = Tasks.await(collectionReference
+                        .whereEqualTo(ParseFields.createdBy, this.userId)
+                        .whereEqualTo(ParseFields.monthNum, month)
+                        .whereEqualTo(ParseFields.yearNum, year)
+                        .whereGreaterThan(ParseFields.stopDate, zeroTime).get());
             }
-
-            collectionReference.get().addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()){
-                    overTimesList.clear();
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                        Date start = documentSnapshot.getDate(ParseFields.startDate);
-                        Date stop = documentSnapshot.getDate(ParseFields.stopDate);
-                        String timeZoneID = documentSnapshot.getString(ParseFields.timeZoneID);
-                        long duration = 0;
-                        if (stop != null && start != null) {
-                            duration = stop.getTime() - start.getTime();
-                        }
-                        CompanyEntity companyEntity = companyRepository.getCompanyByOverTime(documentSnapshot);
-
-                        overTimesList.add(new OverTimeEntity(start, stop, timeZoneID, duration,
-                                documentSnapshot.getString(ParseFields.comment), companyEntity));
+            if (!overTimesSnapshot.isEmpty()) {
+                overTimesList.clear();
+                for (DocumentSnapshot documentSnapshot : overTimesSnapshot.getDocuments()) {
+                    Date start = documentSnapshot.getDate(ParseFields.startDate);
+                    Date stop = documentSnapshot.getDate(ParseFields.stopDate);
+                    String timeZoneID = documentSnapshot.getString(ParseFields.timeZoneID);
+                    long duration = 0;
+                    if (stop != null && start != null) {
+                        duration = stop.getTime() - start.getTime();
                     }
-                    emit.onNext(overTimesList);
+                    CompanyEntity companyEntity = companyRepository.getCompanyByOverTime(documentSnapshot);
+
+                    overTimesList.add(new OverTimeEntity(start, stop, timeZoneID, duration,
+                            documentSnapshot.getString(ParseFields.comment), companyEntity));
                 }
-            });
+                emit.onNext(overTimesList);
+            }
         });
     }
 
@@ -198,23 +200,36 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
         Query query = collectionReference
                 .whereEqualTo(FieldPath.documentId(), userId)
                 .limit(1);
-        DocumentSnapshot user = query.get().getResult().getDocuments().get(0);
-
-
-        return new User(Objects.requireNonNull(user).getId(),
-                user.getString(ParseFields.userName),
-                user.getString(ParseFields.fullName),
-                user.getString(ParseFields.userEmail),
-                false);
+        QuerySnapshot querySnapshot = null;
+        try {
+            querySnapshot = Tasks.await(query.get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+            DocumentSnapshot user = querySnapshot.getDocuments().get(0);
+            return new User(Objects.requireNonNull(user).getId(),
+                    user.getString(ParseFields.userName),
+                    user.getString(ParseFields.fullName),
+                    user.getString(ParseFields.userEmail),
+                    false);
+        } else {
+            return new User();
+        }
     }
 
     private List<DocumentSnapshot> getOverTimes(@NotNull UserCompanyStat stat) {
-
         CollectionReference collectionReference = fireStore.collection(ParseClass.OVER_TIME);
         Query query = collectionReference
                 .whereEqualTo(ParseFields.createdBy, stat.getUser().getObjectId())
                 .whereEqualTo(ParseFields.forCompany, userCompanyRepository.getActiveCompanyId());
-        return query.get().getResult().getDocuments();
+        QuerySnapshot querySnapshot = null;
+        try {
+            querySnapshot = Tasks.await(query.get());
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Objects.requireNonNull(querySnapshot).getDocuments();
     }
 
     private void formSummaryStrings(StringBuilder stringBuilder, UserCompanyStat stat) {
