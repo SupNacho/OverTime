@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.UserCompaniesEntity;
 
@@ -50,10 +51,17 @@ public class ChooseCompanyRepository implements IChooseCompanyRepository {
         return userCompanyRepository.deactivateCompany();
     }
 
+//    @Override
+//    public Observable<Boolean> joinCompany(String pin) {
+//        CompanyEntity company = companyRepository.getCompanyByPin(pin);
+//        return userCompanyRepository.addCompanyToUser(company);
+//    }
     @Override
     public Observable<Boolean> joinCompany(String pin) {
-        CompanyEntity company = companyRepository.getCompanyByPin(pin);
-        return userCompanyRepository.addCompanyToUser(company);
+        return Observable.create( emitter -> {
+            CompanyEntity company = companyRepository.getCompanyByPin(pin);
+            userCompanyRepository.addCompanyToUser(company).subscribe(emitter::onNext);
+        });
     }
 
     @Override

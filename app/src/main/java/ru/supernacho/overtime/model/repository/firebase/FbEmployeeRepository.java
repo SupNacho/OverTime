@@ -1,18 +1,19 @@
 package ru.supernacho.overtime.model.repository.firebase;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
@@ -22,8 +23,9 @@ import ru.supernacho.overtime.model.repository.IEmployeeRepository;
 import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
 import ru.supernacho.overtime.model.repository.ParseClass;
 import ru.supernacho.overtime.model.repository.ParseFields;
+import timber.log.Timber;
 
-public class FbEmployeeRepository implements IEmployeeRepository{
+public class FbEmployeeRepository implements IEmployeeRepository {
     private List<User> employees;
     private CompanyEntity currentCompany;
     private FirebaseFirestore fireStore;
@@ -41,39 +43,42 @@ public class FbEmployeeRepository implements IEmployeeRepository{
     public List<User> getEmployeesList() {
         return employees;
     }
+
     @Override
     public Observable<Boolean> getEmployees() {
-
         return Observable.create(emit -> {
             String[] activeCompanyId = new String[1];
-
             activeCompanyId[0] = userCompanyRepository.getActiveCompanyId();
 
             CollectionReference filterForCompany = fireStore.collection(ParseClass.USER_COMPANIES);
-            filterForCompany.whereEqualTo(ParseFields.userCompaniesCompanies, activeCompanyId[0]);
-            filterForCompany.get().addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()){
+            QuerySnapshot filterForCompanySnapshot =
+                    Tasks.await(filterForCompany.whereArrayContains(ParseFields.userCompaniesCompanies,
+                            activeCompanyId[0]).get());
+                if (!filterForCompanySnapshot.isEmpty()) {
                     employees.clear();
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                       CompanyEntity company = companyRepository.getCompanyAdmins(documentSnapshot, activeCompanyId[0]);
-                       CollectionReference filteredUser = fireStore.collection(ParseClass.PARSE_USER);
-                       Query filerUserQuery = filteredUser
-                               .whereEqualTo(FieldPath.documentId(),
-                                       documentSnapshot.getString(ParseFields.userCompaniesUserId))
-                               .limit(1);
-                       User user = filerUserQuery.get().getResult().getDocuments().get(0).toObject(User.class);
-                        if (user != null) {
-                            user.setAdmin(company.getAdmins().contains(user.getUserId()));
-                            employees.add(user);
+                    for (DocumentSnapshot documentSnapshot : filterForCompanySnapshot.getDocuments()) {
+                        CompanyEntity company = companyRepository.getCompanyAdmins(documentSnapshot, activeCompanyId[0]);
+                        CollectionReference filteredUser = fireStore.collection(ParseClass.PARSE_USER);
+                        Query filerUserQuery = filteredUser
+                                .whereEqualTo(FieldPath.documentId(),
+                                        documentSnapshot.getString(ParseFields.userCompaniesUserId))
+                                .limit(1);
+                        QuerySnapshot userSnapShot = Tasks.await(filerUserQuery.get());
+                        if (!userSnapShot.isEmpty()) {
+                            User user = userSnapShot.getDocuments().get(0).toObject(User.class);
+                            if (user != null) {
+                                user.setAdmin(company.getAdmins().contains(user.getObjectId()));
+                                employees.add(user);
+                            }
                         }
                     }
                     emit.onNext(true);
                 } else {
                     emit.onNext(false);
                 }
-            });
         });
     }
+
     @Override
     public Observable<CompanyEntity> getCompany() {
         return Observable.create(emit ->
@@ -97,10 +102,12 @@ public class FbEmployeeRepository implements IEmployeeRepository{
                             }
                         }));
     }
+
     @Override
     public Observable<Boolean> setAdminStatus(User user) {
         return companyRepository.setAdminStatus(user, currentCompany);
     }
+
     @Override
     public Observable<Boolean> fireEmployee(User employee) {
         return Observable.create(emit -> {

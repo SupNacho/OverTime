@@ -30,7 +30,7 @@ public class UserCompanyRepository {
         ParseQuery<ParseObject> companyIdQuery = ParseQuery.getQuery(ParseClass.USER_COMPANIES);
         ParseObject result = null;
         try {
-            result = companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, employee.getUserId())
+            result = companyIdQuery.whereEqualTo(ParseFields.userCompaniesUserId, employee.getObjectId())
                     .getFirst();
         } catch (ParseException e) {
             e.printStackTrace();

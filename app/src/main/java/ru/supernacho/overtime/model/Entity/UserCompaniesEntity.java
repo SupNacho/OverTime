@@ -1,11 +1,12 @@
 package ru.supernacho.overtime.model.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserCompaniesEntity {
-    private String activeCompany;
+    private String activeCompany = "";
     private String userId;
-    private List<String> companies;
+    private List<String> companies = new ArrayList<>();
 
     public UserCompaniesEntity() {
     }

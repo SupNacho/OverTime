@@ -14,7 +14,6 @@ import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
-import ru.supernacho.overtime.model.repository.ICompanyRepository;
 import ru.supernacho.overtime.model.repository.ParseClass;
 import ru.supernacho.overtime.model.repository.ParseFields;
 import ru.supernacho.overtime.utils.PinGenerator;
@@ -40,8 +39,8 @@ public class CompanyRepository {
 
             for (; ; ) {
                 String emplPin = PinGenerator.getPin();
-                if (checkPin(ParseFields.companyEmpPin, emplPin)) {
-                    company.put(ParseFields.companyEmpPin, emplPin);
+                if (checkPin(ParseFields.companyPin, emplPin)) {
+                    company.put(ParseFields.companyPin, emplPin);
                     break;
                 }
             }
@@ -103,7 +102,7 @@ public class CompanyRepository {
         ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
         ParseObject result = null;
         try {
-            result = companyQuery.whereEqualTo(ParseFields.companyEmpPin, pin).getFirst();
+            result = companyQuery.whereEqualTo(ParseFields.companyPin, pin).getFirst();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -124,7 +123,7 @@ public class CompanyRepository {
                         company.getString(ParseFields.companyPhone),
                         company.getString(ParseFields.companyEmail),
                         company.getString(ParseFields.companyChief),
-                        company.getString(ParseFields.companyEmpPin)
+                        company.getString(ParseFields.companyPin)
                 ));
             }
         });
@@ -147,7 +146,7 @@ public class CompanyRepository {
                     company.getString(ParseFields.companyPhone),
                     company.getString(ParseFields.companyEmail),
                     company.getString(ParseFields.companyChief),
-                    company.getString(ParseFields.companyEmpPin));
+                    company.getString(ParseFields.companyPin));
         } else {
             companyEntity = new CompanyEntity("", "No connection", false);
         }
@@ -172,7 +171,7 @@ public class CompanyRepository {
             ParseQuery<ParseObject> companyQuery = ParseQuery.getQuery(ParseClass.COMPANY);
             ParseObject company = companyQuery.whereEqualTo(ParseFields.companyId, currentCompany.getObjectId()).getFirst();
             if (user.isAdmin()) {
-                company.addUnique(ParseFields.companyAdmins, user.getUserId());
+                company.addUnique(ParseFields.companyAdmins, user.getObjectId());
                 company.saveEventually(e -> {
                     if (e == null) {
                         emit.onNext(true);
@@ -186,7 +185,7 @@ public class CompanyRepository {
 
                 JSONArray admins = company.getJSONArray(ParseFields.companyAdmins);
                 for (int i = 0; i < admins.length(); i++) {
-                    if (admins.get(i).equals(user.getUserId())) admins.remove(i);
+                    if (admins.get(i).equals(user.getObjectId())) admins.remove(i);
                 }
 
                 company.put(ParseFields.companyAdmins, admins);

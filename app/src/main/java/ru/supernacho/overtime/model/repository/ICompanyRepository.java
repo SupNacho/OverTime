@@ -1,8 +1,11 @@
 package ru.supernacho.overtime.model.repository;
+import android.icu.lang.UCharacter;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.parse.ParseObject;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.Entity.UserCompany;
@@ -26,4 +29,6 @@ public interface ICompanyRepository {
     Observable<Boolean> setAdminStatus(User user, CompanyEntity currentCompany);
 
     void addCompanyToUser(String companyId);
+
+    PublishSubject<UserCompany> subscribeToEBus();
 }

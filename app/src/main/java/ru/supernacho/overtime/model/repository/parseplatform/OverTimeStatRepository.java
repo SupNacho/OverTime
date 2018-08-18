@@ -197,7 +197,7 @@ public class OverTimeStatRepository {
 
     private List<ParseObject> getOverTimes(@NotNull UserCompanyStat stat) throws ParseException {
         ParseQuery<ParseObject> employeeOverTimes = ParseQuery.getQuery(ParseClass.OVER_TIME);
-        return employeeOverTimes.whereEqualTo(ParseFields.createdBy, stat.getUser().getUserId())
+        return employeeOverTimes.whereEqualTo(ParseFields.createdBy, stat.getUser().getObjectId())
                 .whereEqualTo(ParseFields.forCompany,
                         userCompanyRepository.getActiveCompanyId())
                 .find();

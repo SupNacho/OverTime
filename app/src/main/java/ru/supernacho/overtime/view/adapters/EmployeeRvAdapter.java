@@ -49,7 +49,7 @@ public class EmployeeRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             tvFullName = itemView.findViewById(R.id.tv_fullname_employees_view);
             tvEmail = itemView.findViewById(R.id.tv_email_employees_view);
-            itemView.setOnClickListener(v -> presenter.chooseEmployee(employs.get(getLayoutPosition()).getUserId()));
+            itemView.setOnClickListener(v -> presenter.chooseEmployee(employs.get(getLayoutPosition()).getObjectId()));
         }
     }
 }

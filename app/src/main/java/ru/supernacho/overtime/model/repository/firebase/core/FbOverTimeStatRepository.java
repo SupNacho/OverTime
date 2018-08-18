@@ -212,7 +212,7 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
 
         CollectionReference collectionReference = fireStore.collection(ParseClass.OVER_TIME);
         Query query = collectionReference
-                .whereEqualTo(ParseFields.createdBy, stat.getUser().getUserId())
+                .whereEqualTo(ParseFields.createdBy, stat.getUser().getObjectId())
                 .whereEqualTo(ParseFields.forCompany, userCompanyRepository.getActiveCompanyId());
         return query.get().getResult().getDocuments();
     }

@@ -26,8 +26,7 @@ public interface ParseFields {
     String companyPhone = "phone";
     String companyEmail = "email";
     String companyChief = "chief";
-    String companyAdminPin = "adminPin";
-    String companyEmpPin = "empPin";
+    String companyPin = "pin";
     String companyAdmins = "admins";
     //UserCompanies
     String userCompaniesUserId = "userId";

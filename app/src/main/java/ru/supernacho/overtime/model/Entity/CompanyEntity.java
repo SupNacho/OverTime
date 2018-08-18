@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyEntity {
-    private final String objectId;
+    private String objectId;
     private String name;
     private String address;
     private String phone;
@@ -13,6 +13,9 @@ public class CompanyEntity {
     private String pin;
     private boolean isActive;
     private List<String> admins;
+
+    public CompanyEntity() {
+    }
 
     public CompanyEntity(String objectId, String name, boolean isActive) {
         this.objectId = objectId;
