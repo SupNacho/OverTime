@@ -51,11 +51,6 @@ public class ChooseCompanyRepository implements IChooseCompanyRepository {
         return userCompanyRepository.deactivateCompany();
     }
 
-//    @Override
-//    public Observable<Boolean> joinCompany(String pin) {
-//        CompanyEntity company = companyRepository.getCompanyByPin(pin);
-//        return userCompanyRepository.addCompanyToUser(company);
-//    }
     @Override
     public Observable<Boolean> joinCompany(String pin) {
         return Observable.create( emitter -> {

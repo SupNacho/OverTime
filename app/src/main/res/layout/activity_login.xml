@@ -33,19 +33,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/btn_google_signin_login_actvt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/or_login_delimiter"/>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -175,6 +162,19 @@
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/forgot_password"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/or_login_delimiter"/>
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/btn_google_signin_login_actvt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
     </ScrollView>

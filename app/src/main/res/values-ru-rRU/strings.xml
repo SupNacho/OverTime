@@ -4,7 +4,7 @@
     <string name="or_login_delimiter">- или -</string>
     <string name="prompt_email">Эл.почта</string>
     <string name="prompt_password">Пароль</string>
-    <string name="action_login">Логин</string>
+    <string name="action_login">Войти</string>
     <string name="action_login_short">Логин</string>
     <string name="error_invalid_username">Поле \"Эл.почта\" не заполнено</string>
     <string name="error_invalid_full_name">Поле ФИО не заполнено</string>
@@ -13,6 +13,7 @@
     <string name="error_invalid_confirm_password">Пароли не совпадают</string>
     <string name="error_incorrect_password">Логин/Пароль не верный</string>
     <string name="error_field_required">Это поле обязательно для заполнения</string>
+    <string name="error_login_failed">Ошибка авторизации</string>
     <string name="permission_rationale">Разрешения на доступ к контактам для автозаполнения полей</string>
     <string name="action_settings">Настройки</string>
     <string name="action_logout">Выйти из уч.записи</string>
