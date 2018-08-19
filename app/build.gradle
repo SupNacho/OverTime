@@ -15,8 +15,8 @@ android {
         applicationId "ru.supernacho.overtime"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0.2"
+        versionCode 6
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

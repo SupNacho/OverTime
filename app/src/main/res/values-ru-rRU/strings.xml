@@ -118,6 +118,7 @@
     <string name="subj_extra_personal_stat">Мои переработки</string>
     <string name="chooser_title_all_employee_stat">Поделиться статистикой по всем сотрудникам</string>
     <string name="chooser_title_personal_stat">Поледиться персональной статистикой</string>
+    <string name="title_activity_tabs">Переработки</string>
     <string name="overtime_chart_hint">Выберите переработку для отображения комментариев по этой работе</string>
     <string name="overtime_chart_no_selected">Перерабтка не выбрана</string>
     <string name="chart_label">Часов в день</string>
