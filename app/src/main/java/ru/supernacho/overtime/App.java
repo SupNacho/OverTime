@@ -36,24 +36,6 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
-//
-//        Parse.initialize(new Parse.Configuration.Builder(getApplicationContext())
-//                .applicationId(getResources().getString(R.string.app_id))
-//                .clientKey(getResources().getString(R.string.client_id))
-//                .server(getResources().getString(R.string.server_address))
-//                .build());
-
-        FirebaseFirestore
-                .getInstance()
-                .setFirestoreSettings(new FirebaseFirestoreSettings.Builder()
-                        .setPersistenceEnabled(true).build());
-
-        Timber.d("Fire store instance %s", FirebaseFirestore.getInstance().toString());
-//
-//        ParseACL defaultACL = new ParseACL();
-//        defaultACL.setPublicReadAccess(true);
-//        defaultACL.setPublicWriteAccess(true);
-//        ParseACL.setDefaultACL(defaultACL, true);
     }
 
     public static App getInstance() {

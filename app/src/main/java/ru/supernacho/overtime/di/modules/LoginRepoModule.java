@@ -8,8 +8,6 @@ import ru.supernacho.overtime.model.repository.ICompanyRepository;
 import ru.supernacho.overtime.model.repository.ILoginRepository;
 import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
 import ru.supernacho.overtime.model.repository.firebase.FbLoginRepository;
-import ru.supernacho.overtime.model.repository.parseplatform.CompanyRepository;
-import ru.supernacho.overtime.model.repository.parseplatform.UserCompanyRepository;
 
 @Singleton
 @Module(includes = {UserCompaniesRepoModule.class, CompanyRepoModule.class})

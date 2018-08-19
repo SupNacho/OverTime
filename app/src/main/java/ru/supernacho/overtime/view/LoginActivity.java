@@ -115,8 +115,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                 .requestEmail()
                 .build();
         googleSingInClient = GoogleSignIn.getClient(this, gso);
-//        GoogleSignInAccount gsa = GoogleSignIn.getLastSignedInAccount(this);
-//        if (gsa != null) presenter.;
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin();
@@ -137,6 +135,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     public void onClickGoogleSingIn(){
         Intent signInIntent = googleSingInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_REQUEST_CODE);
+        showProgress(true);
+
     }
 
     @OnClick({R.id.email_sign_in_button, R.id.btn_cancel,
@@ -198,6 +198,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
     public void loginSuccess() {
         Intent tabsIntent = new Intent(this, TabsActivity.class);
         startActivity(tabsIntent);
+        showProgress(false);
         this.finish();
     }
 
@@ -252,7 +253,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
                         presenter.checkUserRegistration(user);
-//                        loginSuccess();
                     } else {
                         loginError("Authentication failed");
                     }
@@ -435,7 +435,9 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
 
     private void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+        if (inputMethodManager != null && getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }
 

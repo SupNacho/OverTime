@@ -12,7 +12,6 @@ import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.UserCompany;
 import ru.supernacho.overtime.model.repository.ILoginRepository;
-import ru.supernacho.overtime.model.repository.parseplatform.LoginRepository;
 import ru.supernacho.overtime.view.TabsView;
 
 @InjectViewState

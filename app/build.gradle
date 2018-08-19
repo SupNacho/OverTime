@@ -5,7 +5,6 @@ apply plugin: 'com.google.gms.google-services'
 android {
     lintOptions {
         checkReleaseBuilds false
-//        abortOnError false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -16,7 +15,7 @@ android {
         applicationId "ru.supernacho.overtime"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 3
+        versionCode 4
         versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
