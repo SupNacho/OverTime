@@ -156,5 +156,7 @@
     <string name="sort_comp_label_chart_fragment">Filter: </string>
     <string name="all_companies">All companies</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="restore_toast_positive">Check your email for password recovery link</string>
+    <string name="restore_toast_negative">No user with this email</string>
 
 </resources>

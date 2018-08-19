@@ -129,4 +129,6 @@
     <string name="sort_comp_label_chart_fragment">Фильтр: </string>
     <string name="all_companies">Все компании</string>
     <string name="forgot_password">Забыли пароль?</string>
+    <string name="restore_toast_positive">Ссылка для востановления пароля отправлена на эл.почту</string>
+    <string name="restore_toast_negative">Пользователь с такой эл.почтой не найден</string>
 </resources>

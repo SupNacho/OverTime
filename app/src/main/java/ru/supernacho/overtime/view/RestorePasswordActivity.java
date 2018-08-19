@@ -1,8 +1,8 @@
 package ru.supernacho.overtime.view;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -50,15 +50,16 @@ public class RestorePasswordActivity extends MvpAppCompatActivity implements Res
 
     @Override
     public void restoreStarted() {
-        showRecoveryResult("Check your email for password recovery link");
+        showRecoveryResult(getResources().getString(R.string.restore_toast_positive));
+        finish();
     }
 
     @Override
     public void restoreFailed() {
-        showRecoveryResult("No user with this email");
+        showRecoveryResult(getResources().getString(R.string.restore_toast_negative));
     }
 
     private void showRecoveryResult(String msg) {
-        Snackbar.make(etEmail, msg, Snackbar.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 }
