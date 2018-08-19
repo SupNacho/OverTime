@@ -2,6 +2,7 @@ package ru.supernacho.overtime.presenter;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
@@ -11,7 +12,6 @@ import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.User;
 import ru.supernacho.overtime.model.repository.ILoginRepository;
-import ru.supernacho.overtime.model.repository.parseplatform.LoginRepository;
 import ru.supernacho.overtime.model.repository.RepoEvents;
 import ru.supernacho.overtime.view.LoginView;
 import timber.log.Timber;
@@ -84,6 +84,28 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
         checkLoginStatus();
     }
 
+    public void checkUserRegistration(FirebaseUser user){
+        repository.checkUserRegistration(user)
+                .subscribeOn(App.getFbThread())
+                .observeOn(uiScheduler)
+                .subscribe(new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        getViewState().loginSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.d("Err: %s", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                    }
+                });
+    }
+
     public void addUserToCompanies(String companyId){
         repository.addCompanyToUser(companyId)
                 .subscribeOn(App.getFbThread())
@@ -125,6 +147,6 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        repoEventObserver.dispose();
+        if (repoEventObserver != null) repoEventObserver.dispose();
     }
 }

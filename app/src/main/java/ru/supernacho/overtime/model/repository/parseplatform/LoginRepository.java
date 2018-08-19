@@ -1,5 +1,6 @@
 package ru.supernacho.overtime.model.repository.parseplatform;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.parse.ParseUser;
 
 import io.reactivex.Observable;
@@ -98,6 +99,11 @@ public class LoginRepository implements ILoginRepository{
 
     public Observable<CompanyEntity> getCurrentCompany(){
         return companyRepository.getCurrentCompany();
+    }
+
+    @Override
+    public Observable<Boolean> checkUserRegistration(FirebaseUser user) {
+        return null;
     }
 
     public PublishSubject<RepoEvents> getRepoEventBus() {

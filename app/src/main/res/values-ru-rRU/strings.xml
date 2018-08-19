@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Переработки</string>
+    <string name="or_login_delimiter">- или -</string>
     <string name="prompt_email">Эл.почта</string>
     <string name="prompt_password">Пароль</string>
     <string name="action_login">Логин</string>
     <string name="action_login_short">Логин</string>
-    <string name="error_invalid_username">Поле \"Логин\" не заполнено</string>
+    <string name="error_invalid_username">Поле \"Эл.почта\" не заполнено</string>
     <string name="error_invalid_full_name">Поле ФИО не заполнено</string>
     <string name="error_invalid_email">Не верный адрес эл.почты</string>
     <string name="error_invalid_password">Пароль слишком короткий</string>

@@ -1,8 +1,12 @@
 package ru.supernacho.overtime.model.repository.firebase;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +31,7 @@ public class FbLoginRepository implements ILoginRepository {
     private ICompanyRepository companyRepository;
     private FirebaseAuth auth;
     private FirebaseUser fbUser;
+    private FirebaseFirestore firestore;
 
     public FbLoginRepository(IUserCompanyRepository userCompanyRepository, ICompanyRepository companyRepository) {
         this.userCompanyRepository = userCompanyRepository;
@@ -34,6 +39,7 @@ public class FbLoginRepository implements ILoginRepository {
         this.repoEventBus = PublishSubject.create();
         this.auth = FirebaseAuth.getInstance();
         this.fbUser = auth.getCurrentUser();
+        this.firestore = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -43,7 +49,7 @@ public class FbLoginRepository implements ILoginRepository {
                     if (task.isSuccessful()) {
                         sendEmailVerification();
                         repoEventBus.onNext(RepoEvents.REGISTRATION_SUCCESS);
-                        DocumentReference doc = FirebaseFirestore.getInstance()
+                        DocumentReference doc = firestore
                                 .collection(ParseClass.PARSE_USER)
                                 .document(fbUser.getUid());
                         Map<String, Object> dataToSave = new HashMap<>();
@@ -87,6 +93,24 @@ public class FbLoginRepository implements ILoginRepository {
     }
 
     @Override
+    public Observable<Boolean> checkUserRegistration(FirebaseUser user) {
+        return Observable.create( emitter -> {
+            QuerySnapshot querySnapshot =
+                    Tasks.await(firestore.collection(ParseClass.PARSE_USER)
+                            .whereEqualTo(FieldPath.documentId(), user.getUid()).get());
+            if (querySnapshot.isEmpty()){
+                DocumentReference createUser = firestore.document(ParseClass.PARSE_USER + "/"
+                        + user.getUid());
+                createUser.set(new User(user.getUid(),"",user.getDisplayName(),user.getEmail(),false));
+                userCompanyRepository.createUserCompaniesEntity();
+                emitter.onNext(true);
+            } else {
+                emitter.onNext(true);
+            }
+        });
+    }
+
+    @Override
     public Observable<String> getUserData() {
         return Observable.create(emit -> {
             String uid;
@@ -95,7 +119,7 @@ public class FbLoginRepository implements ILoginRepository {
             } else {
                 uid = "";
             }
-            DocumentReference userDoc = FirebaseFirestore.getInstance()
+            DocumentReference userDoc = firestore
                     .document(ParseClass.PARSE_USER + "/" + uid);
             userDoc.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists())
