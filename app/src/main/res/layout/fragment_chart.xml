@@ -101,6 +101,16 @@
             android:textSize="24sp"
             android:layout_weight="2" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_loading_chart_fragment"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_chart_fragment"
         android:layout_width="wrap_content"

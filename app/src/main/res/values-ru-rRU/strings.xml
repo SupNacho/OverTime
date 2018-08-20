@@ -86,7 +86,7 @@
     <string name="manage_empl_fire_employee_desc">Уволить сотрудника</string>
     <string name="nav_drawer_manage_employee">Управлять сотрудниками</string>
     <string name="nav_drawer_choose_company">Управлять компаниями</string>
-    <string name="nav_drawer_register_company">Зарегистрировать компанию</string>
+    <string name="nav_drawer_register_company">Создать компанию</string>
     <string name="nav_drawer_about_active_company">О Компании</string>
     <string name="alert_leave_company_header">Покинуть компанию?</string>
     <string name="alert_fire_employee_header">Уволить сотрудника?</string>

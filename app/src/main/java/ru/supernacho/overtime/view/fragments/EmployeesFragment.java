@@ -66,6 +66,7 @@ public class EmployeesFragment extends MvpAppCompatFragment implements Employees
         adapter = new EmployeeRvAdapter(presenter);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(presenter::getEmploysList);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @OnClick(R.id.btn_all_stat_employee_fragment)
