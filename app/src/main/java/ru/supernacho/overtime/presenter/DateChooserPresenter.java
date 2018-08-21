@@ -13,8 +13,9 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.DateChooserEntry;
-import ru.supernacho.overtime.model.repository.LogRepository;
+import ru.supernacho.overtime.model.repository.ILogRepository;
 import ru.supernacho.overtime.view.fragments.DateChooserView;
 
 @InjectViewState
@@ -25,7 +26,7 @@ public class DateChooserPresenter extends MvpPresenter<DateChooserView> {
     private String userId;
 
     @Inject
-    LogRepository repository;
+    ILogRepository repository;
 
 
     public DateChooserPresenter(Scheduler uiScheduler, String userId) {
@@ -43,7 +44,7 @@ public class DateChooserPresenter extends MvpPresenter<DateChooserView> {
     public void getDateData(boolean isAllEmployeesStat) {
         if (!isAllEmployeesStat) {
             disposableGetDate = repository.getMonths(userId)
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(App.getFbThread())
                     .observeOn(uiScheduler)
                     .subscribe(objects -> {
                         dateList.clear();
@@ -64,7 +65,7 @@ public class DateChooserPresenter extends MvpPresenter<DateChooserView> {
                     });
         } else {
             disposableGetDate = repository.getAllEmployeesMonths()
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(App.getFbThread())
                     .observeOn(uiScheduler)
                     .subscribe(objects -> {
                         dateList.clear();

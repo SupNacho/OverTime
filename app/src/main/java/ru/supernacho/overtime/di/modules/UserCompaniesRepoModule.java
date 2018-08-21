@@ -4,13 +4,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.UserCompanyRepository;
+import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
+import ru.supernacho.overtime.model.repository.firebase.core.FbUserCompanyRepository;
 
 @Singleton
 @Module
 public class UserCompaniesRepoModule {
     @Provides
-    UserCompanyRepository userCompanyRepository(){
-        return new UserCompanyRepository();
+    IUserCompanyRepository userCompanyRepository(){
+        return new FbUserCompanyRepository();
     }
 }

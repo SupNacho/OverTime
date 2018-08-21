@@ -10,8 +10,10 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.OverTimeEntity;
 import ru.supernacho.overtime.model.repository.ChartRepository;
+import ru.supernacho.overtime.model.repository.IChartRepository;
 import ru.supernacho.overtime.utils.charts.DurationToStringConverter;
 import ru.supernacho.overtime.view.fragments.ChartView;
 
@@ -22,7 +24,7 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
     private StringBuilder stringBuilder;
 
     @Inject
-    ChartRepository repository;
+    IChartRepository repository;
 
     public ChartPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
@@ -36,7 +38,7 @@ public class ChartPresenter extends MvpPresenter<ChartView> {
 
     public void getOverTimes(int month, int year, String userId, String forCompany){
         repository.getOverTimes(month, year, userId, forCompany)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<List<OverTimeEntity>>() {
                     @Override

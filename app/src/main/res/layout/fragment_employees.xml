@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/ll_manager_fragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/ll_manager_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="@dimen/fab_margin"
     tools:context=".view.fragments.ManagerFragment">
+
     <Button
         android:id="@+id/btn_all_stat_employee_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/show_all_employees_stat_btn"/>
+        android:text="@string/show_all_employees_stat_btn" />
+
     <android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/srl_manager_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_manager_fragment_emp_chooser"
+        android:id="@+id/srl_manager_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_manager_fragment_emp_chooser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

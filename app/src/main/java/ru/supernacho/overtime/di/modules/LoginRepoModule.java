@@ -4,17 +4,18 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.CompanyRepository;
-import ru.supernacho.overtime.model.repository.LoginRepository;
-import ru.supernacho.overtime.model.repository.UserCompanyRepository;
+import ru.supernacho.overtime.model.repository.ICompanyRepository;
+import ru.supernacho.overtime.model.repository.ILoginRepository;
+import ru.supernacho.overtime.model.repository.IUserCompanyRepository;
+import ru.supernacho.overtime.model.repository.firebase.FbLoginRepository;
 
 @Singleton
 @Module(includes = {UserCompaniesRepoModule.class, CompanyRepoModule.class})
 public class LoginRepoModule {
 
     @Provides
-    LoginRepository loginRepository(UserCompanyRepository userCompanyRepository,
-                                    CompanyRepository companyRepository) {
-        return new LoginRepository(userCompanyRepository, companyRepository);
+    ILoginRepository loginRepository(IUserCompanyRepository userCompanyRepository,
+                                     ICompanyRepository companyRepository) {
+        return new FbLoginRepository(userCompanyRepository, companyRepository);
     }
 }

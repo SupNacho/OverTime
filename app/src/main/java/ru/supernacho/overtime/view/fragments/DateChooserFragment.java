@@ -108,6 +108,7 @@ public class DateChooserFragment extends MvpAppCompatFragment implements DateCho
         adapter = new DateLogRvAdapter(presenter);
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(this::updateData);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     private void updateData(){

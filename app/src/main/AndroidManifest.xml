@@ -21,19 +21,27 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.TabsActivity"
             android:label="@string/title_activity_tabs"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".view.CompanyRegistrationActivity" />
-        <activity android:name=".view.ChooseCompanyActivity" />
-        <activity android:name=".view.ManageEmployeeActivity" />
-        <activity android:name=".view.RestorePasswordActivity"></activity>
+        <activity
+            android:name=".view.CompanyRegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ChooseCompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ManageEmployeeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.RestorePasswordActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

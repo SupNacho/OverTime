@@ -1,7 +1,10 @@
 package ru.supernacho.overtime.model.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CompanyEntity {
-    private final String objectId;
+    private String objectId;
     private String name;
     private String address;
     private String phone;
@@ -9,6 +12,10 @@ public class CompanyEntity {
     private String chief;
     private String pin;
     private boolean isActive;
+    private List<String> admins;
+
+    public CompanyEntity() {
+    }
 
     public CompanyEntity(String objectId, String name, boolean isActive) {
         this.objectId = objectId;
@@ -19,6 +26,7 @@ public class CompanyEntity {
         this.chief = "";
         this.pin = "";
         this.isActive = isActive;
+        this.admins = new ArrayList<>();
     }
     public CompanyEntity(String objectId, String name, String address, String phone, String email, String chief, String pin) {
         this.objectId = objectId;
@@ -28,6 +36,7 @@ public class CompanyEntity {
         this.email = email;
         this.chief = chief;
         this.pin = pin;
+        this.admins = new ArrayList<>();
     }
 
     public String getName() {
@@ -84,6 +93,17 @@ public class CompanyEntity {
 
     public String getObjectId() {
         return objectId;
+    }
+
+    public List<String> getAdmins() {
+        return admins;
+    }
+
+    public void addAdmin(String adminId) {
+        this.admins.add(adminId);
+    }
+    public void removeAdmin(String adminId) {
+        this.admins.remove(adminId);
     }
 
     @Override

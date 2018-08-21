@@ -11,16 +11,15 @@ import io.reactivex.schedulers.Schedulers;
 import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.UserCompany;
-import ru.supernacho.overtime.model.repository.LoginRepository;
+import ru.supernacho.overtime.model.repository.ILoginRepository;
 import ru.supernacho.overtime.view.TabsView;
-import timber.log.Timber;
 
 @InjectViewState
 public class TabsPresenter extends MvpPresenter<TabsView> {
     private DisposableObserver<Boolean> logoutObserver;
     private Scheduler uiScheduler;
     @Inject
-    LoginRepository repository;
+    ILoginRepository repository;
 
     public TabsPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
@@ -52,7 +51,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
         };
 
         repository.getUserData()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<String>() {
                     @Override
@@ -74,7 +73,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
 
     public void userIsAdmin(){
         repository.userIsAdmin()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<UserCompany>() {
                     @Override
@@ -97,7 +96,7 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
 
     public void getCurrentCompany(){
         repository.getCurrentCompany()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<CompanyEntity>() {
                     @Override

@@ -4,13 +4,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.supernacho.overtime.model.repository.OverTimeRunRepository;
+import ru.supernacho.overtime.model.repository.IOverTimeRunRepository;
+import ru.supernacho.overtime.model.repository.firebase.core.FbOverTimeRunRepository;
 
 @Singleton
 @Module
 public class OverTimeRunRepoModule {
     @Provides
-    OverTimeRunRepository overTimeRunRepository(){
-        return new OverTimeRunRepository();
+    IOverTimeRunRepository overTimeRunRepository(){
+        return new FbOverTimeRunRepository();
     }
 }

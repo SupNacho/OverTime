@@ -5,13 +5,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import ru.supernacho.overtime.model.repository.ChartRepository;
-import ru.supernacho.overtime.model.repository.OverTimeStatRepository;
+import ru.supernacho.overtime.model.repository.IChartRepository;
+import ru.supernacho.overtime.model.repository.IOverTimeStatRepository;
 
 @Singleton
 @Module(includes = {OverTimeRepoModule.class})
 public class ChartRepoModule {
     @Provides
-    ChartRepository chartRepository(OverTimeStatRepository overTimeStatRepository){
+    IChartRepository chartRepository(IOverTimeStatRepository overTimeStatRepository){
         return new ChartRepository(overTimeStatRepository);
     }
 }

@@ -10,9 +10,10 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.Entity.User;
-import ru.supernacho.overtime.model.repository.EmployeeRepository;
+import ru.supernacho.overtime.model.repository.IEmployeeRepository;
 import ru.supernacho.overtime.view.ManageEmployeeView;
 
 @InjectViewState
@@ -20,7 +21,7 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> im
     private Scheduler uiScheduler;
 
     @Inject
-    EmployeeRepository repository;
+    IEmployeeRepository repository;
 
     public ManageEmployeePresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
@@ -32,7 +33,7 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> im
 
     public void getEmployees(){
         repository.getEmployees()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
@@ -77,7 +78,7 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> im
     public void grantAdmin(User employee){
         employee.setAdmin(!employee.isAdmin());
         repository.setAdminStatus(employee)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
@@ -110,7 +111,7 @@ public class ManageEmployeePresenter extends MvpPresenter<ManageEmployeeView> im
         if (object instanceof User) {
             User employee = (User) object;
             repository.fireEmployee(employee)
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(App.getFbThread())
                     .observeOn(uiScheduler)
                     .subscribe(new DisposableObserver<Boolean>() {
                         @Override

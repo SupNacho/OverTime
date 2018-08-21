@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -85,6 +86,8 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
     Spinner spSortByCompany;
     @BindView(R.id.tv_sort_label_chart_fragment)
     TextView tvSortLabel;
+    @BindView(R.id.pb_loading_chart_fragment)
+    ProgressBar pbLoadingChart;
 
     private List<BarEntry> yVals = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
@@ -130,9 +133,11 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         unbinder = ButterKnife.bind(this, view);
-        String forCompany = null;
-        if (isManagerView) forCompany = ((TabsActivity) Objects.requireNonNull(getActivity())).getCompanyId();
-        presenter.getOverTimes(month, year, userId, forCompany);
+        if (isManagerView) {
+            String forCompany  = ((TabsActivity) Objects.requireNonNull(getActivity())).getCompanyId();
+            presenter.getOverTimes(month, year, userId, forCompany);
+        }
+        showProgress(true);
         fab.setOnClickListener(v -> presenter.sendReport(
                 getResources().getString(R.string.text_rep_new_rec),
                 getResources().getString(R.string.text_rep_start_date),
@@ -156,11 +161,13 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 presenter.getOverTimes(month, year, userId, companiesList.get(position).getObjectId());
+                showProgress(true);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 presenter.getOverTimes(month, year, userId, null);
+                showProgress(true);
             }
         });
         if (isManagerView) {
@@ -203,6 +210,7 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         setupBarChart(barData);
         barChart.notifyDataSetChanged();
         barChart.invalidate();
+        showProgress(false);
     }
 
     private void formCollections(@NotNull List<OverTimeEntity> overTimeEntityList, @NotNull OverTimeEntity overTimeEntity) {
@@ -229,6 +237,10 @@ public class ChartFragment extends MvpAppCompatFragment implements ChartView,
         xAxisBarChart.setLabelCount(labels.size() > 3 ? 4 : labels.size());
         xAxisBarChart.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxisBarChart.setValueFormatter(new XAxisValuesFormatter(labels));
+    }
+
+    private void showProgress(boolean show){
+        pbLoadingChart.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @NonNull

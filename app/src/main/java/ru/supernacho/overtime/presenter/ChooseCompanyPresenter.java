@@ -11,8 +11,10 @@ import javax.inject.Inject;
 import io.reactivex.Scheduler;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import ru.supernacho.overtime.App;
 import ru.supernacho.overtime.model.Entity.CompanyEntity;
 import ru.supernacho.overtime.model.repository.ChooseCompanyRepository;
+import ru.supernacho.overtime.model.repository.IChooseCompanyRepository;
 import ru.supernacho.overtime.view.ChooseCompanyView;
 
 @InjectViewState
@@ -21,7 +23,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
     private List<CompanyEntity> companies;
 
     @Inject
-    ChooseCompanyRepository repository;
+    IChooseCompanyRepository repository;
 
     public ChooseCompanyPresenter(Scheduler uiScheduler) {
         this.uiScheduler = uiScheduler;
@@ -30,7 +32,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
 
     public void getUserCompanies(){
         repository.getCompanies()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<List<CompanyEntity>>() {
                     @Override
@@ -54,7 +56,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
 
     public void setActiveCompany(String companyId){
         repository.setActiveCompany(companyId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
@@ -80,7 +82,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
 
     public void deactivateCompany(){
         repository.deactivateCompany()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
@@ -106,7 +108,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
 
     public void joinCompany(String pin){
         repository.joinCompany(pin)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(App.getFbThread())
                 .observeOn(uiScheduler)
                 .subscribe(new DisposableObserver<Boolean>() {
                     @Override
@@ -140,7 +142,7 @@ public class ChooseCompanyPresenter extends MvpPresenter<ChooseCompanyView> impl
         if (object instanceof String){
             String companyId = (String) object;
             repository.exitFromCompany(companyId)
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(App.getFbThread())
                     .observeOn(uiScheduler)
                     .subscribe(new DisposableObserver<Boolean>() {
                         @Override

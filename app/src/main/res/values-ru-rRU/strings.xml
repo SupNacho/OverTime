@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Переработки</string>
+    <string name="or_login_delimiter">- или -</string>
     <string name="prompt_email">Эл.почта</string>
     <string name="prompt_password">Пароль</string>
-    <string name="action_login">Логин</string>
+    <string name="action_login">Войти</string>
     <string name="action_login_short">Логин</string>
-    <string name="error_invalid_username">Поле \"Логин\" не заполнено</string>
+    <string name="error_invalid_username">Поле \"Эл.почта\" не заполнено</string>
     <string name="error_invalid_full_name">Поле ФИО не заполнено</string>
     <string name="error_invalid_email">Не верный адрес эл.почты</string>
     <string name="error_invalid_password">Пароль слишком короткий</string>
     <string name="error_invalid_confirm_password">Пароли не совпадают</string>
     <string name="error_incorrect_password">Логин/Пароль не верный</string>
     <string name="error_field_required">Это поле обязательно для заполнения</string>
+    <string name="error_login_failed">Ошибка авторизации</string>
     <string name="permission_rationale">Разрешения на доступ к контактам для автозаполнения полей</string>
     <string name="action_settings">Настройки</string>
     <string name="action_logout">Выйти из уч.записи</string>
@@ -84,7 +86,7 @@
     <string name="manage_empl_fire_employee_desc">Уволить сотрудника</string>
     <string name="nav_drawer_manage_employee">Управлять сотрудниками</string>
     <string name="nav_drawer_choose_company">Управлять компаниями</string>
-    <string name="nav_drawer_register_company">Зарегистрировать компанию</string>
+    <string name="nav_drawer_register_company">Создать компанию</string>
     <string name="nav_drawer_about_active_company">О Компании</string>
     <string name="alert_leave_company_header">Покинуть компанию?</string>
     <string name="alert_fire_employee_header">Уволить сотрудника?</string>
@@ -117,6 +119,7 @@
     <string name="subj_extra_personal_stat">Мои переработки</string>
     <string name="chooser_title_all_employee_stat">Поделиться статистикой по всем сотрудникам</string>
     <string name="chooser_title_personal_stat">Поледиться персональной статистикой</string>
+    <string name="title_activity_tabs">Переработки</string>
     <string name="overtime_chart_hint">Выберите переработку для отображения комментариев по этой работе</string>
     <string name="overtime_chart_no_selected">Перерабтка не выбрана</string>
     <string name="chart_label">Часов в день</string>
@@ -128,4 +131,6 @@
     <string name="sort_comp_label_chart_fragment">Фильтр: </string>
     <string name="all_companies">Все компании</string>
     <string name="forgot_password">Забыли пароль?</string>
+    <string name="restore_toast_positive">Ссылка для востановления пароля отправлена на эл.почту</string>
+    <string name="restore_toast_negative">Пользователь с такой эл.почтой не найден</string>
 </resources>

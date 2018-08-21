@@ -11,7 +11,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_login">Login</string>
     <string name="action_login_short">Login</string>
-    <string name="error_invalid_username">This username is empty</string>
+    <string name="error_invalid_username">This email field is empty</string>
     <string name="error_invalid_full_name">This full name is empty</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -21,10 +21,12 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_tabs" translatable="false">No connection, only save overtime</string>
+    <string name="error_login_failed">Authentication failed</string>
+    <string name="title_activity_tabs">Overtime</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
     <string name="section_format" translatable="false">Hello World from section: %1$d</string>
+    <string name="or_login_delimiter">- or -</string>
 
     <!-- Strings related to text report -->
     <string name="text_rep_new_rec">Overtime:</string>
@@ -155,4 +157,7 @@
     <string name="sort_comp_label_chart_fragment">Filter: </string>
     <string name="all_companies">All companies</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="restore_toast_positive">Check your email for password recovery link</string>
+    <string name="restore_toast_negative">No user with this email</string>
+
 </resources>
