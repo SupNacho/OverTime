@@ -165,13 +165,11 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
             if (!overTimesSnapshot.isEmpty()) {
                 overTimesList.clear();
                 for (DocumentSnapshot documentSnapshot : overTimesSnapshot.getDocuments()) {
-                    Date start = documentSnapshot.getDate(ParseFields.startDate);
-                    Date stop = documentSnapshot.getDate(ParseFields.stopDate);
+                    Date start = Objects.requireNonNull(documentSnapshot.getTimestamp(ParseFields.startDate)).toDate();
+                    Date stop = Objects.requireNonNull(documentSnapshot.getTimestamp(ParseFields.stopDate)).toDate();
                     String timeZoneID = documentSnapshot.getString(ParseFields.timeZoneID);
                     long duration = 0;
-                    if (stop != null && start != null) {
-                        duration = stop.getTime() - start.getTime();
-                    }
+                    duration = stop.getTime() - start.getTime();
                     CompanyEntity companyEntity = companyRepository.getCompanyByOverTime(documentSnapshot);
 
                     overTimesList.add(new OverTimeEntity(start, stop, timeZoneID, duration,
@@ -183,8 +181,8 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
     }
 
     private void addToMap(@NotNull DocumentSnapshot overTime, User userEntity) {
-        long duration = Objects.requireNonNull(overTime.getDate(ParseFields.stopDate)).getTime()
-                - Objects.requireNonNull(overTime.getDate(ParseFields.startDate)).getTime();
+        long duration = Objects.requireNonNull(overTime.getTimestamp(ParseFields.stopDate)).toDate().getTime()
+                - Objects.requireNonNull(overTime.getTimestamp(ParseFields.startDate)).toDate().getTime();
         if (usersMap.containsKey(userEntity)) {
             usersMap.put(userEntity, usersMap.get(userEntity)
                     + duration);
@@ -243,26 +241,23 @@ public class FbOverTimeStatRepository implements IOverTimeStatRepository {
     private void formDetailStrings(StringBuilder stringBuilder, List<DocumentSnapshot> overTimes) {
         Context context = App.getInstance().getApplicationContext();
         for (DocumentSnapshot overTime : overTimes) {
-            Date start = overTime.getDate(ParseFields.startDate);
-            Date stop = overTime.getDate(ParseFields.stopDate);
+            Date start = Objects.requireNonNull(overTime.getTimestamp(ParseFields.startDate)).toDate();
+            Date stop = Objects.requireNonNull(overTime.getTimestamp(ParseFields.stopDate)).toDate();
             String timeZoneID = overTime.getString(ParseFields.timeZoneID);
             String otComment = overTime.getString(ParseFields.comment);
-            OverTimeEntity overTimeEntity = null;
-            if (stop != null && start != null) {
-                overTimeEntity = new OverTimeEntity(start, stop, timeZoneID,
-                        stop.getTime() - start.getTime(), otComment, null);
-            }
+            OverTimeEntity overTimeEntity = new OverTimeEntity(start, stop, timeZoneID,
+                    stop.getTime() - start.getTime(), otComment, null);
             stringBuilder
                     .append("\n")
                     .append(context.getResources().getString(R.string.employee_start_time))
-                    .append(overTimeEntity != null ? overTimeEntity.getStartDateTimeLabel() : null)
+                    .append(overTimeEntity.getStartDateTimeLabel())
                     .append("\n").append(context.getResources().getString(R.string.employee_stop_time))
-                    .append(overTimeEntity != null ? overTimeEntity.getStopDateTimeLabel() : null)
+                    .append(overTimeEntity.getStopDateTimeLabel())
                     .append("\n").append(context.getResources().getString(R.string.employee_duration))
-                    .append(overTimeEntity != null ? overTimeEntity.getDurationString() : null)
+                    .append(overTimeEntity.getDurationString())
                     .append("\n").append(context.getResources().getString(R.string.employee_over_time_comment))
                     .append("\n")
-                    .append(overTimeEntity != null ? overTimeEntity.getComment() : null)
+                    .append(overTimeEntity.getComment())
                     .append("\n");
         }
         stringBuilder.append(context.getResources().getString(R.string.employee_over_time_delimiter)).append("\n\n");

@@ -110,7 +110,7 @@ public class FbOverTimeRunRepository implements IOverTimeRunRepository {
             query.get().addOnSuccessListener(queryDocumentSnapshots -> {
                 if (!queryDocumentSnapshots.isEmpty()) {
                     emit.onNext(Objects.requireNonNull(queryDocumentSnapshots.getDocuments().get(0)
-                            .getDate(ParseFields.startDate)).getTime());
+                            .getTimestamp(ParseFields.startDate)).toDate().getTime());
                 }
             });
         });
