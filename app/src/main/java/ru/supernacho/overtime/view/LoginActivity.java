@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -147,7 +148,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
 
     @OnClick({R.id.email_sign_in_button, R.id.btn_cancel,
             R.id.btn_confirm_registration, R.id.btn_register, R.id.linear_layout,
-            R.id.tv_restore_password_login_actvt})
+            R.id.tv_restore_password_login_actvt, R.id.tv_privacy_pol_login_actvt})
     public void onClickSignIn(View view) {
         switch (view.getId()) {
             case R.id.email_sign_in_button:
@@ -172,6 +173,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView, Vi
             case R.id.tv_restore_password_login_actvt:
                 Intent restore = new Intent(this, RestorePasswordActivity.class);
                 startActivity(restore);
+                break;
+            case R.id.tv_privacy_pol_login_actvt:
+                Intent privacy = new Intent(Intent.ACTION_VIEW, Uri.parse("https://supnacho.github.io/overtime/privacy_policy.html"));
+                startActivity(privacy);
                 break;
         }
     }

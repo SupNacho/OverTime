@@ -133,4 +133,5 @@
     <string name="forgot_password">Забыли пароль?</string>
     <string name="restore_toast_positive">Ссылка для востановления пароля отправлена на эл.почту</string>
     <string name="restore_toast_negative">Пользователь с такой эл.почтой не найден</string>
+    <string name="action_policy">Политика конф-ности</string>
 </resources>

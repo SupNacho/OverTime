@@ -25,6 +25,7 @@
     <string name="title_activity_tabs">Overtime</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
+    <string name="action_policy">Privacy policy</string>
     <string name="section_format" translatable="false">Hello World from section: %1$d</string>
     <string name="or_login_delimiter">- or -</string>
 

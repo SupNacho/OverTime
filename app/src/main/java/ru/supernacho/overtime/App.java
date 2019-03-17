@@ -2,6 +2,7 @@ package ru.supernacho.overtime;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.parse.Parse;
@@ -38,7 +39,7 @@ public class App extends Application {
                 .build();
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setTimestampsInSnapshotsEnabled(true)
+//                .setTimestampsInSnapshotsEnabled(true)
                 .build();
         firestore.setFirestoreSettings(settings);
     }

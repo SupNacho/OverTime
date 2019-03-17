@@ -1,6 +1,7 @@
 package ru.supernacho.overtime.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -285,5 +286,10 @@ public class TabsActivity extends MvpAppCompatActivity implements TabsView {
     @Override
     public void openCompanyInfo() {
         CompanyInfo.viewCurrent(this);
+    }
+
+    @Override
+    public void showPolicy() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://supnacho.github.io/overtime/privacy_policy.html")));
     }
 }

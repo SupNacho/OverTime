@@ -138,4 +138,8 @@ public class TabsPresenter extends MvpPresenter<TabsView> {
                 .observeOn(uiScheduler)
                 .subscribe(logoutObserver);
     }
+
+    public void viewPolicy(){
+        getViewState().showPolicy();
+    }
 }

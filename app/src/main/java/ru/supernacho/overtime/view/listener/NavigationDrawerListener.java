@@ -37,6 +37,9 @@ public class NavigationDrawerListener implements NavigationView.OnNavigationItem
             case R.id.nav_logout:
                 presenter.logout();
                 break;
+            case R.id.nav_policy:
+                presenter.viewPolicy();
+                break;
                 default:
                     Timber.d("no such nav drawer item");
                     break;

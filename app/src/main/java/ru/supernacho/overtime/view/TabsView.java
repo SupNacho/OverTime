@@ -19,4 +19,6 @@ public interface TabsView extends MvpView {
     void startCompanyChooser();
     void startCompanyRegistration();
     void openCompanyInfo();
+
+    void showPolicy();
 }
